@@ -1193,3 +1193,241 @@ html, body, #root{
 .how-section{
     padding-bottom:0;
 }
+
+
+/* =====================================
+            RESPONSIVE
+===================================== */
+
+/* ---------- Laptop ---------- */
+
+@media (max-width:1200px){
+
+    .navbar{
+        padding:0 30px;
+    }
+
+    .hero h1{
+        font-size:58px;
+    }
+
+    .cards-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+/* ---------- Tablet ---------- */
+
+@media (max-width:992px){
+
+    .navbar{
+        padding:0 20px;
+    }
+
+    .nav-links{
+        gap:20px;
+    }
+
+    .hero{
+        margin-top:60px;
+        padding:0 20px;
+    }
+
+    .hero h1{
+        font-size:48px;
+    }
+
+    .hero p{
+        font-size:17px;
+        width:100%;
+    }
+
+    .hero-buttons{
+        flex-wrap:wrap;
+    }
+
+    .agents{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .steps-container{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .cards-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width:768px){
+
+    .navbar{
+        height:auto;
+        padding:18px;
+        flex-direction:column;
+        gap:18px;
+    }
+
+    .home{
+        padding-top:140px;
+    }
+
+    .logo{
+        width:100%;
+        justify-content:center;
+    }
+
+    .nav-links{
+        width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
+    .nav-right{
+        width:100%;
+        justify-content:center;
+        flex-wrap:wrap;
+    }
+
+    .hero{
+        margin-top:20px;
+        padding:0 18px;
+    }
+
+    .badge{
+        font-size:12px;
+        padding:8px 14px;
+    }
+
+    .hero h1{
+        font-size:40px;
+        line-height:1.2;
+    }
+
+    .hero p{
+        font-size:16px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        align-items:center;
+    }
+
+    .primary-btn,
+    .secondary-btn{
+        width:100%;
+        max-width:320px;
+    }
+
+    .council-header{
+        flex-direction:column;
+        gap:10px;
+        text-align:center;
+    }
+
+    .agents{
+        grid-template-columns:1fr;
+    }
+
+    .team-title,
+    .section-title,
+    .blueprint h2,
+    .cta h2{
+        font-size:34px;
+    }
+
+    .team-grid,
+    .steps-container,
+    .cards-grid{
+        grid-template-columns:1fr;
+    }
+
+    .container{
+        width:92%;
+    }
+
+    .footer{
+        padding:40px 20px;
+    }
+
+    .footer-container{
+        flex-direction:column;
+        gap:35px;
+    }
+
+    .footer-links{
+        width:100%;
+        justify-content:space-between;
+        flex-wrap:wrap;
+        gap:25px;
+    }
+
+}
+
+
+/* ---------- Small Mobile ---------- */
+
+@media (max-width:480px){
+
+    .navbar{
+        padding:15px;
+    }
+
+    .logo{
+        font-size:18px;
+    }
+
+    .logo-icon{
+        width:34px;
+        height:34px;
+        font-size:18px;
+    }
+
+    .hero h1{
+        font-size:30px;
+    }
+
+    .hero p{
+        font-size:15px;
+        line-height:1.7;
+    }
+
+    .badge{
+        width:100%;
+        border-radius:12px;
+    }
+
+    .team-title,
+    .section-title,
+    .blueprint h2,
+    .cta h2{
+        font-size:28px;
+    }
+
+    .step-card,
+    .blue-card,
+    .member{
+        padding:20px;
+    }
+
+    .cta{
+        padding:55px 18px;
+    }
+
+    .cta button{
+        width:100%;
+    }
+
+    .footer-links{
+        flex-direction:column;
+        gap:20px;
+    }
+
+}

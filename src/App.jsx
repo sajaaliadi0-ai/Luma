@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Landpage from "./landing-page";
-import Login from "./Login";
-import Work from "./work";
+import Landpage from "./page/landing-page";
+import Login from "./page/Login";
+import Work from "./page/work";
 
 function App() {
   return (
