@@ -1,0 +1,119 @@
+/* ===================================
+PAGE
+=================================== */
+
+.new-blueprint-page{
+
+    width:100%;
+    height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    background:#f5f7fc;
+}
+
+/* ===================================
+CARD
+=================================== */
+
+.new-blueprint-card{
+
+    width:520px;
+
+    background:#ffffff;
+
+    border-radius:24px;
+
+    padding:50px;
+
+    text-align:center;
+
+    box-shadow:0 20px 40px rgba(15,23,42,.08);
+}
+
+/* ===================================
+TITLE
+=================================== */
+
+.new-blueprint-title{
+
+    font-size:34px;
+
+    font-weight:700;
+
+    color:#111827;
+
+    margin:22px 0 12px;
+}
+
+.new-blueprint-subtitle{
+
+    color:#6b7280;
+
+    font-size:15px;
+
+    line-height:1.7;
+
+    margin-bottom:40px;
+}
+
+/* ===================================
+BUTTONS
+=================================== */
+
+.new-blueprint-back{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    background:none;
+
+    color:#4f46e5;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    margin-bottom:15px;
+}
+
+.new-blueprint-create{
+
+    width:100%;
+
+    height:56px;
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#6366f1;
+
+    color:#fff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:10px;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.new-blueprint-create:hover{
+
+    background:#4f46e5;
+
+    transform:translateY(-2px);
+}

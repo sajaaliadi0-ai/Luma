@@ -1,7 +1,6 @@
-import "./landing-page.css";
+import "../css/landing-page.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 const steps = [
   {
     number: "1",
@@ -65,7 +64,10 @@ const blueprintCards = [
 ];
 function Landpage() {
 
+  
+
     const [darkMode, setDarkMode] = useState(false);
+    
 const navigate = useNavigate();
 useEffect(() => {
   document.documentElement.setAttribute(

@@ -1,0 +1,627 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ==========================
+        THEME
+========================== */
+
+:root{
+
+    --register-bg:#f5f7ff;
+    --register-card:#ffffff;
+
+    --register-text:#111827;
+    --register-text2:#6b7280;
+
+    --register-input:#f8fafc;
+    --register-placeholder:#9ca3af;
+
+    --register-primary:#7c6bff;
+    --register-primary-hover:#6857ff;
+
+    --register-shadow:0 25px 60px rgba(0,0,0,.12);
+
+    --register-strength:#d1d5db;
+}
+
+body.dark{
+
+    --register-bg:#1b2436;
+    --register-card:#171f2f;
+
+    --register-text:#ffffff;
+    --register-text2:#c8cfdf;
+
+    --register-input:#232d3f;
+    --register-placeholder:#8d95a9;
+
+    --register-primary:#7c6bff;
+    --register-primary-hover:#6857ff;
+
+    --register-shadow:0 25px 60px rgba(0,0,0,.35);
+
+    --register-strength:#3a455b;
+}
+
+.register-page *{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+.register-page{
+
+    width:100%;
+    min-height:100vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+    overflow:hidden;
+
+    padding:30px;
+
+    font-family:'Inter',sans-serif;
+
+    background:var(--register-bg);
+
+    transition:.35s;
+}
+
+/* ===========================
+      BACKGROUND
+=========================== */
+
+.register-page::before{
+
+    content:"";
+    position:absolute;
+
+    width:300px;
+    height:300px;
+
+    border-radius:50%;
+
+    background:#5b4dff;
+
+    opacity:.18;
+
+    top:-100px;
+    left:-100px;
+}
+
+.register-page::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:280px;
+    height:280px;
+
+    border-radius:50%;
+
+    background:#5b4dff;
+
+    opacity:.18;
+
+    right:-90px;
+    bottom:-90px;
+}
+
+.register-page .register-card{
+
+    width:430px;
+
+    background:var(--register-card);
+
+    border-radius:24px;
+
+    padding:40px;
+
+    position:relative;
+
+    z-index:2;
+
+    box-shadow:var(--register-shadow);
+
+    transition:.35s;
+}
+
+/* ===========================
+      LOGO
+=========================== */
+
+.register-page .logo{
+
+    display:flex;
+    justify-content:center;
+
+    margin-bottom:18px;
+}
+
+.register-page .logo-icon{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    background:var(--register-primary);
+
+    color:#fff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:40px;
+    font-weight:800;
+
+    box-shadow:0 0 25px rgba(124,107,255,.45);
+}
+
+/* ===========================
+      TITLES
+=========================== */
+
+.register-page h2{
+
+    text-align:center;
+
+    color:var(--register-text);
+
+    font-size:30px;
+    font-weight:700;
+
+    margin-bottom:8px;
+}
+
+.register-page .subtitle{
+
+    text-align:center;
+
+    color:var(--register-text2);
+
+    font-size:15px;
+
+    margin-bottom:28px;
+}
+
+/* ===========================
+      FORM
+=========================== */
+
+.register-page form{
+
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.register-page label{
+
+    color:var(--register-text);
+
+    font-size:14px;
+    font-weight:600;
+}
+
+.register-page input{
+
+    width:100%;
+
+    padding:15px;
+
+    background:var(--register-input);
+
+    color:var(--register-text);
+
+    border:none;
+
+    border-radius:12px;
+
+    outline:none;
+
+    transition:.3s;
+}
+
+.register-page input::placeholder{
+
+    color:var(--register-placeholder);
+}
+
+.register-page input:focus{
+
+    box-shadow:0 0 0 2px var(--register-primary);
+}
+
+.password-box{
+
+    position:relative;
+}
+
+.password-box input{
+
+    padding-right:48px;
+}
+
+.show-password{
+
+    position:absolute;
+
+    right:16px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    color:var(--register-text2);
+
+    cursor:pointer;
+
+    font-size:18px;
+}
+
+.show-password:hover{
+
+    color:var(--register-text);
+}
+/* ===========================
+      PASSWORD STRENGTH
+=========================== */
+
+.register-page .strength{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:6px;
+    margin-top:4px;
+}
+
+.register-page .strength div{
+    height:5px;
+    border-radius:10px;
+    background:var(--register-strength);
+    transition:.3s;
+}
+
+.register-page .strength .active{
+    background:#00d084;
+}
+
+.valid{
+    color:#32d583;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+.invalid{
+    color:#ff6b6b;
+    font-size:13px;
+    margin-bottom:8px;
+}
+
+/* ===========================
+      CHECKBOX
+=========================== */
+
+.register-page .check{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:8px 0 15px;
+}
+
+.register-page .check input{
+    width:17px;
+    height:17px;
+    margin-top:2px;
+    accent-color:var(--register-primary);
+}
+
+.register-page .check span{
+    color:var(--register-text2);
+    font-size:13px;
+    line-height:1.6;
+}
+
+/* ===========================
+      BUTTON
+=========================== */
+
+.register-page form button{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:14px;
+    background:var(--register-primary);
+    color:#fff;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.register-page form button:hover{
+    background:var(--register-primary-hover);
+    transform:translateY(-2px);
+}
+.register-page button:active{
+    transform:scale(.98);
+}
+
+/* ===========================
+      BOTTOM
+=========================== */
+
+.register-page .bottom{
+    margin-top:22px;
+    text-align:center;
+    color:var(--register-text2);
+    font-size:14px;
+}
+
+.register-page .bottom a{
+    color:var(--register-primary);
+    text-decoration:none;
+    font-weight:700;
+}
+
+.register-page .bottom a:hover{
+    text-decoration:underline;
+}
+
+/* ===========================
+      REGISTER ROBOT
+=========================== */
+
+.register-page-avatar{
+    display:flex;
+    justify-content:center;
+    margin:10px 0 28px;
+}
+
+.register-page-robot{
+    position:relative;
+    width:130px;
+    height:130px;
+    animation:registerRobotFloat 3s ease-in-out infinite;
+}
+
+.register-page-robot-antenna{
+    position:absolute;
+    width:6px;
+    height:25px;
+    background:var(--register-primary);
+    top:-15px;
+    left:62px;
+    border-radius:10px;
+}
+
+.register-page-robot-antenna::after{
+    content:"";
+    position:absolute;
+    width:14px;
+    height:14px;
+    background:#ff8fab;
+    border-radius:50%;
+    top:-8px;
+    left:-4px;
+}
+
+.register-page-robot-head{
+    position:absolute;
+    width:110px;
+    height:95px;
+    left:10px;
+    top:20px;
+    background:#eef0ff;
+    border:5px solid var(--register-primary);
+    border-radius:25px;
+    box-shadow:0 15px 30px rgba(0,0,0,.18);
+}
+
+.register-page-robot-eye{
+    position:absolute;
+    width:12px;
+    height:12px;
+    background:#222;
+    border-radius:50%;
+    top:35px;
+}
+
+.register-page-robot-eye-left{
+    left:28px;
+}
+
+.register-page-robot-eye-right{
+    right:28px;
+}
+
+.register-page-robot-mouth{
+    position:absolute;
+    width:35px;
+    height:10px;
+    left:32px;
+    bottom:22px;
+    border-bottom:4px solid #333;
+    border-radius:0 0 20px 20px;
+}
+
+.register-page-robot-hand{
+    position:absolute;
+    width:16px;
+    height:55px;
+    background:#eef0ff;
+    border:3px solid var(--register-primary);
+    border-radius:20px;
+    top:26px;
+    transition:.45s ease;
+    z-index:10;
+}
+
+.register-page-robot-hand-left{
+    left:-12px;
+    transform-origin:bottom center;
+}
+
+.register-page-robot-hand-right{
+    right:-12px;
+    transform-origin:bottom center;
+}
+
+/* ===========================
+      ROBOT HAND ANIMATION
+=========================== */
+
+.register-page-robot-close .register-page-robot-hand-left{
+    transform:rotate(55deg) translate(-10px,-8px);
+}
+
+.register-page-robot-close .register-page-robot-hand-right{
+    transform:rotate(-55deg) translate(10px,-8px);
+}
+
+.register-page-robot-open .register-page-robot-hand-left,
+.register-page-robot-open .register-page-robot-hand-right{
+    transform:none;
+}
+
+/* ===========================
+      ROBOT FLOAT
+=========================== */
+
+@keyframes registerRobotFloat{
+
+    0%{
+        transform:translateY(0);
+    }
+
+    50%{
+        transform:translateY(-8px);
+    }
+
+    100%{
+        transform:translateY(0);
+    }
+}
+
+/* ===========================
+      RESPONSIVE
+=========================== */
+
+@media(max-width:500px){
+
+    .register-page{
+        padding:20px;
+    }
+
+    .register-page .register-card{
+        width:100%;
+        padding:28px;
+        border-radius:20px;
+    }
+
+    .register-page h2{
+        font-size:26px;
+    }
+
+    .register-page .subtitle{
+        font-size:14px;
+    }
+
+    .register-page .logo-icon{
+        width:60px;
+        height:60px;
+        font-size:34px;
+    }
+
+    .register-page-robot{
+        width:120px;
+        height:120px;
+    }
+}
+
+/* ===========================
+      EXTRA EFFECTS
+=========================== */
+
+.register-page .register-card::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,.05);
+    pointer-events:none;
+}
+
+.register-page .register-card:hover{
+    transform:translateY(-2px);
+}
+
+.register-page input,
+.register-page button{
+    font-family:'Inter',sans-serif;
+}
+
+.register-theme-btn{
+    position:absolute;
+    top:25px;
+    right:25px;
+
+    width:48px;
+    height:48px;
+
+    border:none;
+    border-radius:50%;
+
+    background:#7c6bff;
+    color:#fff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:20px;
+
+    cursor:pointer;
+
+    z-index:999;
+
+    transition:.3s;
+}
+
+.register-theme-btn:hover{
+    transform:rotate(180deg) scale(1.08);
+}
+
+.register-theme-btn{
+    position:fixed;
+    top:20px;
+    right:20px;
+
+    width:46px !important;
+    height:46px !important;
+
+    border:none;
+    border-radius:50%;
+
+    background:#7c6bff;
+
+    color:#fff;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    cursor:pointer;
+
+    z-index:9999;
+
+    transition:.3s;
+}
+
+.register-theme-btn:hover{
+    transform:rotate(180deg);
+}
