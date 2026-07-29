@@ -1,393 +1,2573 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+
+  FiBell,
+  FiChevronDown,
+  FiChevronRight,
+  FiCode,
+  FiCompass,
+  FiFolder,
+  FiGift,
+  FiGlobe,
+  FiGrid,
+  FiHome,
+  FiLogOut,
+  FiMenu,
+  FiMoreHorizontal,
+  FiPackage,
+  FiPlus,
+  FiSettings,
+  FiSliders,
+  FiUser,
+  FiUsers,
+  FiX,
+  FiZap,
+    FiMic,
+
+  
+} from "react-icons/fi";
+import alex from "./alex.png";
+import emma from "./emma.png";
+import noah from "./noah.png";
+import luna from "./luna.png";
+import david from "./david.png";
+import mia from "./mia.png";
+import leo from "./leo.png";
+import api from "../api/api";
 import "../css/newBlueprint.css";
-import Newblueprint from "./new-blueprint";
-import { useTranslation } from "../i18n";
 
-/* Small inline icons */
-const Icon = ({ children, size = 16 }) => (
-  <svg
-    width={size}
-    height={size}
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    {children}
-  </svg>
-);
-
-const IconMonitor = (p) => (
-  <Icon {...p}>
-    <rect x="3" y="4" width="18" height="13" rx="2" />
-    <path d="M8 21h8M12 17v4" />
-  </Icon>
-);
-const IconEdit = (p) => (
-  <Icon {...p}>
-    <path d="M12 20h9" />
-    <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
-  </Icon>
-);
-const IconFiles = (p) => (
-  <Icon {...p}>
-    <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z" />
-  </Icon>
-);
-const IconAnalysis = (p) => (
-  <Icon {...p}>
-    <path d="M4 19V10M12 19V5M20 19v-7" />
-  </Icon>
-);
-const IconMore = (p) => (
-  <Icon {...p}>
-    <circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" />
-    <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
-    <circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" />
-  </Icon>
-);
-const IconRefresh = (p) => (
-  <Icon {...p}>
-    <path d="M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5" />
-    <path d="M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5" />
-  </Icon>
-);
-const IconHome = (p) => (
-  <Icon {...p}>
-    <path d="M3 11l9-7 9 7" />
-    <path d="M5 10v10h14V10" />
-  </Icon>
-);
-const IconExternal = (p) => (
-  <Icon {...p}>
-    <path d="M14 4h6v6M20 4 10 14" />
-    <path d="M20 14v6H4V4h6" />
-  </Icon>
-);
-const IconCode = (p) => (
-  <Icon {...p}>
-    <path d="M8 5 3 12l5 7M16 5l5 7-5 7" />
-  </Icon>
-);
-const IconChevronDown = (p) => (
-  <Icon {...p}>
-    <path d="M6 9l6 6 6-6" />
-  </Icon>
-);
-const IconHistory = (p) => (
-  <Icon {...p}>
-    <circle cx="12" cy="12" r="9" />
-    <path d="M12 7v5l4 2" />
-  </Icon>
-);
-const IconChevronsRight = (p) => (
-  <Icon {...p}>
-    <path d="M6 5l6 7-6 7M13 5l6 7-6 7" />
-  </Icon>
-);
-
-const MAIN_TABS = [
-  { key: "viewer", label: "tabAppViewer", icon: IconMonitor },
-  { key: "edit", label: "tabEdit", icon: IconEdit },
-  { key: "files", label: "tabFiles", icon: IconFiles },
-  { key: "analysis", label: "tabAnalysis", icon: IconAnalysis },
+const resources = [
+  ["Robot for Forex Trading", "Osuji Promise · ◉ 7.7K", "forex", "Data Analysis"],
+  ["إنشاء موقع لعرض الفيديوهات", "Musa Aljably · ◉ 2.6K", "purple", "Website"],
+  ["موقع فيديوهات الذكاء الاصطناعي", "Mo Daha · ◉ 3.6K", "green", "AI"],
+  ["Bakery dashboard", "Atoms · ◉ 1.4K", "dark", "E-commerce"],
+  ["Fantasy landing page", "Atoms · ◉ 4.1K", "fantasy", "Website"],
+  ["Wallet dashboard", "Atoms · ◉ 1.8K", "wallet", "Productivity"],
 ];
-const MORE_TABS = [
-  { key: "terminal", label: "tabTerminal" },
-  { key: "planner", label: "tabPlanner" },
-  { key: "browser", label: "tabBrowser" },
-  { key: "notebook", label: "tabNotebook" },
+const avatars = [
+  alex,
+  emma,
+  noah,
+  luna,
+  david,
+  mia,
+  leo,
 ];
+function AtomsApp() {
 
-function TabCluster({ activeTab, onSelect }) {
-  const [moreOpen, setMoreOpen] = useState(false);
-  const clusterRef = useRef(null);
-  const { t } = useTranslation();
 
-  useEffect(() => {
-    function handleClickOutside(e) {
-      if (clusterRef.current && !clusterRef.current.contains(e.target)) {
-        setMoreOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
-  const activeMoreTab = MORE_TABS.find((tab) => tab.key === activeTab);
+const navigate = useNavigate();
 
-  return (
-    <div className="newBlueprint-tabcluster" ref={clusterRef}>
-      {MAIN_TABS.map((tab) => {
-        const TabIcon = tab.icon;
-        const isActive = tab.key === activeTab;
-        return (
-          <button
-            key={tab.key}
-            type="button"
-            className={"newBlueprint-tab" + (isActive ? " newBlueprint-tab--active" : "")}
-            onClick={() => {
-              onSelect(tab.key);
-              setMoreOpen(false);
-            }}
-            title={t(tab.label)}
-          >
-            <TabIcon />
-            <span className="newBlueprint-tab-label">{t(tab.label)}</span>
-          </button>
+const handleLogout = async () => {
+  try {
+    const refreshToken = localStorage.getItem("refreshToken");
+
+    await api.post("/api/auth/logout", {
+      refreshToken,
+    });
+  } catch (error) {
+    console.error(error);
+  } finally {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user");
+
+    sessionStorage.clear();
+
+    navigate("/login");
+  }
+};
+const [notifications] = useState([]);
+  const [resourceFilter, setResourceFilter] = useState("All");
+  const [resourceTab, setResourceTab] = useState("Discover");
+  const [showProfile, setShowProfile] = useState(false);
+  const [page, setPage] = useState("Home");
+  const [collapsed, setCollapsed] = useState(false);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [settings, setSettings] = useState(null);
+  const [prompt, setPrompt] = useState("");
+  const [conversations, setConversations] = useState([]);
+  const [activeConversationId, setActiveConversationId] = useState(null);
+  const [typing, setTyping] = useState(false);
+
+
+  const choosePage = (next) => {
+    setPage(next);
+    setWorkspaceOpen(false);
+    setProfileOpen(false);
+  };
+
+
+  const openSettings = (tab = "General") => {
+    setSettings(tab);
+    setProfileOpen(false);
+  };
+
+
+  const openConversation = (id) => {
+    setActiveConversationId(id);
+    setPage("Home");
+    setWorkspaceOpen(false);
+    setProfileOpen(false);
+  };
+
+
+  const toggleSidebar = () => {
+    setCollapsed((current) => !current);
+    setWorkspaceOpen(false);
+    setProfileOpen(false);
+  };
+
+
+  const newChat = () => {
+
+    const id = `chat-${Date.now()}`;
+
+    setConversations((current) => [
+      {
+        id,
+        title:"New chat",
+        messages:[],
+        createdAt:new Date().toLocaleDateString("en-CA"),
+      },
+      ...current,
+    ]);
+
+    setActiveConversationId(id);
+    setPage("Home");
+    setPrompt("");
+    setWorkspaceOpen(false);
+    setProfileOpen(false);
+  };
+
+
+  const sendMessage = () => {
+
+    const text = prompt.trim();
+
+    if(!text) return;
+
+
+    const conversationId =
+      activeConversationId || `chat-${Date.now()}`;
+
+
+    const userMessage = {
+      id:`user-${Date.now()}`,
+      type:"user",
+      text,
+    };
+
+
+    setConversations((current)=>{
+
+      const existing =
+        current.find(
+          conversation =>
+            conversation.id === conversationId
         );
-      })}
 
-      {activeMoreTab && (
-        <button
-          type="button"
-          className="newBlueprint-tab newBlueprint-tab--active"
-          onClick={() => setMoreOpen((prev) => !prev)}
-        >
-          <IconMonitor />
-          <span className="newBlueprint-tab-label">{t(activeMoreTab.label)}</span>
-        </button>
-      )}
 
-      <button
-        type="button"
-        className={"newBlueprint-more-btn" + (moreOpen ? " newBlueprint-more-btn--open" : "")}
-        onClick={() => setMoreOpen((prev) => !prev)}
-        title={t("more")}
-      >
-        <IconMore />
-      </button>
+      if(existing){
 
-      {moreOpen && (
-        <div className="newBlueprint-more-menu" role="menu">
-          {MORE_TABS.map((tab) => {
-            const isActive = tab.key === activeTab;
-            return (
-              <button
-                key={tab.key}
-                type="button"
-                className={"newBlueprint-more-item" + (isActive ? " newBlueprint-more-item--active" : "")}
-                onClick={() => {
-                  onSelect(tab.key);
-                  setMoreOpen(false);
-                }}
-              >
-                {t(tab.label)}
-              </button>
-            );
-          })}
-        </div>
-      )}
-    </div>
-  );
-}
+        return current.map(conversation =>
+          conversation.id === conversationId
+          ?
+          {
+            ...conversation,
+            title:
+              conversation.title==="New chat"
+              ?
+              text.length>30
+              ?
+              `${text.slice(0,30)}…`
+              :
+              text
+              :
+              conversation.title,
 
-const TooltipButton = ({ children, tooltip, onClick }) => (
-  <button className="newBlueprint-icon-btn newBlueprint-tooltip-btn" onClick={onClick} data-tooltip={tooltip} type="button">
-    {children}
-  </button>
-);
+            messages:[
+              ...conversation.messages,
+              userMessage
+            ]
+          }
 
-const EmptyState = ({ message }) => {
-  const { t } = useTranslation();
-  return (
-    <div className="newBlueprint-empty-viewer">
-      <div className="newBlueprint-robot">
-        <div className="robot-character">
-          <div className="robot-antenna">
-            <span></span>
-          </div>
-          <div className="robot-head">
-            <div className="robot-ear robot-ear-left"></div>
-            <div className="robot-ear robot-ear-right"></div>
-            <div className="robot-eyes">
-              <div className="robot-eye">
-                <span></span>
-              </div>
-              <div className="robot-eye">
-                <span></span>
-              </div>
-            </div>
-            <div className="robot-cheeks">
-              <span></span>
-              <span></span>
-            </div>
-            <div className="robot-mouth"></div>
-          </div>
-          <div className="robot-body">
-            <div className="robot-screen"></div>
-            <div className="robot-buttons">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
-        </div>
-      </div>
+          :
 
-      <h2>{message}</h2>
-      <p>{t("emptyStateDetail")}</p>
-    </div>
-  );
-};
+          conversation
+        );
 
-const AnalyticsEmptyState = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="newBlueprint-analysis-empty">
-      <div className="newBlueprint-chart-icon">
-        <div className="chart-bar chart-bar-big"></div>
-        <div className="chart-bar chart-bar-medium"></div>
-        <div className="chart-bar chart-bar-small"></div>
-      </div>
-      <h2>{t("siteAnalyticsTitle")}</h2>
-      <p>{t("siteAnalyticsText")}</p>
-    </div>
-  );
-};
+      }
 
-const FilesView = () => {
-  const { t } = useTranslation();
-  return (
-    <div className="newBlueprint-files-view">
-      <div className="newBlueprint-file-header">
-        <h3>{t("filesTitle")}</h3>
-      </div>
 
-      <div className="newBlueprint-file-tree">
-        {filesContent.map((file, index) => (
-          <div key={index} className="newBlueprint-file-item">
-            <span>{file.type === "folder" ? "📁" : "📄"}</span>
-            <span>{file.name}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+      return [
+        {
+          id:conversationId,
+          title:
+            text.length>30
+            ?
+            `${text.slice(0,30)}…`
+            :
+            text,
 
-const filesContent = [
-  { name: "src", type: "folder" },
-  { name: "App.jsx", type: "file" },
-  { name: "index.css", type: "file" },
-  { name: "package.json", type: "file" },
-];
+          messages:[
+            userMessage
+          ],
 
-export default function NewBlueprint() {
-  const [activeTab, setActiveTab] = useState("viewer");
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const { t } = useTranslation();
+          createdAt:new Date().toLocaleDateString("en-CA"),
+        },
 
-  const viewerContent = null;
-  const editContent = null;
-  const analysisContent = null;
-  const terminalContent = null;
+        ...current,
+      ];
+
+    });
+
+
+    setActiveConversationId(conversationId);
+    setPrompt("");
+    setTyping(true);
+
+setPage("Home");
+    window.setTimeout(()=>{
+
+      setConversations(current=>
+
+        current.map(conversation =>
+
+          conversation.id===conversationId
+
+          ?
+
+          {
+            ...conversation,
+
+            messages:[
+              ...conversation.messages,
+
+              {
+                id:`alex-${Date.now()}`,
+                type:"assistant",
+                text:"وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
+              }
+            ]
+          }
+
+          :
+
+          conversation
+
+        )
+
+      );
+
+
+      setTyping(false);
+
+    },800);
+
+  };
+
 
   return (
-    <div className="blueprint-container">
-      <div className={`newBlueprint-page ${drawerOpen ? "split-mode" : ""}`}>
-        <header className="newBlueprint-topbar">
-          <div className="newBlueprint-topbar-left">
-            <span className="newBlueprint-logo" title="Luma">
-              <span className="luma-character">
-                <span className="luma-ear luma-ear-left"></span>
-                <span className="luma-ear luma-ear-right"></span>
-                <span className="luma-face">
-                  <span className="luma-eye luma-eye-left"></span>
-                  <span className="luma-eye luma-eye-right"></span>
-                  <span className="luma-smile"></span>
-                </span>
-              </span>
-            </span>
+    <div
+      className={`blueprint-app ${
+        collapsed ? "blueprint-is-collapsed" : ""
+      }`}
+    >
 
-            <button className="newBlueprint-icon-btn" title={t("history")} type="button">
-              <IconHistory />
-            </button>
+      <Sidebar
+  notifications={notifications}
+  navigate={navigate}
+  onLogout={handleLogout}
+  page={page}
+  onPage={choosePage}
+  onNewChat={newChat}
+  onCollapse={toggleSidebar}
+  workspaceOpen={workspaceOpen}
+  onWorkspace={() => {
+    setWorkspaceOpen(!workspaceOpen);
+    setProfileOpen(false);
+  }}
+  profileOpen={profileOpen}
+  onProfile={() => {
+    setProfileOpen(!profileOpen);
+    setWorkspaceOpen(false);
+  }}
+  onSettings={openSettings}
+  conversations={conversations}
+  activeConversationId={activeConversationId}
+  onConversation={openConversation}
+/>
 
-            <button
-              className="newBlueprint-icon-btn"
-              title={drawerOpen ? t("closeSplitView") : t("openSplitView")}
-              type="button"
-              onClick={() => setDrawerOpen((prev) => !prev)}
-            >
-              <IconChevronsRight className={drawerOpen ? "rotate-icon" : ""} />
-            </button>
-          </div>
+      <main 
+  className={`blueprint-app-main ${
+    page === "Home" ? "home-active" : "full-page-view"
+  }`}
+>
+  {page === "Home" && (
+    <Home
+      prompt={prompt}
+      setPrompt={setPrompt}
+      messages={
+        conversations.find(
+          (conversation) =>
+            conversation.id === activeConversationId
+        )?.messages || []
+      }
+      typing={typing}
+      onSend={sendMessage}
+    />
+  )}
+                
 
-          <div className="newBlueprint-topbar-center">
-            <div className="newBlueprint-divider" />
-            <TabCluster activeTab={activeTab} onSelect={setActiveTab} />
-          </div>
 
-          <div className="newBlueprint-topbar-right">
-            <button className="newBlueprint-btn newBlueprint-btn--ghost" disabled type="button">
-              {t("workspaceShare")}
-            </button>
-            <button className="newBlueprint-btn newBlueprint-btn--accent" type="button">
-              {t("workspaceUpgrade")}
-            </button>
-            <button className="newBlueprint-btn newBlueprint-btn--primary" type="button">
-              {t("workspacePublish")}
-            </button>
-          </div>
-        </header>
-
-        {activeTab === "viewer" && (
-          <div className="newBlueprint-subbar">
-            <div />
-            <div className="newBlueprint-subbar-center">
-              <TooltipButton tooltip={t("showDesktopPreview")}>
-                <IconMonitor />
-              </TooltipButton>
-              <TooltipButton tooltip={t("reloadAppViewer")}>
-                <IconRefresh />
-              </TooltipButton>
-              <TooltipButton tooltip={t("homeButton")}>
-                <IconHome />
-              </TooltipButton>
-
-              <button
-                type="button"
-                className="newBlueprint-select"
-                onClick={() => {
-                  alert(t("noRoutesFound"));
-                }}
-              >
-                {t("homeButton")}
-                <IconChevronDown size={13} />
-              </button>
-
-              <TooltipButton tooltip={t("openNewTab")}>
-                <IconExternal />
-              </TooltipButton>
-            </div>
-
-            <a href="#" className="newBlueprint-console-link">
-              <IconCode />
-              {t("console")}
-            </a>
-          </div>
+        {page === "Resources" && !showProfile && (
+          <Resources
+            resourceTab={resourceTab}
+            setResourceTab={setResourceTab}
+            setShowProfile={setShowProfile}
+            resourceFilter={resourceFilter}
+            setResourceFilter={setResourceFilter}
+          />
         )}
 
-        <main className="newBlueprint-stage">
-          {activeTab === "viewer" && (viewerContent ? <div className="newBlueprint-ai-content">{viewerContent}</div> : <EmptyState message={t("emptyNoContentAppViewer")} />)}
-          {activeTab === "edit" && (editContent ? <div className="newBlueprint-ai-content">{editContent}</div> : <EmptyState message={t("emptyNoContentEdit")} />)}
-          {activeTab === "analysis" && (analysisContent ? <div className="newBlueprint-ai-content">{analysisContent}</div> : <AnalyticsEmptyState />)}
-          {activeTab === "files" && <FilesView />}
-          {activeTab === "terminal" && (terminalContent ? <div className="newBlueprint-ai-content">{terminalContent}</div> : <EmptyState message={t("terminalNotActivated")} />)}
-          {activeTab === "planner" && <EmptyState message={t("plannerNotActivated")} />}
-          {activeTab === "browser" && <EmptyState message={t("browserNotActivated")} />}
-          {activeTab === "notebook" && <EmptyState message={t("notebookNotActivated")} />}
-        </main>
-      </div>
 
-      {drawerOpen && (
-        <div className="friend-page">
-          <Newblueprint />
-        </div>
+        {page === "Resources" && showProfile && (
+          <ProfilePage />
+        )}
+
+
+        {page === "My Projects" && !showProfile && (
+          <Projects
+            conversations={conversations}
+            onConversation={openConversation}
+            setShowProfile={setShowProfile}
+          />
+        )}
+
+
+        {page === "My Projects" && showProfile && (
+          <ProfilePage />
+        )}
+
+       
+
+      </main>
+
+
+      {settings && (
+        <SettingsModal
+          tab={settings}
+          onTab={setSettings}
+          onClose={() => setSettings(null)}
+        />
       )}
+
     </div>
   );
 }
+
+
+
+function Sidebar({
+  
+  page,
+  onPage,
+  onNewChat,
+  onCollapse,
+  workspaceOpen,
+  onWorkspace,
+  profileOpen,
+  onProfile,
+  onSettings,
+  conversations,
+  activeConversationId,
+  onConversation,
+  notifications,
+
+  onLogout,
+})  {
+
+const nav = [
+  ["Home", FiHome],
+  ["Resources", FiCompass],
+  ["My Projects", FiFolder],
+  ["fullpage", FiPlus],
+];
+
+ 
+
+
+  return (
+
+    <aside className="blueprint-app-sidebar">
+
+
+      <div className="blueprint-brand">
+
+
+        <button
+          className="new-chat-brand"
+          onClick={onNewChat}
+          title="New chat"
+        >
+
+          <span className="blueprint-atoms-symbol">
+
+            <i />
+            <i />
+            <i />
+
+          </span>
+
+          <b>Atoms</b>
+
+        </button>
+
+
+        <button
+          onClick={onCollapse}
+          aria-label="Collapse sidebar"
+        >
+          <FiMenu />
+        </button>
+
+
+      </div>
+
+
+
+      <button
+        className="blueprint-workspace-switch"
+        onClick={onWorkspace}
+      >
+
+        <b>S</b>
+
+        <span>
+          saswe eng's Atoms
+        </span>
+
+        <FiChevronDown />
+
+      </button>
+
+
+
+
+      {workspaceOpen && (
+
+        <div className="blueprint-workspace-popover">
+
+
+          <div className="blueprint-workspace-head">
+
+            <b>S</b>
+
+
+            <span>
+
+              <strong>
+                saswe eng's Atoms
+              </strong>
+
+              <small>
+                Free plan
+              </small>
+
+            </span>
+
+
+          </div>
+
+
+
+          <div className="blueprint-credit-line">
+
+            Credits remaining
+
+            <a>
+              Upgrade
+            </a>
+
+          </div>
+
+
+
+          <div className="blueprint-credit-bar">
+
+            <i />
+
+          </div>
+
+
+
+          <small className="blueprint-credit-left">
+            15 left
+          </small>
+
+
+
+          <small>
+            All workspaces
+          </small>
+
+
+
+          <div className="blueprint-workspace-row">
+
+
+            <b>S</b>
+
+
+            saswe eng's Atoms
+
+
+            <FiChevronRight />
+
+
+          </div>
+
+
+        </div>
+
+      )}
+
+
+
+
+
+
+      <nav>
+
+        {nav.map(([name,Icon])=>(
+
+          <button
+
+            key={name}
+
+            className={
+              page===name
+              ?
+              "selected"
+              :
+              ""
+            }
+
+
+            onClick={()=>
+              onPage(name)
+            }
+
+          >
+
+            <Icon />
+
+            <span>
+              {name}
+            </span>
+
+
+          </button>
+
+
+        ))}
+
+
+      </nav>
+
+
+
+
+
+      <small className="blueprint-recents-label">
+
+        Recents
+
+      </small>
+
+
+
+
+      <div className="blueprint-recents">
+
+
+        {conversations.length===0 ? (
+
+          <small className="empty-recents">
+
+            Your chats will appear here
+
+          </small>
+
+
+        )
+
+        :
+
+        (
+
+          conversations.map(conversation=>(
+
+
+            <button
+
+              key={conversation.id}
+
+              className={
+                conversation.id===activeConversationId
+                ?
+                "active-chat"
+                :
+                ""
+              }
+
+
+              onClick={()=>
+                onConversation(conversation.id)
+              }
+
+            >
+
+              {conversation.title}
+
+
+            </button>
+
+
+          ))
+
+
+        )}
+
+
+      </div>
+
+
+
+
+
+      <div className="blueprint-sidebar-bottom">
+
+
+        <aside>
+
+          <FiUsers />
+
+
+          <span>
+
+            <b>
+              Join our Community
+            </b>
+
+            <small>
+              Earn up to 25 credits
+            </small>
+
+
+          </span>
+
+
+          <FiChevronRight />
+
+
+        </aside>
+
+
+
+
+        <aside>
+
+          <FiGift />
+
+
+          <span>
+
+            <b>
+              Get Free Credits
+            </b>
+
+            <small>
+              Get 10 credits each
+            </small>
+
+
+          </span>
+
+
+          <FiChevronRight />
+
+
+        </aside>
+
+
+      </div>
+           <footer>
+
+    <button
+        className="blueprint-avatar"
+        onClick={onProfile}
+    >
+        S
+    </button>
+
+    <span>
+
+       <button
+    className="blueprint-sidebar-icon-btn"
+    onClick={() => {
+        alert(`You have ${notifications.length} notifications`);
+    }}
+>
+    <FiBell />
+</button>
+
+        
+
+    </span>
+
+</footer>
+
+
+
+
+
+      {profileOpen && (
+
+        <div className="blueprint-profile-popover">
+
+
+          <header>
+
+            <b>
+              S
+            </b>
+
+
+            <span>
+
+              <strong>
+                saswe eng
+              </strong>
+
+
+              <small>
+                engsaswe@gmail.com
+              </small>
+
+
+            </span>
+
+
+          </header>
+
+
+
+         <button onClick={() => onSettings("General")}>
+    <FiSettings />
+    <span>Settings</span>
+    <FiChevronRight />
+</button>
+
+
+          <button onClick={() => onSettings("Plans and credits")}>
+    <FiPackage />
+    <span>Plans</span>
+    <FiChevronRight />
+</button>
+
+
+
+
+         <button onClick={() => onSettings("Account")}>
+    <FiUser />
+    <span>Profile</span>
+    <FiChevronRight />
+</button>
+
+
+
+
+
+         <button>
+    <FiGift />
+    <span>Redemption</span>
+    <FiChevronRight />
+</button>
+
+
+
+
+          <button
+            onClick={() =>
+              onSettings("Preference")
+            }
+          >
+
+            <FiSliders />
+
+            Appearance
+
+            <FiChevronRight />
+
+          </button>
+
+
+
+
+
+          <button>
+
+            ⓘ Help Center
+
+          </button>
+
+
+
+
+
+          <button onClick={() => onPage("Home")}>
+  <FiHome />
+  <span>Homepage</span>
+</button>
+
+<button
+  className="signout"
+  onClick={() => {
+    console.log("clicked");
+    onLogout();
+  }}
+>
+  <FiLogOut />
+  <span>Sign out</span>
+</button>
+
+        </div>
+
+      )}
+
+
+    </aside>
+
+  );
+
+}
+
+
+
+
+
+function Home({
+  prompt,
+  setPrompt,
+  messages,
+  typing,
+  onSend,
+}) {
+  
+const [listening, setListening] = useState(false);
+const [showThemeMenu, setShowThemeMenu] = useState(false);
+const [showPlusMenu, setShowPlusMenu] = useState(false);
+const [theme, setTheme] = useState("Light");
+  const [hoveredAgent,setHoveredAgent] =
+    useState(null);
+
+
+
+  const agents = [
+
+    "Alex is a Product Manager",
+    "Emma is a UI Designer",
+    "Noah is a Backend Developer",
+    "Luna is a QA Engineer",
+    "David is a Data Analyst",
+    "Mia is an AI Engineer",
+    "Leo is a Marketing Expert",
+
+  ];
+
+
+
+const startVoice = () => {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Speech Recognition is not supported.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+
+  recognition.start();
+
+  setListening(true);
+
+  recognition.onresult = (e) => {
+    setPrompt(e.results[0][0].transcript);
+  };
+
+  recognition.onend = () => {
+    setListening(false);
+  };
+};
+  return (
+
+    <div className="blueprint-home-page">
+
+
+
+      <div className="blueprint-top-credit">
+
+        Free plan ·
+
+        <a>
+          Upgrade
+        </a>
+
+      </div>
+
+
+
+
+
+      <div
+        className="blueprint-team-orbs"
+        aria-label="Atoms team"
+      >
+
+
+        {Array.from(
+          {length:7},
+          (_,index)=>(
+
+
+          <div
+            key={index}
+            className="avatar-wrapper"
+
+            onMouseEnter={() =>
+              setHoveredAgent(index)
+            }
+
+            onMouseLeave={() =>
+              setHoveredAgent(null)
+            }
+
+          >
+
+
+
+            {hoveredAgent===index && (
+
+              <div className="blueprint-agent-tooltip">
+
+                {agents[index]}
+
+              </div>
+
+            )}
+
+
+
+
+
+            <i
+
+              className={
+                `blueprint-team-avatar avatar-${index+1}`
+              }
+
+
+              style={{
+  backgroundImage: `url(${avatars[index]})`
+}}
+            />
+
+
+          </div>
+
+
+        ))}
+
+
+
+      </div>
+
+
+
+
+
+      <h1>
+
+        Your next product starts here, saswe eng.
+
+      </h1>
+
+
+
+
+
+
+      {messages.length>0 && (
+
+        <div className="blueprint-sent-messages">
+
+
+          {messages.map(message=>(
+
+
+            <p
+              key={message.id}
+              className={message.type}
+            >
+
+              {message.type==="assistant" &&
+                <b>
+                  Alex
+                </b>
+              }
+
+
+              {message.text}
+
+
+            </p>
+
+
+          ))}
+
+
+
+
+
+
+          {typing && (
+
+            <p className="assistant typing-message">
+
+              <b>
+                Alex
+              </b>
+
+
+              <i />
+              <i />
+              <i />
+
+
+            </p>
+
+          )}
+
+
+
+        </div>
+
+      )}
+
+
+
+
+
+
+      <div className="blueprint-home-prompt">
+
+
+        <input
+
+          value={prompt}
+
+          onChange={(event)=>
+            setPrompt(event.target.value)
+          }
+
+
+          onKeyDown={(event)=>
+            event.key==="Enter" && onSend()
+          }
+
+
+          placeholder=
+          "Ask the team to bring your idea to life"
+
+        />
+
+
+
+
+
+        <footer>
+
+<div className="prompt-action">
+
+<button
+  onClick={() => {
+    setShowPlusMenu(!showPlusMenu);
+    setShowThemeMenu(false);
+  }}
+>
+  <FiPlus />
+</button>
+
+
+{showPlusMenu && (
+  <div className="blueprint-plus-menu">
+
+    <button>
+      Upload file
+    </button>
+
+    <button>
+      Add image
+    </button>
+
+    <button>
+      Connect tools
+    </button>
+
+  </div>
+)}
+
+</div>
+
+
+
+<div className="prompt-action">
+
+<button
+  onClick={() => {
+    setShowThemeMenu(!showThemeMenu);
+    setShowPlusMenu(false);
+  }}
+>
+  {theme}
+  <FiChevronDown />
+</button>
+
+
+{showThemeMenu && (
+  <div className="blueprint-theme-menu">
+
+    <button onClick={() => setTheme("System")}>
+      System
+    </button>
+
+    <button onClick={() => setTheme("Light")}>
+      Light
+    </button>
+
+    <button onClick={() => setTheme("Dark")}>
+      Dark
+    </button>
+
+  </div>
+)}
+
+</div>
+
+
+
+
+          <span />
+
+
+
+
+
+          <button>
+
+            Build
+
+            <FiChevronDown />
+
+          </button>
+
+
+
+
+
+         <button
+    onClick={startVoice}
+    className={listening ? "recording" : ""}
+>
+    <FiMic />
+</button>
+
+
+
+
+
+          <button
+
+            className="go"
+
+            onClick={onSend}
+
+          >
+
+            ↑
+
+          </button>
+
+
+
+        </footer>
+
+
+
+
+
+
+        <aside>
+
+
+          <FiZap />
+
+
+          Connect your tools to Atoms
+
+
+          <span />
+
+          <b>
+            ● ● ● ●
+          </b>
+
+
+          <FiX />
+
+
+        </aside>
+
+
+
+      </div>
+
+
+
+    </div>
+
+  );
+
+}
+function Resources({
+  resourceTab,
+  setResourceTab,
+  
+  resourceFilter,
+  setResourceFilter
+}) {
+
+
+  const templates = [
+    ["Landing Page Template", "Atoms · ◉ 3K", "purple"],
+    ["Dashboard Template", "Atoms · ◉ 5K", "dark"],
+    ["AI Website Template", "Atoms · ◉ 2K", "green"],
+  ];
+
+
+  return (
+
+    <section className="blueprint-catalog">
+
+
+      <header>
+
+        <h2>
+          Resources
+        </h2>
+
+
+        
+      </header>
+
+
+
+
+
+      <div className="blueprint-tabs">
+
+
+        <button
+          className={
+            resourceTab==="Discover"
+            ?
+            "active"
+            :
+            ""
+          }
+
+          onClick={() =>
+            setResourceTab("Discover")
+          }
+
+        >
+          Discover
+        </button>
+
+
+
+
+        <button
+
+          className={
+            resourceTab==="Templates"
+            ?
+            "active"
+            :
+            ""
+          }
+
+          onClick={() =>
+            setResourceTab("Templates")
+          }
+
+        >
+
+          Templates
+
+        </button>
+
+
+      </div>
+
+
+
+
+
+      <div className="blueprint-filters">
+
+
+        {[
+          "All",
+          "E-commerce",
+          "Website",
+          "Game",
+          "Productivity",
+          "Data Analysis",
+          "Latest",
+        ].map((x)=>(
+
+
+          <button
+
+            key={x}
+
+            className={
+              resourceFilter===x
+              ?
+              "filter-active"
+              :
+              ""
+            }
+
+
+            onClick={() =>
+              setResourceFilter(x)
+            }
+
+          >
+
+            {x}
+
+          </button>
+
+
+        ))}
+
+
+      </div>
+
+
+
+
+
+
+      <div className="blueprint-resource-grid">
+
+
+        {(resourceTab==="Discover"
+          ?
+          resources
+          :
+          templates
+        )
+
+        .filter(item =>
+          resourceFilter==="All" ||
+          item[3]===resourceFilter
+        )
+
+        .map(([title,meta,tone],index)=>(
+
+
+          <article key={title}>
+
+
+            <div
+              className={`blueprint-resource-image ${tone}`}
+            >
+
+              <span>
+
+                {
+                  index % 2
+                  ?
+                  "حول أفكارك إلى فيديوهات احترافية"
+                  :
+                  "Trading Dashboard"
+                }
+
+              </span>
+
+
+            </div>
+
+
+
+
+            <footer>
+
+
+              <b className="blueprint-resource-avatar">
+
+                {title[0]}
+
+              </b>
+
+
+
+              <div>
+
+                <strong>
+                  {title}
+                </strong>
+
+
+                <small>
+                  {meta}
+                </small>
+
+
+              </div>
+
+
+            </footer>
+
+
+          </article>
+
+
+        ))}
+
+
+      </div>
+
+
+
+    </section>
+
+
+  );
+
+}
+
+
+
+
+
+
+function ProfilePage(){
+
+
+return (
+
+<section className="blueprint-profile-page">
+
+
+<div className="blueprint-profile-cover" />
+
+
+<div className="blueprint-profile-avatar">
+
+S
+
+</div>
+
+
+
+<button className="blueprint-edit-profile">
+
+Edit profile
+
+</button>
+
+
+
+
+<h1>
+saswe eng
+</h1>
+
+
+
+<p>
+0 saves | 0 views
+</p>
+
+
+
+
+<div className="blueprint-profile-tabs">
+
+
+<b>
+Public Projects
+</b>
+
+
+
+<span>
+Saved
+</span>
+
+
+</div>
+
+
+
+
+<h3>
+Other Projects
+</h3>
+
+
+
+<div className="blueprint-profile-projects">
+
+</div>
+
+
+</section>
+
+);
+
+
+}
+
+
+
+
+
+
+function Projects({
+  conversations,
+  onConversation,
+}) {
+
+
+return (
+
+<section className="blueprint-catalog blueprint-projects">
+
+
+<header>
+
+<h2>
+My Projects
+</h2>
+
+
+
+
+
+
+</header>
+
+
+
+
+<div className="blueprint-filters blueprint-project-filter">
+
+<span>
+Starred
+</span>
+
+</div>
+
+
+
+
+
+{
+conversations.length===0
+
+?
+
+<p className="no-projects">
+
+Start a new chat from the Atoms button to create your first project.
+
+</p>
+
+
+:
+
+<div className="blueprint-project-grid">
+
+
+{conversations.map(conversation=>(
+
+
+<article
+
+key={conversation.id}
+
+onClick={() =>
+onConversation(conversation.id)
+}
+
+>
+
+
+
+<div className="blueprint-empty-project">
+
+
+<span className="blueprint-project-logo">
+
+<i/>
+<i/>
+<i/>
+
+</span>
+
+
+</div>
+
+
+
+
+<footer>
+
+
+<div>
+
+<strong>
+{conversation.title}
+</strong>
+
+
+<small>
+
+{conversation.createdAt || "2026/07/26"}
+
+</small>
+
+
+</div>
+
+
+
+
+<FiMoreHorizontal />
+
+
+</footer>
+
+
+
+</article>
+
+
+))}
+
+
+
+</div>
+
+
+}
+
+
+
+</section>
+
+);
+
+
+}
+function SettingsModal({ tab, onTab, onClose }) {
+
+  const tabs = [
+    ["Domains", FiGlobe],
+    ["People", FiUsers],
+    ["General", FiSliders],
+    ["Connectors", FiZap],
+    ["Plans and credits", FiPackage],
+    ["Cloud & AI", FiGrid],
+    ["Account", FiUser],
+    ["Preference", FiSliders],
+  ];
+
+
+  return (
+
+    <div className="blueprint-modal-backdrop">
+
+      <section className="blueprint-settings-modal">
+
+
+        <aside>
+
+          <b>
+            Settings
+          </b>
+
+
+          <small>
+            Project
+          </small>
+
+
+          {tabs.slice(0,1).map(([n,I])=>(
+
+            <Tab
+              key={n}
+              n={n}
+              I={I}
+              tab={tab}
+              onTab={onTab}
+            />
+
+          ))}
+
+
+
+
+          <small>
+            Workspace
+          </small>
+
+
+          {tabs.slice(1,6).map(([n,I])=>(
+
+            <Tab
+              key={n}
+              n={n}
+              I={I}
+              tab={tab}
+              onTab={onTab}
+            />
+
+          ))}
+
+
+
+
+          <small>
+            Account
+          </small>
+
+
+          {tabs.slice(6).map(([n,I])=>(
+
+            <Tab
+              key={n}
+              n={n}
+              I={I}
+              tab={tab}
+              onTab={onTab}
+            />
+
+          ))}
+
+
+        </aside>
+
+
+
+
+
+        <main>
+
+
+          <button
+            className="blueprint-modal-close"
+            onClick={onClose}
+          >
+
+            <FiX />
+
+          </button>
+
+
+
+          <SettingsContent tab={tab}/>
+
+
+        </main>
+
+
+      </section>
+
+
+    </div>
+
+  );
+
+}
+
+
+
+
+
+
+function Tab({n,I,tab,onTab}){
+
+return (
+
+<button
+
+className={
+  tab===n
+  ?
+  "active"
+  :
+  ""
+}
+
+onClick={() =>
+  onTab(n)
+}
+
+>
+
+<I/>
+
+{n}
+
+
+{n==="Cloud & AI" &&
+
+<em>
+✦ Free
+</em>
+
+}
+
+
+</button>
+
+
+);
+
+}
+
+
+
+
+
+
+
+function SettingsContent({tab}){
+
+
+if(tab==="People")
+
+return (
+
+<>
+
+<h2>
+People <em>Free</em>
+</h2>
+
+
+
+<div className="blueprint-settings-card">
+
+
+<h3>
+Invite workspace members
+</h3>
+
+
+<p>
+Upgrade to invite members and collaborate on all projects.
+</p>
+
+
+
+<div className="blueprint-invite">
+
+
+<input placeholder="Add emails"/>
+
+
+<button>
+Upgrade to invite members
+</button>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div className="blueprint-members">
+
+
+<header>
+
+User
+
+<span>
+Role
+</span>
+
+<span>
+Status
+</span>
+
+<span>
+Total Usage
+</span>
+
+<span>
+Date Joined
+</span>
+
+
+</header>
+
+
+
+
+<p>
+
+<b>
+S
+</b>
+
+saswe eng (you)
+
+
+<span>
+Owner
+</span>
+
+
+<span className="blueprint-active-badge">
+Active
+</span>
+
+
+<span>
+6.51 credits
+</span>
+
+
+<span>
+Jul 26, 2026
+</span>
+
+
+</p>
+
+
+</div>
+
+
+</>
+);
+
+
+
+
+
+
+
+if(tab==="Connectors")
+
+return (
+
+<>
+
+<h2>
+Connectors
+</h2>
+
+
+
+<div className="blueprint-connector-list">
+
+
+{
+
+[
+"GitHub",
+"Supabase",
+"Stripe",
+"Google Analytics 4",
+"Google Search Console",
+"Google Ads",
+]
+
+.map(n=>(
+
+
+<div key={n}>
+
+
+<b>
+
+<FiCode/>
+
+{n}
+
+
+<small>
+Connect {n} to manage your services and project data.
+</small>
+
+
+</b>
+
+
+
+<button>
+Connect
+</button>
+
+
+</div>
+
+
+))
+
+
+}
+
+
+
+</div>
+
+
+</>
+
+);
+
+
+
+
+
+
+
+
+if(tab==="Plans and credits")
+
+return (
+
+<>
+
+
+<h2>
+Plans and credits <em>Free</em>
+</h2>
+
+
+
+<div className="blueprint-credits-card">
+
+
+<b>
+Credits remaining
+</b>
+
+
+<strong>
+15 / 15
+</strong>
+
+
+
+<i>
+<span/>
+</i>
+
+
+<small>
+• 15 daily credits reset on Jul 28
+</small>
+
+
+</div>
+
+
+
+
+
+<div className="blueprint-plan-tabs">
+
+Plan Payment
+
+</div>
+
+
+
+
+
+<div className="blueprint-plans">
+
+
+{
+
+[
+["Free","$0"],
+["Pro","$15.8"],
+["Max","$79"],
+]
+
+.map(([n,p])=>(
+
+
+<article key={n}>
+
+
+<h2>
+{n}
+</h2>
+
+
+<strong>
+
+{p}
+
+<small>
+/ month
+</small>
+
+</strong>
+
+
+
+<p>
+Unlock more features
+</p>
+
+
+</article>
+
+
+))
+
+
+}
+
+
+</div>
+
+
+</>
+
+);
+
+
+
+
+
+
+
+
+if(tab==="Preference")
+
+return (
+
+<>
+
+
+<h2>
+Preference
+</h2>
+
+
+
+<h3>
+Language
+</h3>
+
+
+<p>
+Change the language used in the user interface.
+</p>
+
+
+
+<hr/>
+
+
+
+<h3>
+Theme
+</h3>
+
+
+<p>
+Customize how Atoms looks on your device.
+</p>
+
+
+
+<div className="blueprint-themes">
+
+
+<b>
+System
+</b>
+
+
+<b className="chosen">
+Light
+</b>
+
+
+<b>
+Dark
+</b>
+
+
+</div>
+
+
+
+</>
+
+);
+
+
+
+
+
+
+
+
+if(tab==="Domains")
+
+return (
+
+<>
+
+
+<h2>
+Domains ⓘ
+</h2>
+
+
+
+<h3>
+Connected Domains
+</h3>
+
+
+<p>
+Manage your connected domains
+</p>
+
+
+
+
+<div className="blueprint-notice">
+
+
+The project hasn't been published yet
+
+
+<button>
+Publish
+</button>
+
+
+</div>
+
+
+
+
+
+<div className="blueprint-domain-row">
+
+
+<FiGlobe/>
+
+
+
+<span>
+
+<b>
+Connect Existing Domain
+</b>
+
+
+<small>
+Upgrade your subscription
+</small>
+
+
+</span>
+
+
+
+
+<button>
+Connect domain
+</button>
+
+
+
+</div>
+
+
+</>
+
+);
+
+
+
+
+
+
+
+if(tab==="Account")
+
+return (
+
+<>
+
+
+<h2>
+Account Settings
+</h2>
+
+
+
+<div className="blueprint-account-row">
+
+Avatar
+
+<b>
+S
+</b>
+
+
+</div>
+
+
+
+
+<div className="blueprint-account-row">
+
+Username
+
+<span>
+saswe eng✎
+</span>
+
+
+</div>
+
+
+
+
+<div className="blueprint-account-row">
+
+Email
+
+<span>
+engsaswe@gmail.com
+</span>
+
+
+</div>
+
+
+</>
+
+);
+
+
+
+
+
+
+
+if(tab==="Cloud & AI")
+
+return (
+
+<>
+
+
+<h2>
+Cloud & AI
+</h2>
+
+
+
+<div className="blueprint-warning">
+
+ⓘ Your Cloud & AI Balance is crucial for keeping your published projects running.
+
+</div>
+
+
+
+
+
+<div className="blueprint-cloud-cards">
+
+
+<article>
+
+<h3>
+◕ Cloud & AI
+</h3>
+
+
+<strong>
+$0.00
+</strong>
+
+
+<button>
+Upgrade
+</button>
+
+
+</article>
+
+
+
+
+
+<article>
+
+<h3>
+Cloud $25.00 / $25.00
+</h3>
+
+
+<hr/>
+
+
+<h3>
+AI $1.00 / $1.00
+</h3>
+
+
+</article>
+
+
+</div>
+
+
+</>
+
+);
+
+
+
+
+
+
+
+return (
+
+<>
+
+
+<h2>
+General
+</h2>
+
+
+
+<h3>
+Default Model
+</h3>
+
+
+
+<div className="blueprint-setting-line">
+
+Model
+
+<span>
+Claude Opus 4.7⌄
+</span>
+
+
+</div>
+
+
+
+
+<h3>
+Permissions
+</h3>
+
+
+
+<div className="blueprint-setting-line">
+
+Set Default Access for Projects
+
+
+<span>
+◎ Public⌄
+</span>
+
+
+</div>
+
+
+
+
+<h3>
+Credit Balance Reminder
+</h3>
+
+
+
+<div className="blueprint-setting-line">
+
+Show remaining credits
+
+
+<i className="blueprint-toggle"/>
+
+
+</div>
+
+
+</>
+
+);
+
+
+}
+
+
+export default AtomsApp;  
