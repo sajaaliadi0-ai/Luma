@@ -1,7 +1,6 @@
 import "../css/workspace.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from "../i18n";
 import {
   
   FiSearch,
@@ -15,60 +14,58 @@ import {
 
 const projects = [
   {
-    title: "clinicAppointmentSystem",
+    title: "Clinic Appointment System",
     status: "Generating",
     color: "purple",
     type: "Web App",
     level: "Complex",
-    footer: "clinicFooter",
+    footer: "7 / 11 agents",
     avatars: true
   },
   {
-    title: "campusFoodDelivery",
+    title: "Campus Food Delivery",
     status: "Completed",
     color: "green",
     type: "Mobile App",
     level: "Medium",
-    footer: "campusFooter"
+    footer: "11 sections · updated 2h ago"
   },
   {
-    title: "freelancerInvoicingTool",
+    title: "Freelancer Invoicing Tool",
     status: "In review",
     color: "orange",
     type: "API Service",
     level: "Medium",
-    footer: "freelancerFooter"
+    footer: "3 open reviews · updated 6h ago"
   },
   {
-    title: "fitnessHabitTracker",
+    title: "Fitness Habit Tracker",
     status: "Draft",
     color: "gray",
     type: "Mobile App",
     level: "Simple",
-    footer: "fitnessFooter"
+    footer: "Draft · edited yesterday"
   },
   {
-    title: "smartParkingPlatform",
+    title: "Smart Parking Platform",
     status: "Failed",
     color: "red",
     type: "Platform",
     level: "Complex",
-    footer: "parkingFooter"
+    footer: "Fetching failed · retry available"
   },
   {
-    title: "onlineBookstore",
+    title: "Online Bookstore",
     status: "Completed",
     color: "green",
     type: "Web App",
     level: "Medium",
-    footer: "bookstoreFooter"
+    footer: "10 sections · updated 5 days ago"
   }
 ];
 
-
 function Workspace() {
 
-  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
   const [sort, setSort] = useState("A-Z");
@@ -126,11 +123,11 @@ const toggleTheme = () => {
 
   const [showNotifications, setShowNotifications] = useState(false);
 
- const notifications = [
-  t("workspaceNotification1"),
-  t("workspaceNotification2"),
-  t("workspaceNotification3")
-];
+  const notifications = [
+    "Blueprint generated successfully",
+    "Campus Food Delivery updated",
+    "New AI suggestion available"
+  ];
 
   return (
 
@@ -150,7 +147,7 @@ const toggleTheme = () => {
 
             <input
               type="text"
-              placeholder={t("workspaceSearchPlaceholder")}
+              placeholder="Search blueprints..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -215,13 +212,13 @@ const toggleTheme = () => {
 
           <div>
 
-           <h1 className="workspace-title">
-  {t("workspaceTitle")}
-</h1>
+            <h1 className="workspace-title">
+              Workspace
+            </h1>
 
-<p className="workspace-subtitle">
-  {t("workspaceSubtitle")}
-</p>
+            <p className="workspace-subtitle">
+              6 blueprints · your engineering company is ready
+            </p>
 
           </div>
 
@@ -241,13 +238,17 @@ const toggleTheme = () => {
 
             <div>
 
-             <h2>
-  {t("workspaceHi")}
-</h2>
+              <h2>
+                Hi, I'm Luma! 👋
+              </h2>
 
-<p>
-  {t("workspaceHeroText")}
-</p>
+              <p>
+                I can help you create software blueprints,
+                design scalable systems, optimize workflows
+                and generate complete project architecture
+                within minutes.
+              </p>
+
             </div>
 
           </div>
@@ -256,10 +257,10 @@ const toggleTheme = () => {
 
             <button
               className="workspace-btn"
-              onClick={() => navigate("/new-blueprint")}
+              onClick={() => navigate("/fullpage")}
             >
               <FiPlus />
-              <span>{t("workspaceNewBlueprint")}</span>
+              <span>New Blueprint</span>
             </button>
 
             <select
@@ -268,11 +269,11 @@ const toggleTheme = () => {
               onChange={(e) => setSort(e.target.value)}
             >
               <option value="A-Z">
-                {t("workspaceSortAZ")}
+                A → Z
               </option>
 
               <option value="Z-A">
-                {t("workspaceSortZA")}
+                Z → A
               </option>
             </select>
 
@@ -288,42 +289,42 @@ const toggleTheme = () => {
             className={`workspace-filter-btn ${filter === "All" ? "active" : ""}`}
             onClick={() => setFilter("All")}
           >
-            {t("workspaceFilterAll")}
+            All
           </button>
 
           <button
             className={`workspace-filter-btn ${filter === "Draft" ? "active" : ""}`}
             onClick={() => setFilter("Draft")}
           >
-            {t("workspaceFilterDraft")}
+            Draft
           </button>
 
           <button
             className={`workspace-filter-btn ${filter === "Generating" ? "active" : ""}`}
             onClick={() => setFilter("Generating")}
           >
-            {t("workspaceFilterGenerating")}
+            Generating
           </button>
 
           <button
             className={`workspace-filter-btn ${filter === "In review" ? "active" : ""}`}
             onClick={() => setFilter("In review")}
           >
-            {t("workspaceFilterInReview")}
+            In review
           </button>
 
           <button
             className={`workspace-filter-btn ${filter === "Completed" ? "active" : ""}`}
             onClick={() => setFilter("Completed")}
           >
-            {t("workspaceFilterCompleted")}
+            Completed
           </button>
 
           <button
             className={`workspace-filter-btn ${filter === "Failed" ? "active" : ""}`}
             onClick={() => setFilter("Failed")}
           >
-            {t("workspaceFilterFailed")}
+            Failed
           </button>
 
         </div>
@@ -344,15 +345,7 @@ const toggleTheme = () => {
                 <span
                   className={`workspace-badge workspace-${item.color}`}
                 >
-                  {(() => {
-                    const s = item.status;
-                    if (s === "Generating") return t("statusGenerating");
-                    if (s === "Completed") return t("statusCompleted");
-                    if (s === "In review") return t("statusInReview");
-                    if (s === "Draft") return t("statusDraft");
-                    if (s === "Failed") return t("statusFailed");
-                    return s;
-                  })()}
+                  {item.status}
                 </span>
 
                 <button className="workspace-more">
@@ -361,31 +354,18 @@ const toggleTheme = () => {
 
               </div>
 
-             <h3 className="workspace-card-title">
- {t(item.title)}
-</h3>
+              <h3 className="workspace-card-title">
+                {item.title}
+              </h3>
 
               <div className="workspace-tags">
 
                 <span className="workspace-tag">
-                  {(() => {
-                    const ty = item.type;
-                    if (ty === "Web App") return t("typeWebApp");
-                    if (ty === "Mobile App") return t("typeMobileApp");
-                    if (ty === "API Service") return t("typeApiService");
-                    if (ty === "Platform") return t("typePlatform");
-                    return ty;
-                  })()}
+                  {item.type}
                 </span>
 
                 <span className="workspace-tag">
-                  {(() => {
-                    const lv = item.level;
-                    if (lv === "Complex") return t("levelComplex");
-                    if (lv === "Medium") return t("levelMedium");
-                    if (lv === "Simple") return t("levelSimple");
-                    return lv;
-                  })()}
+                  {item.level}
                 </span>
 
               </div>
@@ -414,13 +394,13 @@ const toggleTheme = () => {
 
               <div className="workspace-footer">
 
-             <span>
-  {t(item.footer)}
-</span>
+                <span>
+                  {item.footer}
+                </span>
 
-              <button className="workspace-open">
-  {t("workspaceOpen")}
-</button>
+                <button className="workspace-open">
+                  Open →
+                </button>
 
               </div>
 
