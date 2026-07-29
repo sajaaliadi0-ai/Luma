@@ -1,70 +1,75 @@
 import "../css/landing-page.css";
 import { useNavigate } from "react-router-dom";
-
-const steps = [
-  {
-    number: "1",
-    title: "Describe the idea",
-    text: "Write your idea in plain language, pick a project type, complexity, and output language.",
-  },
-  {
-    number: "2",
-    title: "The Council engineers it",
-    text: "Eleven agents run a structured pipeline in real time, debate, and resolve conflicts.",
-  },
-  {
-    number: "3",
-    title: "Download the Blueprint",
-    text: "Read, refine, and export a complete engineering document as PDF or Markdown.",
-  }
-];
-
-const blueprintCards = [
-  {
-    icon: "▣",
-    title: "Requirements",
-    text: "Numbered FR & NFR with acceptance criteria and use cases."
-  },
-  {
-    icon: "⌘",
-    title: "Architecture",
-    text: "Layered system architecture with clear module boundaries."
-  },
-  {
-    icon: "◉",
-    title: "Database",
-    text: "Entities, ERD and a normalized SQL schema with indexes."
-  },
-  {
-    icon: "⚡",
-    title: "API",
-    text: "REST endpoints with authentication, pagination, and error semantics."
-  },
-  {
-    icon: "▤",
-    title: "UX/UI",
-    text: "User flows, wireframes and a full design system."
-  },
-  {
-    icon: "🔒",
-    title: "Security",
-    text: "Threat model, controls, and a security analysis"
-  },
-  {
-    icon: "✓",
-    title: "Testing",
-    text: "A test plan with concrete, traceable test cases."
-  },
-  {
-    icon: "◌",
-    title: "DevOps",
-    text: "CI/CD pipeline and a deployment strategy."
-  }
-];
+import { useTranslation } from "../i18n";
 
 function Landpage({ dark, setDark }) {
-
   const navigate = useNavigate();
+  const { t, language, setLanguage } = useTranslation();
+
+  const steps = [
+    {
+      number: "1",
+      title: t("step1Title"),
+      text: t("step1Text"),
+    },
+    {
+      number: "2",
+      title: t("step2Title"),
+      text: t("step2Text"),
+    },
+    {
+      number: "3",
+      title: t("step3Title"),
+      text: t("step3Text"),
+    }
+  ];
+
+  const blueprintCards = [
+    {
+      icon: "▣",
+      title: t("requirementsTitle"),
+      text: t("requirementsText")
+    },
+    {
+      icon: "⌘",
+      title: t("architectureTitle"),
+      text: t("architectureText")
+    },
+    {
+      icon: "◉",
+      title: t("databaseTitle"),
+      text: t("databaseText")
+    },
+    {
+      icon: "⚡",
+      title: t("apiTitle"),
+      text: t("apiText")
+    },
+    {
+      icon: "▤",
+      title: t("uxTitle"),
+      text: t("uxText")
+    },
+    {
+      icon: "🔒",
+      title: t("securityTitle"),
+      text: t("securityText")
+    },
+    {
+      icon: "✓",
+      title: t("testingTitle"),
+      text: t("testingText")
+    },
+    {
+      icon: "◌",
+      title: t("devopsTitle"),
+      text: t("devopsText")
+    }
+  ];
+
+  const toggleLanguage = () => {
+    setLanguage(language === "en" ? "ar" : "en");
+  };
 
   return (
 
@@ -80,11 +85,11 @@ function Landpage({ dark, setDark }) {
         </div>
 
         <nav className="nav-links">
-          <a href="#hero">Product</a>
-          <a href="#council">The Council</a>
-          <a href="#how">How it works</a>
-          <a href="#output">Output</a>
-          <a href="#pricing">Pricing</a>
+          <a href="#hero">{t("productNav")}</a>
+          <a href="#council">{t("councilNav")}</a>
+          <a href="#how">{t("howNav")}</a>
+          <a href="#output">{t("outputNav")}</a>
+          <a href="#pricing">{t("pricingNav")}</a>
         </nav>
 
         <div className="nav-right">
@@ -134,18 +139,22 @@ function Landpage({ dark, setDark }) {
 
           </button>
 
+          <button className="lang-btn" onClick={toggleLanguage}>
+            {t("languageToggle")}
+          </button>
+
           <button
             className="login"
             onClick={() => navigate("/login")}
           >
-            Log in
+            {t("loginButton")}
           </button>
 
           <button
             className="signup"
             onClick={() => navigate("/work")}
           >
-            Start a Blueprint
+            {t("signupButton")}
           </button>
 
         </div>
@@ -156,21 +165,16 @@ function Landpage({ dark, setDark }) {
       <section id="hero" className="hero">
 
         <div className="badge">
-          ● A virtual software engineering company — not a chatbot
+          ● {t("heroBadge")}
         </div>
 
         <h1>
-          From raw idea to complete
+          {t("heroTitle1")}
           <br />
-          software blueprint
+          {t("heroTitle2")}
         </h1>
 
-        <p>
-          Describe your idea in a sentence. A council of eleven
-          specialized AI agents turns it into requirements,
-          architecture, database, API, UI/UX, security, tests and a
-          deployment plan — exportable as PDF or Markdown.
-        </p>
+        <p>{t("heroSubtitle")}</p>
 
         <div className="hero-buttons">
 
@@ -182,7 +186,7 @@ function Landpage({ dark, setDark }) {
                 .scrollIntoView({ behavior: "smooth" })
             }
           >
-            Start a Blueprint →
+            {t("heroPrimary")}
           </button>
 
           <button
@@ -193,7 +197,7 @@ function Landpage({ dark, setDark }) {
                 .scrollIntoView({ behavior: "smooth" })
             }
           >
-            See how the Council works
+            {t("heroSecondary")}
           </button>
 
         </div>
@@ -212,12 +216,12 @@ function Landpage({ dark, setDark }) {
             <span className="dot yellow"></span>
             <span className="dot green"></span>
 
-            <p>Engineering Council Room</p>
+            <p>{t("councilTitle")}</p>
 
           </div>
 
           <div className="progress">
-            ● 7 / 11 agents complete
+            ● {t("councilProgress")}
           </div>
 
         </div>
@@ -228,10 +232,10 @@ function Landpage({ dark, setDark }) {
 
             <div className="avatar">TU</div>
 
-            <div className="info">
-              <h3>Turing</h3>
-              <p>Analysing scope</p>
-            </div>
+              <div className="info">
+                <h3>Turing</h3>
+                <p>{t("agentAnalysingScope")}</p>
+              </div>
 
             <span className="status success"></span>
 
@@ -241,10 +245,10 @@ function Landpage({ dark, setDark }) {
 
             <div className="avatar">LO</div>
 
-            <div className="info">
-              <h3>Lovelace</h3>
-              <p>Drafting FR-001...</p>
-            </div>
+              <div className="info">
+                <h3>Lovelace</h3>
+                <p>{t("agentDraftingFR")}</p>
+              </div>
 
             <span className="status working"></span>
 
@@ -254,10 +258,10 @@ function Landpage({ dark, setDark }) {
 
             <div className="avatar">BR</div>
 
-            <div className="info">
-              <h3>Brooks</h3>
-              <p>Layered architecture</p>
-            </div>
+              <div className="info">
+                <h3>Brooks</h3>
+                <p>{t("agentLayeredArchitecture")}</p>
+              </div>
 
             <span className="status success"></span>
 
@@ -310,12 +314,11 @@ function Landpage({ dark, setDark }) {
       <section id="team" className="team">
 
         <h2 className="team-title">
-          Meet the AI Engineering Council
+          {t("teamTitle")}
         </h2>
 
         <p className="team-subtitle">
-          Eleven specialists named after pioneers of computing. Each owns one
-          discipline, works in order, and reviews the others.
+          {t("teamSubtitle")}
         </p>
 
         <div className="team-grid">
@@ -330,8 +333,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Analyses the idea, plans the pipeline,
-              resolves conflicts and approves.
+              {t("descProjectDirector")}
             </p>
           </div>
 
@@ -345,8 +347,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Stakeholders, value proposition
-              and business rules.
+              {t("descBusinessAnalyst")}
             </p>
           </div>
 
@@ -360,8 +361,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Functional and non-functional
-              requirements and use cases.
+              {t("descRequirementsAnalyst")}
             </p>
           </div>
 
@@ -375,8 +375,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Layered architecture and clear
-              module boundaries.
+              {t("descSystemArchitect")}
             </p>
           </div>
 
@@ -390,8 +389,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Entities, ERD and normalized
-              SQL schema.
+              {t("descDatabaseEngineer")}
             </p>
           </div>
 
@@ -405,8 +403,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              REST endpoints, authentication
-              and error semantics.
+              {t("descApiEngineer")}
             </p>
           </div>
 
@@ -420,7 +417,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              User flows, wireframes and the design system.
+              {t("descUiUxDesigner")}
             </p>
           </div>
 
@@ -434,7 +431,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Threat model and concrete security controls.
+              {t("descSecurityEngineer")}
             </p>
           </div>
 
@@ -448,7 +445,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Test plan with concrete, traceable test cases.
+              {t("descQaEngineer")}
             </p>
           </div>
 
@@ -462,7 +459,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              CI/CD pipeline and deployment strategy.
+              {t("descDevOpsEngineer")}
             </p>
           </div>
 
@@ -476,7 +473,7 @@ function Landpage({ dark, setDark }) {
               </div>
             </div>
             <p>
-              Compiles everything into the final blueprint.
+              {t("descDocumentationAgent")}
             </p>
           </div>
 
@@ -487,9 +484,9 @@ function Landpage({ dark, setDark }) {
 
         <div className="container">
 
-          <h2 className="section-title">
-            How it works
-          </h2>
+         <h2 className="section-title">
+  {t("howNav")}
+</h2>
 
           <div className="steps-container">
 
@@ -520,12 +517,11 @@ function Landpage({ dark, setDark }) {
           <div id="output" className="blueprint">
 
             <h2>
-              One idea in. A complete blueprint out.
+              {t("outputHeading")}
             </h2>
 
             <p className="subtitle">
-              Every blueprint is an SRS/SDD-grade document covering the full
-              analysis and design process.
+              {t("outputSubtitle")}
             </p>
 
             <div className="cards-grid">
@@ -561,17 +557,17 @@ function Landpage({ dark, setDark }) {
       <div id="pricing" className="cta">
 
         <h2>
-          Turn your idea into an engineered system
+          {t("ctaTitle")}
         </h2>
 
         <p>
-          Free while in beta · English & Arabic output · Export as PDF or Markdown
+          {t("ctaText")}
         </p>
 
         <button
           onClick={() => navigate("/work")}
         >
-          Start a Blueprint →
+          {t("ctaButton")}
         </button>
 
       </div>
@@ -599,7 +595,7 @@ function Landpage({ dark, setDark }) {
                 </h3>
 
                 <p>
-                  From raw idea to complete software blueprint.
+                    {t("footerBrandText")}
                 </p>
 
               </div>
@@ -607,7 +603,7 @@ function Landpage({ dark, setDark }) {
             </div>
 
             <small>
-              © 2026 Luma Architect · Graduation Project
+                {t("footerCopyright")}
             </small>
 
           </div>

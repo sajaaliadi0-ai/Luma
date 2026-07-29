@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import api from "../api/api";
+import { useTranslation } from "../i18n";
 
 import "../css/login.css";
 
 function Login() {
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
  const [email, setEmail] = useState(() => {
@@ -34,13 +35,13 @@ return localStorage.getItem("rememberedEmail") !== null;  });
     setSuccess("");
 
    if (email.trim() === "") {
-    setError("Please enter your email.");
+    setError(t("enterEmail"));
     return;
 }
 
     if (password.trim() === "") {
 
-      setError("Please enter your password.");
+      setError(t("enterPassword"));
 
       return;
 
@@ -48,7 +49,7 @@ return localStorage.getItem("rememberedEmail") !== null;  });
 
     if (password.length < 6) {
 
-      setError("Password must be at least 6 characters.");
+      setError(t("passwordMin6"));
 
       return;
 
@@ -88,20 +89,26 @@ const data = response.data;
 
       }
 
-      setSuccess("✅ Login Successful!");
-
+setSuccess(t("loginSuccess"));
       setTimeout(() => {
 
         navigate("/work");
 
       }, 1500);
 
-    } catch (err) {
+ } catch (err) {
 
-setError(
-  err.response?.data?.message ||
-  "Invalid email or password."
-);
+  const message = err.response?.data?.message;
+
+  if (
+    message === "Invalid email or password" ||
+    message === "Invalid credentials"
+  ) {
+    setError(t("invalidCredentials"));
+  } else {
+    setError(message || t("invalidCredentials"));
+  }
+
     } finally {
 
       setLoading(false);
@@ -150,11 +157,11 @@ setError(
           </div>
 
           <h1 className="login-page-title">
-            Welcome
+            {t("loginWelcome")}
           </h1>
 
           <p className="login-page-subtitle">
-            Sign in to your account
+            {t("loginSubtitle")}
           </p>
 
           {error && (
@@ -184,20 +191,19 @@ setError(
 
             <div className="login-page-input-group">
 
-<label htmlFor="email">         Email              </label>
-
+<label htmlFor="email">{t("emailLabel")}</label>
 
               <div className="login-page-input-box">
 
                 <i className="fa-solid fa-user"></i>
- <input
-    type="email"
-    id="email"
-    placeholder="Enter your email"
-    value={email}
-    onChange={(e) => setEmail(e.target.value)}
-    required
-/>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder={t("emailPlaceholder")}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
 
 
 
@@ -209,7 +215,7 @@ setError(
             <div className="login-page-input-group">
 
               <label htmlFor="password">
-                Password
+                {t("passwordLabel")}
               </label>
 
               <div className="login-page-input-box">
@@ -219,7 +225,7 @@ setError(
                 <input
                   type={showPassword ? "text" : "password"}
                   id="password"
-                  placeholder="Enter your password"
+                  placeholder={t("passwordPlaceholder")}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -254,12 +260,12 @@ setError(
                   onChange={(e) => setRememberMe(e.target.checked)}
                 />
 
-                Remember Me
+                {t("rememberMe")}
 
               </label>
 
               <Link to="/ForgotPassword">
-                Forgot Password?
+                {t("forgotPassword")}
               </Link>
 
             </div>
@@ -271,8 +277,8 @@ setError(
             >
 
               {loading
-                ? "Loading..."
-                : "Login"}
+                ? t("loading")
+                : t("loginSubmit")}
 
             </button>
 
@@ -280,10 +286,10 @@ setError(
 
           <p className="login-page-bottom-text">
 
-            Don't have an account?
+            {t("accountPrompt")}
 
             <Link to="/Register">
-              Register
+              {t("registerLink")}
             </Link>
 
           </p>

@@ -1,10 +1,12 @@
-
-    import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "../i18n";
 
 import "../css/ForgotPassword.css";
 
 function ForgotPassword() {
+
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -24,8 +26,7 @@ function ForgotPassword() {
 
     const [animationStage, setAnimationStage] = useState("open");
 
-    
-   
+
     // ==========================
     // Validation
     // ==========================
@@ -35,6 +36,7 @@ function ForgotPassword() {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     };
+
 
     // ==========================
     // Submit
@@ -48,23 +50,27 @@ function ForgotPassword() {
 
         setSuccess("");
 
+
         if (email.trim() === "") {
 
-            setError("Please enter your email");
+            setError(t("enterEmail"));
 
             return;
 
         }
+
 
         if (!validateEmail(email)) {
 
-            setError("Please enter a valid email");
+            setError(t("enterValidEmail"));
 
             return;
 
         }
 
+
         setLoading(true);
+
 
         try {
 
@@ -72,7 +78,9 @@ function ForgotPassword() {
                 "https://dummyjson.com/users"
             );
 
+
             const data = await response.json();
+
 
             const user = data.users.find(
 
@@ -81,13 +89,16 @@ function ForgotPassword() {
 
             );
 
+
             if (user) {
 
-                setSuccess("Sending verification email...");
+                setSuccess(t("sendingVerificationEmail"));
+
 
                 // Close Envelope
 
                 setAnimationStage("close");
+
 
                 setTimeout(() => {
 
@@ -95,21 +106,26 @@ function ForgotPassword() {
 
                     setAnimationStage("fly");
 
+
                 }, 900);
+
 
                 setTimeout(() => {
 
                     navigate("/VerifyEmail");
 
+
                 }, 1200);
+
 
             }
 
             else {
 
-                setError("Email not found");
+                setError(t("emailNotFound"));
 
             }
+
 
         }
 
@@ -117,9 +133,10 @@ function ForgotPassword() {
 
             console.log(error);
 
-            setError("Server error. Try again later");
+            setError(t("serverErrorTryLater"));
 
         }
+
 
         finally {
 
@@ -128,154 +145,206 @@ function ForgotPassword() {
         }
 
     };
-    return (
+        return (
 
-    <div className="forgotpassword-page-wrapper">
+        <div className="forgotpassword-page-wrapper">
 
-        <div className="forgotpassword-page-sheet">
-
-        
-            {/* Envelope */}
-           <div
- className={`forgotpassword-page-envelope ${animationStage}`}
->
-
-    {/* PAPER PLANE */}
-    <div className="forgotpassword-page-paper-plane">
-
-        <i className="fa-solid fa-paper-plane"></i>
-
-    </div>
+            <div className="forgotpassword-page-sheet">
 
 
-    {/* LETTER */}
+                {/* Envelope */}
 
-    <div className="forgotpassword-page-letter">
-
-        <i className="fa-solid fa-at"></i>
-
-    </div>
+                <div
+                    className={`forgotpassword-page-envelope ${animationStage}`}
+                >
 
 
-    {/* ENVELOPE */}
+                    {/* PAPER PLANE */}
 
-    <div className="forgotpassword-page-envelope-back"></div>
+                    <div className="forgotpassword-page-paper-plane">
 
-    <div className="forgotpassword-page-envelope-left"></div>
-
-    <div className="forgotpassword-page-envelope-right"></div>
-
-    <div className="forgotpassword-page-envelope-bottom"></div>
-
-    <div className="forgotpassword-page-envelope-flap"></div>
-
-
-</div>
-            {/* Title */}
-
-            <h1 className="forgotpassword-page-title">
-
-                Forgot Password?
-
-            </h1>
-
-            {/* Subtitle */}
-
-            <p className="forgotpassword-page-subtitle">
-
-                Enter your email address and we'll send you a link to reset your password.
-
-            </p>
-
-            {/* Form */}
-
-            <form onSubmit={handleSubmit}>
-
-                <div className="forgotpassword-page-input-group">
-
-                    <label htmlFor="email">
-
-                        Email Address
-
-                    </label>
-
-                    <div className="forgotpassword-page-input-box">
-
-                        <i className="fa-solid fa-envelope"></i>
-
-                        <input
-                            className="forgotpassword-page-input"
-                            type="email"
-                            id="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                        <i className="fa-solid fa-paper-plane"></i>
 
                     </div>
 
+
+
+                    {/* LETTER */}
+
+                    <div className="forgotpassword-page-letter">
+
+                        <i className="fa-solid fa-at"></i>
+
+                    </div>
+
+
+
+                    {/* ENVELOPE */}
+
+                    <div className="forgotpassword-page-envelope-back"></div>
+
+                    <div className="forgotpassword-page-envelope-left"></div>
+
+                    <div className="forgotpassword-page-envelope-right"></div>
+
+                    <div className="forgotpassword-page-envelope-bottom"></div>
+
+                    <div className="forgotpassword-page-envelope-flap"></div>
+
+
                 </div>
 
-                {error && (
 
-                    <p className="forgotpassword-page-error-message">
 
-                        {error}
+                {/* Title */}
 
-                    </p>
+                <h1 className="forgotpassword-page-title">
 
-                )}
+                    {t("forgotPasswordTitle")}
 
-                {success && (
+                </h1>
 
-                    <p className="forgotpassword-page-success-message">
 
-                        {success}
 
-                    </p>
+                {/* Subtitle */}
 
-                )}
+                <p className="forgotpassword-page-subtitle">
 
-                <button
-                    type="submit"
-                    className="forgotpassword-page-btn"
-                    disabled={loading}
-                >
+                    {t("forgotPasswordSubtitle")}
 
-                    {
+                </p>
 
-                        loading ?
 
-                        <span className="forgotpassword-page-spinner"></span>
 
-                        :
+                {/* Form */}
 
-                        "Send Reset Link"
+                <form onSubmit={handleSubmit}>
 
-                    }
 
-                </button>
+                    <div className="forgotpassword-page-input-group">
 
-            </form>
 
-            <p className="forgotpassword-page-bottom-text">
+                        <label htmlFor="email">
 
-                Remember your password?
+                            {t("emailAddressLabel")}
 
-                <Link to="/login">
+                        </label>
 
-                    Back to Login
 
-                </Link>
 
-            </p>
+                        <div className="forgotpassword-page-input-box">
+
+
+                            <i className="fa-solid fa-envelope"></i>
+
+
+
+                            <input
+
+                                className="forgotpassword-page-input"
+
+                                type="email"
+
+                                id="email"
+
+                                placeholder={t("enterEmailPlaceholder")}
+
+                                value={email}
+
+                                onChange={(e) => setEmail(e.target.value)}
+
+                            />
+
+
+                        </div>
+
+
+                    </div>
+                                        {error && (
+
+                        <p className="forgotpassword-page-error-message">
+
+                            {error}
+
+                        </p>
+
+                    )}
+
+
+
+                    {success && (
+
+                        <p className="forgotpassword-page-success-message">
+
+                            {success}
+
+                        </p>
+
+                    )}
+
+
+
+
+                    <button
+
+                        type="submit"
+
+                        className="forgotpassword-page-btn"
+
+                        disabled={loading}
+
+                    >
+
+                        {
+
+                            loading ?
+
+                            <span className="forgotpassword-page-spinner"></span>
+
+                            :
+
+                            t("sendResetLink")
+
+                        }
+
+
+                    </button>
+
+
+
+                </form>
+
+
+
+
+                <p className="forgotpassword-page-bottom-text">
+
+
+                    {t("rememberPassword")}
+
+
+
+                    <Link to="/login">
+
+                        {t("backToLogin")}
+
+                    </Link>
+
+
+                </p>
+
+
+
+            </div>
+
 
         </div>
 
-    </div>
 
-);
+    );
+
 
 }
+
 
 export default ForgotPassword;

@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "../i18n";
 
 import "../css/VerifyEmail.css";
 
 
 function VerifyEmail() {
+    const { t } = useTranslation();
     const navigate = useNavigate();
     const [otp, setOtp] = useState(
         ["","","","","",""]
@@ -66,7 +68,7 @@ const handleChange = (value,index)=>{
         if(code.length !== 6){
 
             setError(
-                "Please enter the 6 digit code"
+                t("enter6DigitCode")
             );
 
             return;
@@ -79,7 +81,7 @@ const handleChange = (value,index)=>{
             setLoading(false);
 
             setSuccess(
-                "Email verified successfully"
+                t("emailVerifiedSuccessfully")
             );
 
             setTimeout(()=>{
@@ -160,12 +162,11 @@ const handleChange = (value,index)=>{
                         </div>
                     </div>
                     <h1 className="verify-page-title">
-                        Verify Your Email
+                        {t("verifyEmailTitle")}
                     </h1>
 
                     <p className="verify-page-subtitle">
-                        We sent a verification code to your email.
-                        Please enter the code below.
+                        {t("verifyEmailSubtitle")}
                     </p>
 
                     <div className="verify-page-otp-container">
@@ -223,12 +224,12 @@ onChange={(e)=>
                             loading ?
                             <span className="spinner"></span>
                             :
-                            "Verify"
+                            t("verifyButton")
                         }
                     </button>
                     <p className="verify-page-bottom-text">
 
-                        Didn't receive the code?
+                        {t("didntReceiveCode")}
 
                         <button
 

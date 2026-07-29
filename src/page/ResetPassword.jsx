@@ -1,9 +1,12 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "../i18n";
 
 import "../css/ResetPassword.css";
 
 function ResetPassword() {
+
+    const { t } = useTranslation();
 
     const navigate = useNavigate();
 
@@ -38,14 +41,13 @@ function ResetPassword() {
 
         if (newPassword.length < 8) {
 
-            alert("Password must be at least 8 characters");
+            alert(t("passwordMustContain8"));
             return;
 
         }
 
         if (newPassword !== confirmNewPassword) {
-
-            alert("Passwords do not match");
+            alert(t("passwordsDoNotMatch"));
             return;
 
         }
@@ -69,20 +71,20 @@ function ResetPassword() {
 
             console.log(data);
 
-            if (response.ok) {
+                if (response.ok) {
 
                 navigate("/login");
 
             } else {
 
-                alert("Reset password failed");
+                alert(t("resetPasswordFailed"));
 
             }
 
         } catch (error) {
 
             console.log(error);
-            alert("Something went wrong");
+            alert(t("somethingWentWrong"));
 
         }
 
@@ -127,9 +129,9 @@ function ResetPassword() {
 
                     </div>
 
-                    <h1>Reset Password</h1>
+                    <h1>{t("resetPasswordTitle")}</h1>
 
-                    <p>Create your new password</p>
+                    <p>{t("resetPasswordSubtitle")}</p>
 
                 </div>
 
@@ -137,13 +139,13 @@ function ResetPassword() {
 
                     <div className="resetpassword-page-input-group">
 
-                        <label>New Password</label>
+                        <label>{t("newPasswordLabel")}</label>
 
                         <div className="resetpassword-page-password-field">
 
                             <input
                                 type={showNewPassword ? "text" : "password"}
-                                placeholder="Enter new password"
+                                placeholder={t("enterNewPassword")}
                                 value={newPassword}
                                 onChange={(e) => {
 
@@ -194,29 +196,29 @@ function ResetPassword() {
                             </div>
 
                             <p>
-                                {
-                                    strength === 0
-                                        ? ""
-                                        : strength <= 2
-                                        ? "Weak Password"
-                                        : strength === 3
-                                        ? "Medium Password"
-                                        : "Strong Password"
-                                }
-                            </p>
+                                    {
+                                        strength === 0
+                                            ? ""
+                                            : strength <= 2
+                                            ? t("weakPassword")
+                                            : strength === 3
+                                            ? t("mediumPassword")
+                                            : t("strongPassword")
+                                    }
+                                </p>
 
                         </div>
 
                     </div>
                                         <div className="resetpassword-page-input-group">
 
-                        <label>Confirm Password</label>
+                        <label>{t("confirmPasswordLabel")}</label>
 
                         <div className="resetpassword-page-password-field">
 
                             <input
                                 type={showConfirmPassword ? "text" : "password"}
-                                placeholder="Confirm password"
+                                placeholder={t("confirmPasswordPlaceholder")}
                                 value={confirmNewPassword}
                                 onChange={(e) =>
                                     setConfirmNewPassword(e.target.value)
@@ -250,17 +252,16 @@ function ResetPassword() {
                         type="button"
                         onClick={resetPassword}
                     >
-                        Reset Password
+                        {t("resetPasswordButton")}
                     </button>
 
                 </form>
 
                 <div className="resetpassword-page-footer">
 
-                    <Link to="/login">
-                        Back to Login
-                    </Link>
-
+                  <Link to="/login">
+    {t("backToLogin")}
+</Link>
                 </div>
 
             </div>

@@ -2884,3 +2884,19 @@ body,
 body {
     overflow-x: hidden;
 }
+/* يبقى ترتيب الكروت مثل الإنجليزية */
+html[dir="rtl"] .team-grid{
+    direction: ltr;
+}
+
+/* لكن محتوى البطاقة يبقى عربي */
+html[dir="rtl"] .member{
+    direction: rtl;
+    text-align: right;
+}
+
+/* إصلاح مكان آخر صف */
+html[dir="rtl"] .team-grid .member:nth-child(10),
+html[dir="rtl"] .team-grid .member:nth-child(11){
+    transform: translateX(30%);
+}

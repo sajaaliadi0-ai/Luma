@@ -3,9 +3,11 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api/api";
+import { useTranslation } from "../i18n";
 
 function Register() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
 const [fullName, setFullName] = useState("");
 const [email, setEmail] = useState("");
@@ -33,12 +35,12 @@ const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password.length < 8) {
-      alert("Password must contain at least 8 characters");
+      alert(t("passwordMustContain8"));
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      alert(t("passwordsDoNotMatch"));
       return;
     }
 
@@ -52,7 +54,7 @@ try {
 
   console.log(response.data);
 
-  alert("Registration successful!");
+  alert(t("registrationSuccessful"));
 
   navigate("/login");
 
@@ -60,7 +62,7 @@ try {
 
   alert(
     err.response?.data?.message ||
-    "Registration failed."
+    t("registrationFailed")
   );
 
 }  };
@@ -106,37 +108,39 @@ try {
 
         </div>
 
-        <h2>Create your account</h2>
+        <h2>{t("createYourAccount")}</h2>
 
         <p className="subtitle">
-          Start turning ideas into blueprints
+          {t("startTurningIdeas")}
         </p>
 
         <form onSubmit={handleSubmit}>
-                    <label>Full name</label>
+                    <label>{t("fullNameLabel")}</label>
 
         <input
   type="text"
-  placeholder="Enter your name"
+  placeholder={t("enterYourName")}
   value={fullName}
   onChange={(e) => setFullName(e.target.value)}
-/>
-          <label>Email</label>
+/
+>
+          <label>{t("emailAddressLabel")}</label>
 
          <input
   type="email"
-  placeholder="user-name@example.com"
+  placeholder={t("userNamePlaceholder")}
   value={email}
   onChange={(e) => setEmail(e.target.value)}
-/>
+/
+>
 
-          <label>Password</label>
+          <label>{t("passwordLabel")}</label>
 
           <div className="password-box">
 
             <input
               type={showPassword ? "text" : "password"}
-              placeholder="••••••••"
+              placeholder={t("passwordPlaceholderRegister")}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
@@ -162,19 +166,19 @@ try {
 
           </div>
 
-          <p className={password.length >= 8 ? "valid" : "invalid"}>
-            {password.length >= 8
-              ? "✔ Password length is valid"
-              : "✖ Password must contain at least 8 characters"}
-          </p>
+        <p className={password.length >= 8 ? "valid" : "invalid"}>
+  {password.length >= 8
+    ? t("passwordValid")
+    : t("passwordTooShort")}
+</p>
 
-          <label>Confirm password</label>
+          <label>{t("confirmPasswordLabel")}</label>
 
           <div className="password-box">
 
             <input
               type={showConfirmPassword ? "text" : "password"}
-              placeholder="••••••••"
+              placeholder={t("passwordPlaceholderRegister")}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
@@ -199,22 +203,22 @@ try {
             <input type="checkbox" required />
 
             <span>
-              I agree to the Terms of Service and Privacy Policy
+              {t("agreeTerms")}
             </span>
 
           </div>
 
           <button type="submit">
-            Create account
+            {t("createAccountButton")}
           </button>
 
         </form>
                 <p className="bottom">
 
-          Already have an account?
+          {t("alreadyHaveAccount")}
 
           <Link to="/login">
-            {" "}Sign in
+            {" "}{t("signIn")}
           </Link>
 
         </p>
