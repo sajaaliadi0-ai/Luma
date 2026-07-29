@@ -11,6 +11,7 @@ import NewBlueprint from "./page/new-blueprint";
 import ForgotPassword from "./page/ForgotPassword";
 import VerifyEmail from "./page/VerifyEmail";
 import ResetPassword from "./page/ResetPassword";
+import  Fullpage  from "./page/fullpage";
 
 function App() {
   const [dark, setDark] = useState(false);
@@ -61,6 +62,12 @@ function App() {
           path="/ResetPassword"
           element={<ResetPassword dark={dark} setDark={setDark} />}
         />
+
+         <Route
+          path="/fullpage"
+          element={<Fullpage dark={dark} setDark={setDark} />}
+        />
+
       </Routes>
     </BrowserRouter>
   );
