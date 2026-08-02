@@ -185,8 +185,7 @@ const { language, setLanguage, t } = useTranslation();
 
       sessionStorage.clear();
 
-      navigate("/login");
-    }
+navigate("/landing-page");    }
   };
 
 
@@ -216,23 +215,9 @@ const { language, setLanguage, t } = useTranslation();
     useState(null);
 
 
-  /* ===================================================
-     PROMPT
-
-     مهم:
-     هذا يأخذ prompt الموجود من Home
-     =================================================== */
 
   const [prompt, setPrompt] =
     useState("");
-
-
-  /* ===================================================
-     CONVERSATIONS
-
-     مهم جداً:
-     بدل [] نقرأ من sessionStorage
-     =================================================== */
 
   const [conversations, setConversations] =
     useState(() =>
@@ -259,13 +244,6 @@ const { language, setLanguage, t } = useTranslation();
   const [typing, setTyping] =
     useState(false);
 
-
-  /* ===================================================
-     SAVE CONVERSATIONS
-
-     كل ما conversations تتغير
-     نحفظها في sessionStorage
-  =================================================== */
 
   useEffect(() => {
 
@@ -317,21 +295,6 @@ const { language, setLanguage, t } = useTranslation();
     activeConversationId,
   ]);
 
-
-  /* ===================================================
-     RECEIVE PROMPT FROM OLD HOME PAGE
-
-     الصفحة الأولى Home.jsx تعمل:
-
-     sessionStorage.setItem(
-       "blueprintPrompt",
-       text
-     );
-
-     ثم navigate("/DualWorkspace")
-
-     هنا نستقبلها.
-  =================================================== */
 
   useEffect(() => {
 
@@ -1950,12 +1913,95 @@ setTheme("dark");
 /* =====================================================
    PROFILE PAGE
 ===================================================== */
-
 function ProfilePage() {
+  const [accountActive, setAccountActive] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  // =========================
+  // DEACTIVATE / ACTIVATE
+  // =========================
+  const handleAccountStatus = async () => {
+    setLoading(true);
+    setMessage("");
+    setError("");
+
+    try {
+      const endpoint = accountActive
+        ? "/api/users/account/deactivate"
+        : "/api/users/account/activate";
+
+      await api.patch(endpoint);
+
+      setAccountActive(!accountActive);
+
+      setMessage(
+        accountActive
+          ? "Your account has been deactivated."
+          : "Your account has been activated."
+      );
+    } catch (error) {
+      console.error("Account status error:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Something went wrong. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // =========================
+  // DELETE ACCOUNT
+  // =========================
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete your account? This action cannot be undone."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeleteLoading(true);
+    setMessage("");
+    setError("");
+
+    try {
+      await api.delete("/api/users/account");
+
+      // Remove saved authentication data
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+
+      sessionStorage.clear();
+
+      // Go back to login
+      navigate("/login");
+    } catch (error) {
+      console.error("Delete account error:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Unable to delete your account. Please try again."
+      );
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
-
     <section className="blueprint-profile-page">
+
+      {/* =========================
+          OLD PROFILE DESIGN
+      ========================= */}
 
       <div className="blueprint-profile-cover" />
 
@@ -1976,7 +2022,6 @@ function ProfilePage() {
       </p>
 
       <div className="blueprint-profile-tabs">
-
         <b>
           Public Projects
         </b>
@@ -1984,7 +2029,6 @@ function ProfilePage() {
         <span>
           Saved
         </span>
-
       </div>
 
       <h3>
@@ -1993,120 +2037,106 @@ function ProfilePage() {
 
       <div className="blueprint-profile-projects" />
 
-    </section>
-  );
-}
+      {/* =========================
+          ACCOUNT MANAGEMENT
+      ========================= */}
 
+      <div className="blueprint-account-management">
 
-/* =====================================================
-   PROJECTS
-===================================================== */
+        <h3>
+          Account Settings
+        </h3>
 
-function Projects({
-  conversations,
-  onConversation,
-}) {
-
-  return (
-
-    <section className="blueprint-catalog blueprint-projects">
-
-      <header>
-
-        <h2>
-          My Projects
-        </h2>
-
-      </header>
-
-
-      <div className="blueprint-filters blueprint-project-filter">
-
-        <span>
-          Starred
-        </span>
-
-      </div>
-
-
-      {conversations.length === 0 ? (
-
-        <p className="no-projects">
-
-          Start a new chat from the
-          Atoms button to create your
-          first project.
-
+        <p className="account-management-description">
+          Manage your account status and permanently delete your account.
         </p>
 
-      ) : (
+        {/* SUCCESS MESSAGE */}
+        {message && (
+          <div className="account-success-message">
+            {message}
+          </div>
+        )}
 
-        <div className="blueprint-project-grid">
+        {/* ERROR MESSAGE */}
+        {error && (
+          <div className="account-error-message">
+            {error}
+          </div>
+        )}
 
-          {conversations.map(
-            (conversation) => (
+        {/* =========================
+            ACTIVATE / DEACTIVATE
+        ========================= */}
 
-              <article
-                key={
-                  conversation.id
-                }
-                onClick={() =>
-                  onConversation(
-                    conversation.id
-                  )
-                }
-              >
+        <div className="account-management-row">
 
-                <div className="blueprint-empty-project">
+          <div className="account-management-info">
+            <strong>
+              Account status
+            </strong>
 
-                  <span className="blueprint-project-logo">
+            <span>
+              {accountActive
+                ? "Your account is currently active."
+                : "Your account is currently deactivated."
+              }
+            </span>
+          </div>
 
-                    <i />
-                    <i />
-                    <i />
-
-                  </span>
-
-                </div>
-
-
-                <footer>
-
-                  <div>
-
-                    <strong>
-                      {
-                        conversation.title
-                      }
-                    </strong>
-
-                    <small>
-                      {
-                        conversation.createdAt ||
-                        "2026/07/26"
-                      }
-                    </small>
-
-                  </div>
-
-                  <FiMoreHorizontal />
-
-                </footer>
-
-              </article>
-
-            )
-          )}
+          <button
+            className={
+              accountActive
+                ? "account-status-button deactivate"
+                : "account-status-button activate"
+            }
+            onClick={handleAccountStatus}
+            disabled={loading}
+          >
+            {loading
+              ? "Please wait..."
+              : accountActive
+                ? "Deactivate account"
+                : "Activate account"
+            }
+          </button>
 
         </div>
 
-      )}
+        {/* =========================
+            DELETE ACCOUNT
+        ========================= */}
+
+        <div className="account-danger-zone">
+
+          <div className="account-management-info">
+            <strong>
+              Delete account
+            </strong>
+
+            <span>
+              Permanently delete your account and all associated data.
+            </span>
+          </div>
+
+          <button
+            className="account-delete-button"
+            onClick={handleDeleteAccount}
+            disabled={deleteLoading}
+          >
+            {deleteLoading
+              ? "Deleting..."
+              : "Delete account"
+            }
+          </button>
+
+        </div>
+
+      </div>
 
     </section>
   );
 }
-
-
 /* =====================================================
    SETTINGS MODAL
 ===================================================== */
@@ -2289,10 +2319,87 @@ function Tab({
 /* =====================================================
    SETTINGS CONTENT
 ===================================================== */
-
 function SettingsContent({
   tab,
 }) {
+  const [accountActive, setAccountActive] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleAccountStatus = async () => {
+    setLoading(true);
+    setMessage("");
+    setError("");
+
+    try {
+      const endpoint = accountActive
+        ? "/api/users/account/deactivate"
+        : "/api/users/account/activate";
+
+      await api.patch(endpoint);
+
+      setAccountActive((current) => !current);
+
+      setMessage(
+        accountActive
+          ? "Your account has been deactivated."
+          : "Your account has been activated."
+      );
+
+    } catch (error) {
+      console.error("Account status error:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Something went wrong. Please try again."
+      );
+
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleDeleteAccount = async () => {
+    const confirmed = window.confirm(
+      "Are you sure you want to permanently delete your account? This action cannot be undone."
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setDeleteLoading(true);
+    setMessage("");
+    setError("");
+
+    try {
+      await api.delete("/api/users/account");
+
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("user");
+
+      sessionStorage.clear();
+
+      navigate("/login");
+
+    } catch (error) {
+      console.error("Delete account error:", error);
+
+      setError(
+        error.response?.data?.message ||
+        "Unable to delete your account. Please try again."
+      );
+
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   /* ===================================================
      PEOPLE
@@ -2664,54 +2771,162 @@ function SettingsContent({
   /* ===================================================
      ACCOUNT
   =================================================== */
+if (tab === "Account") {
 
-  if (tab === "Account") {
-
-    return (
-
-      <>
-
-        <h2>
-          Account Settings
-        </h2>
+  return (
+    <>
+      <h2>
+        Account Settings
+      </h2>
 
 
-        <div className="blueprint-account-row">
+      <div className="blueprint-account-row">
 
-          Avatar
+        Avatar
 
-          <b>
-            S
-          </b>
+        <b>
+          S
+        </b>
+
+      </div>
+
+
+      <div className="blueprint-account-row">
+
+        Username
+
+        <span>
+          saswe eng✎
+        </span>
+
+      </div>
+
+
+      <div className="blueprint-account-row">
+
+        Email
+
+        <span>
+          engsaswe@gmail.com
+        </span>
+
+      </div>
+
+
+      {/* =========================================
+          ACCOUNT MANAGEMENT
+      ========================================= */}
+
+      <div className="blueprint-account-profile">
+
+        <h3>
+          Profile
+        </h3>
+
+        <p>
+          Manage your profile and account information.
+        </p>
+
+
+        {/* SUCCESS */}
+
+        {message && (
+          <div className="account-success-message">
+            {message}
+          </div>
+        )}
+
+
+        {/* ERROR */}
+
+        {error && (
+          <div className="account-error-message">
+            {error}
+          </div>
+        )}
+
+
+        {/* =========================================
+            ACCOUNT STATUS
+        ========================================= */}
+
+        <div className="account-management-row">
+
+          <div className="account-management-info">
+
+            <strong>
+              Account status
+            </strong>
+
+            <span>
+              {accountActive
+                ? "Your account is currently active."
+                : "Your account is currently deactivated."
+              }
+            </span>
+
+          </div>
+
+
+          {/* TOGGLE */}
+
+          <button
+            type="button"
+            className={`account-toggle ${
+              accountActive ? "active" : ""
+            }`}
+            onClick={handleAccountStatus}
+            disabled={loading}
+            aria-label="Toggle account status"
+          >
+
+            <span />
+
+          </button>
 
         </div>
 
 
-        <div className="blueprint-account-row">
+        {/* =========================================
+            DELETE ACCOUNT
+        ========================================= */}
 
-          Username
+        <div className="account-danger-zone">
 
-          <span>
-            saswe eng✎
-          </span>
+          <div className="account-management-info">
+
+            <strong>
+              Delete account
+            </strong>
+
+            <span>
+              Permanently delete your account and all associated data.
+            </span>
+
+          </div>
+
+
+          <button
+            type="button"
+            className="account-delete-button"
+            onClick={handleDeleteAccount}
+            disabled={deleteLoading}
+          >
+
+            {deleteLoading
+              ? "Deleting..."
+              : "Delete account"
+            }
+
+          </button>
 
         </div>
 
+      </div>
 
-        <div className="blueprint-account-row">
-
-          Email
-
-          <span>
-            engsaswe@gmail.com
-          </span>
-
-        </div>
-
-      </>
-    );
-  }
-
+    </>
+  );
+}
 
   /* ===================================================
      CLOUD & AI
