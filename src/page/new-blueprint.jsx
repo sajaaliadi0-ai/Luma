@@ -1,7 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
+  useEffect,
+  useState,
+} from "react";
 
+import {
+  useNavigate,
+} from "react-router-dom";
+
+import {
   FiBell,
   FiChevronDown,
   FiChevronRight,
@@ -14,6 +20,7 @@ import {
   FiHome,
   FiLogOut,
   FiMenu,
+  FiMic,
   FiMoreHorizontal,
   FiPackage,
   FiPlus,
@@ -23,10 +30,8 @@ import {
   FiUsers,
   FiX,
   FiZap,
-    FiMic,
-
-  
 } from "react-icons/fi";
+
 import alex from "./alex.png";
 import emma from "./emma.png";
 import noah from "./noah.png";
@@ -34,17 +39,15 @@ import luna from "./luna.png";
 import david from "./david.png";
 import mia from "./mia.png";
 import leo from "./leo.png";
-import api from "../api/api";
-import "../css/newBlueprint.css";
 
-const resources = [
-  ["Robot for Forex Trading", "Osuji Promise · ◉ 7.7K", "forex", "Data Analysis"],
-  ["إنشاء موقع لعرض الفيديوهات", "Musa Aljably · ◉ 2.6K", "purple", "Website"],
-  ["موقع فيديوهات الذكاء الاصطناعي", "Mo Daha · ◉ 3.6K", "green", "AI"],
-  ["Bakery dashboard", "Atoms · ◉ 1.4K", "dark", "E-commerce"],
-  ["Fantasy landing page", "Atoms · ◉ 4.1K", "fantasy", "Website"],
-  ["Wallet dashboard", "Atoms · ◉ 1.8K", "wallet", "Productivity"],
-];
+import api from "../api/api";
+import "../css/newblueprint2.css";
+
+import { useTranslation } from "../i18n";
+/* =====================================================
+   AVATARS
+===================================================== */
+
 const avatars = [
   alex,
   emma,
@@ -54,316 +57,896 @@ const avatars = [
   mia,
   leo,
 ];
+
+
+/* =====================================================
+   STORAGE KEYS
+===================================================== */
+
+const CONVERSATIONS_KEY =
+  "atomsConversations";
+
+const ACTIVE_CONVERSATION_KEY =
+  "atomsActiveConversation";
+
+
+/* =====================================================
+   LOAD CONVERSATIONS
+===================================================== */
+
+function getSavedConversations() {
+  try {
+    const saved =
+      sessionStorage.getItem(
+        CONVERSATIONS_KEY
+      );
+
+    if (!saved) {
+      return [];
+    }
+
+    const parsed = JSON.parse(saved);
+
+    return Array.isArray(parsed)
+      ? parsed
+      : [];
+
+  } catch (error) {
+    console.error(
+      "Failed to load conversations:",
+      error
+    );
+
+    return [];
+  }
+}
+
+
+/* =====================================================
+   LOAD ACTIVE CONVERSATION
+===================================================== */
+
+function getSavedActiveConversation() {
+  return (
+    sessionStorage.getItem(
+      ACTIVE_CONVERSATION_KEY
+    ) || null
+  );
+}
+
+
+/* =====================================================
+   ATOMS APP
+===================================================== */
+
 function AtomsApp() {
 
+  const [theme, setTheme] = useState(() => {
+  return localStorage.getItem("theme") || "light";
+});
+
+useEffect(() => {
+  localStorage.setItem("theme", theme);
+
+  document.documentElement.setAttribute(
+  "data-theme",
+  theme
+);
+
+document.body.classList.toggle(
+  "dark",
+  theme === "dark"
+);
+}, [theme]);
+
+  const navigate = useNavigate();
+
+const { language, setLanguage, t } = useTranslation();
+  /* ===================================================
+     LOGOUT
+  =================================================== */
+
+  const handleLogout = async () => {
+
+    try {
+
+      const refreshToken =
+        localStorage.getItem(
+          "refreshToken"
+        );
+
+      await api.post(
+        "/api/auth/logout",
+        {
+          refreshToken,
+        }
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Logout error:",
+        error
+      );
+
+    } finally {
+
+      localStorage.removeItem(
+        "accessToken"
+      );
+
+      localStorage.removeItem(
+        "refreshToken"
+      );
+
+      localStorage.removeItem(
+        "user"
+      );
+
+      sessionStorage.clear();
+
+      navigate("/login");
+    }
+  };
 
 
-const navigate = useNavigate();
+  /* ===================================================
+     STATES
+  =================================================== */
 
-const handleLogout = async () => {
-  try {
-    const refreshToken = localStorage.getItem("refreshToken");
+  const [notifications] =
+    useState([]);
 
-    await api.post("/api/auth/logout", {
-      refreshToken,
-    });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
+  const [showProfile, setShowProfile] =
+    useState(false);
 
-    sessionStorage.clear();
+  const [page, setPage] =
+    useState("Home");
 
-    navigate("/login");
-  }
-};
-const [notifications] = useState([]);
-  const [resourceFilter, setResourceFilter] = useState("All");
-  const [resourceTab, setResourceTab] = useState("Discover");
-  const [showProfile, setShowProfile] = useState(false);
-  const [page, setPage] = useState("Home");
-  const [collapsed, setCollapsed] = useState(false);
-  const [workspaceOpen, setWorkspaceOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
-  const [settings, setSettings] = useState(null);
-  const [prompt, setPrompt] = useState("");
-  const [conversations, setConversations] = useState([]);
-  const [activeConversationId, setActiveConversationId] = useState(null);
-  const [typing, setTyping] = useState(false);
+  const [collapsed, setCollapsed] =
+    useState(false);
+
+  const [workspaceOpen, setWorkspaceOpen] =
+    useState(false);
+
+  const [profileOpen, setProfileOpen] =
+    useState(false);
+
+  const [settings, setSettings] =
+    useState(null);
 
 
-  const choosePage = (next) => {
+  /* ===================================================
+     PROMPT
+
+     مهم:
+     هذا يأخذ prompt الموجود من Home
+     =================================================== */
+
+  const [prompt, setPrompt] =
+    useState("");
+
+
+  /* ===================================================
+     CONVERSATIONS
+
+     مهم جداً:
+     بدل [] نقرأ من sessionStorage
+     =================================================== */
+
+  const [conversations, setConversations] =
+    useState(() =>
+      getSavedConversations()
+    );
+
+
+  /* ===================================================
+     ACTIVE CONVERSATION
+  =================================================== */
+
+  const [
+    activeConversationId,
+    setActiveConversationId,
+  ] = useState(() =>
+    getSavedActiveConversation()
+  );
+
+
+  /* ===================================================
+     TYPING
+  =================================================== */
+
+  const [typing, setTyping] =
+    useState(false);
+
+
+  /* ===================================================
+     SAVE CONVERSATIONS
+
+     كل ما conversations تتغير
+     نحفظها في sessionStorage
+  =================================================== */
+
+  useEffect(() => {
+
+    try {
+
+      sessionStorage.setItem(
+        CONVERSATIONS_KEY,
+        JSON.stringify(
+          conversations
+        )
+      );
+
+    } catch (error) {
+
+      console.error(
+        "Failed to save conversations:",
+        error
+      );
+
+    }
+
+  }, [conversations]);
+
+
+  /* ===================================================
+     SAVE ACTIVE CONVERSATION
+  =================================================== */
+
+  useEffect(() => {
+
+    if (
+      activeConversationId
+    ) {
+
+      sessionStorage.setItem(
+        ACTIVE_CONVERSATION_KEY,
+        activeConversationId
+      );
+
+    } else {
+
+      sessionStorage.removeItem(
+        ACTIVE_CONVERSATION_KEY
+      );
+
+    }
+
+  }, [
+    activeConversationId,
+  ]);
+
+
+  /* ===================================================
+     RECEIVE PROMPT FROM OLD HOME PAGE
+
+     الصفحة الأولى Home.jsx تعمل:
+
+     sessionStorage.setItem(
+       "blueprintPrompt",
+       text
+     );
+
+     ثم navigate("/DualWorkspace")
+
+     هنا نستقبلها.
+  =================================================== */
+
+  useEffect(() => {
+
+    const savedPrompt =
+      sessionStorage.getItem(
+        "blueprintPrompt"
+      );
+
+    if (!savedPrompt) {
+      return;
+    }
+
+
+    const text =
+      savedPrompt.trim();
+
+    if (!text) {
+
+      sessionStorage.removeItem(
+        "blueprintPrompt"
+      );
+
+      return;
+    }
+
+
+    /* =================================================
+       منع التكرار
+    ================================================= */
+
+    const alreadyExists =
+      conversations.some(
+        (conversation) =>
+          conversation.messages?.some(
+            (message) =>
+              message.type === "user" &&
+              message.text === text
+          )
+      );
+
+
+    if (alreadyExists) {
+
+      sessionStorage.removeItem(
+        "blueprintPrompt"
+      );
+
+      return;
+    }
+
+
+    /* =================================================
+       CREATE CONVERSATION
+    ================================================= */
+
+    const conversationId =
+      `chat-${Date.now()}`;
+
+
+    const newConversation = {
+
+      id: conversationId,
+
+      title:
+        text.length > 30
+          ? `${text.slice(0, 30)}…`
+          : text,
+
+      messages: [
+
+        {
+          id:
+            `user-${Date.now()}`,
+
+          type: "user",
+
+          text,
+        },
+
+      ],
+
+      createdAt:
+        new Date()
+          .toLocaleDateString(
+            "en-CA"
+          ),
+    };
+
+
+    setConversations(
+      (current) => [
+        newConversation,
+        ...current,
+      ]
+    );
+
+
+    setActiveConversationId(
+      conversationId
+    );
+
+
+    /* =================================================
+       تنظيف prompt بعد استلامه
+    ================================================= */
+
+    sessionStorage.removeItem(
+      "blueprintPrompt"
+    );
+
+
+  }, []);
+
+
+  /* ===================================================
+     PAGE
+  =================================================== */
+
+  const choosePage = (
+    next
+  ) => {
+
     setPage(next);
+
     setWorkspaceOpen(false);
+
     setProfileOpen(false);
+
+    setShowProfile(false);
   };
 
 
-  const openSettings = (tab = "General") => {
+  /* ===================================================
+     SETTINGS
+  =================================================== */
+
+  const openSettings = (
+    tab = "General"
+  ) => {
+
     setSettings(tab);
+
     setProfileOpen(false);
   };
 
 
-  const openConversation = (id) => {
+  /* ===================================================
+     OPEN CONVERSATION
+  =================================================== */
+
+  const openConversation = (
+    id
+  ) => {
+
     setActiveConversationId(id);
+
     setPage("Home");
+
     setWorkspaceOpen(false);
+
     setProfileOpen(false);
+
+    setShowProfile(false);
   };
 
+
+  /* ===================================================
+     SIDEBAR COLLAPSE
+  =================================================== */
 
   const toggleSidebar = () => {
-    setCollapsed((current) => !current);
+
+    setCollapsed(
+      (current) => !current
+    );
+
     setWorkspaceOpen(false);
+
     setProfileOpen(false);
   };
 
+
+  /* ===================================================
+     NEW CHAT
+  =================================================== */
 
   const newChat = () => {
 
-    const id = `chat-${Date.now()}`;
+    const id =
+      `chat-${Date.now()}`;
 
-    setConversations((current) => [
-      {
-        id,
-        title:"New chat",
-        messages:[],
-        createdAt:new Date().toLocaleDateString("en-CA"),
-      },
-      ...current,
-    ]);
 
-    setActiveConversationId(id);
+    const newConversation = {
+
+      id,
+
+      title: "New chat",
+
+      messages: [],
+
+      createdAt:
+        new Date()
+          .toLocaleDateString(
+            "en-CA"
+          ),
+    };
+
+
+    setConversations(
+      (current) => [
+        newConversation,
+        ...current,
+      ]
+    );
+
+
+    setActiveConversationId(
+      id
+    );
+
+
     setPage("Home");
+
     setPrompt("");
+
+    setTyping(false);
+
     setWorkspaceOpen(false);
+
     setProfileOpen(false);
+
+    setShowProfile(false);
   };
 
 
+  /* ===================================================
+     SEND MESSAGE
+  =================================================== */
+
   const sendMessage = () => {
 
-    const text = prompt.trim();
+    const text =
+      prompt.trim();
 
-    if(!text) return;
+
+    if (!text) {
+      return;
+    }
 
 
     const conversationId =
-      activeConversationId || `chat-${Date.now()}`;
+      activeConversationId ||
+      `chat-${Date.now()}`;
 
 
     const userMessage = {
-      id:`user-${Date.now()}`,
-      type:"user",
+
+      id:
+        `user-${Date.now()}`,
+
+      type: "user",
+
       text,
     };
 
 
-    setConversations((current)=>{
+    setConversations(
+      (current) => {
 
-      const existing =
-        current.find(
-          conversation =>
-            conversation.id === conversationId
-        );
+        const existing =
+          current.find(
+            (conversation) =>
+              conversation.id ===
+              conversationId
+          );
 
 
-      if(existing){
+        /* =============================================
+           EXISTING CHAT
+        ============================================= */
 
-        return current.map(conversation =>
-          conversation.id === conversationId
-          ?
+        if (existing) {
+
+          return current.map(
+            (conversation) => {
+
+              if (
+                conversation.id !==
+                conversationId
+              ) {
+
+                return conversation;
+              }
+
+
+              return {
+
+                ...conversation,
+
+                title:
+                  conversation.title ===
+                  "New chat"
+
+                    ? text.length > 30
+                      ? `${text.slice(0, 30)}…`
+                      : text
+
+                    : conversation.title,
+
+                messages: [
+
+                  ...conversation.messages,
+
+                  userMessage,
+
+                ],
+              };
+
+            }
+          );
+        }
+
+
+        /* =============================================
+           NEW CHAT
+        ============================================= */
+
+        return [
+
           {
-            ...conversation,
+
+            id:
+              conversationId,
+
             title:
-              conversation.title==="New chat"
-              ?
-              text.length>30
-              ?
-              `${text.slice(0,30)}…`
-              :
-              text
-              :
-              conversation.title,
+              text.length > 30
+                ? `${text.slice(0, 30)}…`
+                : text,
 
-            messages:[
-              ...conversation.messages,
-              userMessage
-            ]
-          }
+            messages: [
+              userMessage,
+            ],
 
-          :
+            createdAt:
+              new Date()
+                .toLocaleDateString(
+                  "en-CA"
+                ),
+          },
 
-          conversation
-        );
+          ...current,
 
+        ];
       }
+    );
 
 
-      return [
-        {
-          id:conversationId,
-          title:
-            text.length>30
-            ?
-            `${text.slice(0,30)}…`
-            :
-            text,
-
-          messages:[
-            userMessage
-          ],
-
-          createdAt:new Date().toLocaleDateString("en-CA"),
-        },
-
-        ...current,
-      ];
-
-    });
+    setActiveConversationId(
+      conversationId
+    );
 
 
-    setActiveConversationId(conversationId);
     setPrompt("");
+
     setTyping(true);
 
-setPage("Home");
-    window.setTimeout(()=>{
+    setPage("Home");
 
-      setConversations(current=>
 
-        current.map(conversation =>
+    /* =================================================
+       TEMPORARY AI RESPONSE
+    ================================================= */
 
-          conversation.id===conversationId
+    window.setTimeout(() => {
 
-          ?
+      setConversations(
+        (current) =>
+          current.map(
+            (conversation) => {
 
-          {
-            ...conversation,
+              if (
+                conversation.id !==
+                conversationId
+              ) {
 
-            messages:[
-              ...conversation.messages,
-
-              {
-                id:`alex-${Date.now()}`,
-                type:"assistant",
-                text:"وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
+                return conversation;
               }
-            ]
-          }
 
-          :
 
-          conversation
+              return {
 
-        )
+                ...conversation,
 
+                messages: [
+
+                  ...conversation.messages,
+
+                  {
+
+                    id:
+                      `alex-${Date.now()}`,
+
+                    type:
+                      "assistant",
+
+                    text:
+                      "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
+
+                  },
+
+                ],
+              };
+
+            }
+          )
       );
-
 
       setTyping(false);
 
-    },800);
+    }, 800);
 
   };
 
 
+  /* ===================================================
+     RENDER
+  =================================================== */
+
   return (
-    <div
-      className={`blueprint-app ${
-        collapsed ? "blueprint-is-collapsed" : ""
-      }`}
-    >
 
-      <Sidebar
-  notifications={notifications}
-  navigate={navigate}
-  onLogout={handleLogout}
-  page={page}
-  onPage={choosePage}
-  onNewChat={newChat}
-  onCollapse={toggleSidebar}
-  workspaceOpen={workspaceOpen}
-  onWorkspace={() => {
-    setWorkspaceOpen(!workspaceOpen);
-    setProfileOpen(false);
-  }}
-  profileOpen={profileOpen}
-  onProfile={() => {
-    setProfileOpen(!profileOpen);
-    setWorkspaceOpen(false);
-  }}
-  onSettings={openSettings}
-  conversations={conversations}
-  activeConversationId={activeConversationId}
-  onConversation={openConversation}
-/>
-
-      <main 
-  className={`blueprint-app-main ${
-    page === "Home" ? "home-active" : "full-page-view"
+   <div
+  dir={language === "ar" ? "rtl" : "ltr"}
+  className={`blueprint-app ${
+    collapsed
+      ? "blueprint-is-collapsed"
+      : ""
   }`}
 >
-  {page === "Home" && (
-    <Home
-      prompt={prompt}
-      setPrompt={setPrompt}
-      messages={
-        conversations.find(
-          (conversation) =>
-            conversation.id === activeConversationId
-        )?.messages || []
-      }
-      typing={typing}
-      onSend={sendMessage}
-    />
-  )}
-                
+
+      {/* =================================================
+          SIDEBAR
+      ================================================= */}
+
+      <Sidebar
+
+        notifications={
+          notifications
+        }
+
+        navigate={
+          navigate
+        }
+
+        onLogout={
+          handleLogout
+        }
+
+        page={
+          page
+        }
+
+        onPage={
+          choosePage
+        }
+
+        onNewChat={
+          newChat
+        }
+
+        onCollapse={
+          toggleSidebar
+        }
+
+        workspaceOpen={
+          workspaceOpen
+        }
+
+        onWorkspace={() => {
+
+          setWorkspaceOpen(
+            (current) =>
+              !current
+          );
+
+          setProfileOpen(false);
+        }}
+
+        profileOpen={
+          profileOpen
+        }
+
+        onProfile={() => {
+
+          setProfileOpen(
+            (current) =>
+              !current
+          );
+
+          setWorkspaceOpen(false);
+        }}
+
+        onSettings={
+          openSettings
+        }
+
+        conversations={
+          conversations
+        }
+
+        activeConversationId={
+          activeConversationId
+        }
+
+        onConversation={
+          openConversation
+        }
+      />
 
 
-        {page === "Resources" && !showProfile && (
-          <Resources
-            resourceTab={resourceTab}
-            setResourceTab={setResourceTab}
-            setShowProfile={setShowProfile}
-            resourceFilter={resourceFilter}
-            setResourceFilter={setResourceFilter}
-          />
+      {/* =================================================
+          MAIN
+      ================================================= */}
+
+      <main
+        className={
+          `blueprint-app-main ${
+            page === "Home"
+              ? "home-active"
+              : "full-page-view"
+          }`
+        }
+      >
+
+        {/* =================================================
+            HOME
+        ================================================= */}
+
+        {page === "Home" && (
+
+          <Home
+  prompt={prompt}
+  setPrompt={setPrompt}
+  messages={
+    conversations.find(
+      (conversation) =>
+        conversation.id === activeConversationId
+    )?.messages || []
+  }
+  typing={typing}
+  onSend={sendMessage}
+  theme={theme}
+  setTheme={setTheme}
+/>
+
         )}
 
 
-        {page === "Resources" && showProfile && (
-          <ProfilePage />
-        )}
+        {/* =================================================
+            MY PROJECTS
+        ================================================= */}
+
+        {page === "My Projects" &&
+          !showProfile && (
+
+            <Projects
+
+              conversations={
+                conversations
+              }
+
+              onConversation={
+                openConversation
+              }
+
+            />
+
+          )}
 
 
-        {page === "My Projects" && !showProfile && (
-          <Projects
-            conversations={conversations}
-            onConversation={openConversation}
-            setShowProfile={setShowProfile}
-          />
-        )}
+        {/* =================================================
+            PROFILE
+        ================================================= */}
 
+        {page === "My Projects" &&
+          showProfile && (
 
-        {page === "My Projects" && showProfile && (
-          <ProfilePage />
-        )}
+            <ProfilePage />
 
-       
+          )}
 
       </main>
 
 
+      {/* =================================================
+          SETTINGS
+      ================================================= */}
+
       {settings && (
+
         <SettingsModal
-          tab={settings}
-          onTab={setSettings}
-          onClose={() => setSettings(null)}
+
+          tab={
+            settings
+          }
+
+          onTab={
+            setSettings
+          }
+
+          onClose={() =>
+            setSettings(null)
+          }
+
         />
+
       )}
 
     </div>
@@ -371,9 +954,11 @@ setPage("Home");
 }
 
 
+/* =====================================================
+   SIDEBAR
+===================================================== */
 
 function Sidebar({
-  
   page,
   onPage,
   onNewChat,
@@ -387,27 +972,29 @@ function Sidebar({
   activeConversationId,
   onConversation,
   notifications,
-
   onLogout,
-})  {
-
+  navigate,
+}) {
+    const { t } = useTranslation()
 const nav = [
-  ["Home", FiHome],
-  ["Resources", FiCompass],
-  ["My Projects", FiFolder],
-  ["fullpage", FiPlus],
+  [t("home"), FiHome],
+  [t("resources"), FiCompass],
+  [t("newChat"), FiPlus],
+  [t("myProjects"), FiFolder],
 ];
-
- 
 
 
   return (
 
-    <aside className="blueprint-app-sidebar">
+    <aside
+      className="blueprint-app-sidebar"
+    >
 
+      {/* =================================================
+          BRAND
+      ================================================= */}
 
       <div className="blueprint-brand">
-
 
         <button
           className="new-chat-brand"
@@ -423,7 +1010,9 @@ const nav = [
 
           </span>
 
-          <b>Atoms</b>
+          <b>
+            Atoms
+          </b>
 
         </button>
 
@@ -432,20 +1021,26 @@ const nav = [
           onClick={onCollapse}
           aria-label="Collapse sidebar"
         >
-          <FiMenu />
-        </button>
 
+          <FiMenu />
+
+        </button>
 
       </div>
 
 
+      {/* =================================================
+          WORKSPACE
+      ================================================= */}
 
       <button
         className="blueprint-workspace-switch"
         onClick={onWorkspace}
       >
 
-        <b>S</b>
+        <b>
+          S
+        </b>
 
         <span>
           saswe eng's Atoms
@@ -456,17 +1051,19 @@ const nav = [
       </button>
 
 
-
+      {/* =================================================
+          WORKSPACE POPOVER
+      ================================================= */}
 
       {workspaceOpen && (
 
         <div className="blueprint-workspace-popover">
 
-
           <div className="blueprint-workspace-head">
 
-            <b>S</b>
-
+            <b>
+              S
+            </b>
 
             <span>
 
@@ -480,9 +1077,7 @@ const nav = [
 
             </span>
 
-
           </div>
-
 
 
           <div className="blueprint-credit-line">
@@ -496,7 +1091,6 @@ const nav = [
           </div>
 
 
-
           <div className="blueprint-credit-bar">
 
             <i />
@@ -504,11 +1098,9 @@ const nav = [
           </div>
 
 
-
           <small className="blueprint-credit-left">
             15 left
           </small>
-
 
 
           <small>
@@ -516,147 +1108,132 @@ const nav = [
           </small>
 
 
-
           <div className="blueprint-workspace-row">
 
-
-            <b>S</b>
-
+            <b>
+              S
+            </b>
 
             saswe eng's Atoms
 
-
             <FiChevronRight />
 
-
           </div>
-
 
         </div>
 
       )}
 
 
-
-
-
+      {/* =================================================
+          NAVIGATION
+      ================================================= */}
 
       <nav>
 
-        {nav.map(([name,Icon])=>(
+        {nav.map(
+          ([name, Icon]) => (
 
-          <button
+            <button
+              key={name}
+              className={
+                page === name
+                  ? "selected"
+                  : ""
+              }
+           onClick={() => {
 
-            key={name}
+  if (name === t("resources")) {
+  navigate("/resources");
+  return;
+}
 
-            className={
-              page===name
-              ?
-              "selected"
-              :
-              ""
-            }
+if (name === t("newChat")) {
+  onNewChat();
+  return;
+}
 
+onPage(name);
 
-            onClick={()=>
-              onPage(name)
-            }
+  onPage(name);
 
-          >
+}}
+            >
 
-            <Icon />
+              <Icon />
 
-            <span>
-              {name}
-            </span>
+              <span>
+                {name}
+              </span>
 
+            </button>
 
-          </button>
-
-
-        ))}
-
+          )
+        )}
 
       </nav>
 
 
-
-
+      {/* =================================================
+          RECENTS
+      ================================================= */}
 
       <small className="blueprint-recents-label">
-
         Recents
-
       </small>
-
-
 
 
       <div className="blueprint-recents">
 
-
-        {conversations.length===0 ? (
+        {conversations.length === 0 ? (
 
           <small className="empty-recents">
-
             Your chats will appear here
-
           </small>
 
+        ) : (
 
-        )
+          conversations.map(
+            (conversation) => (
 
-        :
+              <button
+                key={
+                  conversation.id
+                }
+                className={
+                  conversation.id ===
+                  activeConversationId
+                    ? "active-chat"
+                    : ""
+                }
+                onClick={() =>
+                  onConversation(
+                    conversation.id
+                  )
+                }
+              >
 
-        (
+                {conversation.title}
 
-          conversations.map(conversation=>(
+              </button>
 
-
-            <button
-
-              key={conversation.id}
-
-              className={
-                conversation.id===activeConversationId
-                ?
-                "active-chat"
-                :
-                ""
-              }
-
-
-              onClick={()=>
-                onConversation(conversation.id)
-              }
-
-            >
-
-              {conversation.title}
-
-
-            </button>
-
-
-          ))
-
+            )
+          )
 
         )}
-
 
       </div>
 
 
-
-
+      {/* =================================================
+          SIDEBAR BOTTOM
+      ================================================= */}
 
       <div className="blueprint-sidebar-bottom">
-
 
         <aside>
 
           <FiUsers />
-
 
           <span>
 
@@ -668,22 +1245,16 @@ const nav = [
               Earn up to 25 credits
             </small>
 
-
           </span>
-
 
           <FiChevronRight />
 
-
         </aside>
-
-
 
 
         <aside>
 
           <FiGift />
-
 
           <span>
 
@@ -695,51 +1266,58 @@ const nav = [
               Get 10 credits each
             </small>
 
-
           </span>
-
 
           <FiChevronRight />
 
-
         </aside>
 
-
       </div>
-           <footer>
-
-    <button
-        className="blueprint-avatar"
-        onClick={onProfile}
-    >
-        S
-    </button>
-
-    <span>
-
-       <button
-    className="blueprint-sidebar-icon-btn"
-    onClick={() => {
-        alert(`You have ${notifications.length} notifications`);
-    }}
->
-    <FiBell />
-</button>
-
-        
-
-    </span>
-
-</footer>
 
 
+      {/* =================================================
+          FOOTER
+      ================================================= */}
+
+      <footer>
+
+        <button
+          className="blueprint-avatar"
+          onClick={onProfile}
+        >
+          S
+        </button>
 
 
+        <span>
+
+          <button
+            className="blueprint-sidebar-icon-btn"
+            onClick={() => {
+
+              alert(
+                `You have ${notifications.length} notifications`
+              );
+
+            }}
+          >
+
+            <FiBell />
+
+          </button>
+
+        </span>
+
+      </footer>
+
+
+      {/* =================================================
+          PROFILE POPOVER
+      ================================================= */}
 
       {profileOpen && (
 
         <div className="blueprint-profile-popover">
-
 
           <header>
 
@@ -747,119 +1325,151 @@ const nav = [
               S
             </b>
 
-
             <span>
 
               <strong>
                 saswe eng
               </strong>
 
-
               <small>
                 engsaswe@gmail.com
               </small>
 
-
             </span>
-
 
           </header>
 
 
-
-         <button onClick={() => onSettings("General")}>
-    <FiSettings />
-    <span>Settings</span>
-    <FiChevronRight />
-</button>
-
-
-          <button onClick={() => onSettings("Plans and credits")}>
-    <FiPackage />
-    <span>Plans</span>
-    <FiChevronRight />
-</button>
-
-
-
-
-         <button onClick={() => onSettings("Account")}>
-    <FiUser />
-    <span>Profile</span>
-    <FiChevronRight />
-</button>
-
-
-
-
-
-         <button>
-    <FiGift />
-    <span>Redemption</span>
-    <FiChevronRight />
-</button>
-
-
-
-
           <button
             onClick={() =>
-              onSettings("Preference")
+              onSettings("General")
             }
           >
 
-            <FiSliders />
+            <FiSettings />
 
-            Appearance
+            <span>
+              Settings
+            </span>
 
             <FiChevronRight />
 
           </button>
 
 
+          <button
+            onClick={() =>
+              onSettings(
+                "Plans and credits"
+              )
+            }
+          >
 
+            <FiPackage />
 
+            <span>
+              Plans
+            </span>
 
-          <button>
-
-            ⓘ Help Center
+            <FiChevronRight />
 
           </button>
 
 
+          <button
+            onClick={() =>
+              onSettings("Account")
+            }
+          >
+
+            <FiUser />
+
+            <span>
+              Profile
+            </span>
+
+            <FiChevronRight />
+
+          </button>
 
 
+          <button>
 
-          <button onClick={() => onPage("Home")}>
-  <FiHome />
-  <span>Homepage</span>
-</button>
+            <FiGift />
 
-<button
-  className="signout"
-  onClick={() => {
-    console.log("clicked");
-    onLogout();
-  }}
->
-  <FiLogOut />
-  <span>Sign out</span>
-</button>
+            <span>
+              Redemption
+            </span>
+
+            <FiChevronRight />
+
+          </button>
+
+
+          <button
+            onClick={() =>
+              onSettings(
+                "Preference"
+              )
+            }
+          >
+
+            <FiSliders />
+
+            <span>
+              Appearance
+            </span>
+
+            <FiChevronRight />
+
+          </button>
+
+
+          <button>
+            ⓘ Help Center
+          </button>
+
+
+          <button
+            onClick={() =>
+              onPage("Home")
+            }
+          >
+
+            <FiHome />
+
+            <span>
+              Homepage
+            </span>
+
+          </button>
+
+
+          <button
+            className="signout"
+            onClick={onLogout}
+          >
+
+            <FiLogOut />
+
+            <span>
+              Sign out
+            </span>
+
+          </button>
 
         </div>
 
       )}
 
-
     </aside>
-
   );
-
 }
 
 
-
-
+/* =====================================================
+   HOME
+===================================================== */
 
 function Home({
   prompt,
@@ -867,186 +1477,224 @@ function Home({
   messages,
   typing,
   onSend,
+  theme,
+  setTheme,
 }) {
-  
-const [listening, setListening] = useState(false);
-const [showThemeMenu, setShowThemeMenu] = useState(false);
-const [showPlusMenu, setShowPlusMenu] = useState(false);
-const [theme, setTheme] = useState("Light");
-  const [hoveredAgent,setHoveredAgent] =
-    useState(null);
+const { t } = useTranslation();
+  const [listening, setListening] =
+    useState(false);
 
+  const [showThemeMenu, setShowThemeMenu] =
+    useState(false);
+
+  const [showPlusMenu, setShowPlusMenu] =
+    useState(false);
+
+
+  const [hoveredAgent, setHoveredAgent] =
+    useState(null);
 
 
   const agents = [
 
     "Alex is a Product Manager",
+
     "Emma is a UI Designer",
+
     "Noah is a Backend Developer",
+
     "Luna is a QA Engineer",
+
     "David is a Data Analyst",
+
     "Mia is an AI Engineer",
+
     "Leo is a Marketing Expert",
 
   ];
+  
+
+  /* ===================================================
+     VOICE
+  =================================================== */
+
+  const startVoice = () => {
+
+    const SpeechRecognition =
+      window.SpeechRecognition ||
+      window.webkitSpeechRecognition;
 
 
+    if (!SpeechRecognition) {
 
-const startVoice = () => {
-  const SpeechRecognition =
-    window.SpeechRecognition || window.webkitSpeechRecognition;
+      alert(
+        "Speech Recognition is not supported."
+      );
 
-  if (!SpeechRecognition) {
-    alert("Speech Recognition is not supported.");
-    return;
-  }
+      return;
+    }
 
-  const recognition = new SpeechRecognition();
 
-  recognition.lang = "en-US";
-  recognition.interimResults = false;
+    const recognition =
+      new SpeechRecognition();
 
-  recognition.start();
 
-  setListening(true);
+    recognition.lang =
+      "en-US";
 
-  recognition.onresult = (e) => {
-    setPrompt(e.results[0][0].transcript);
+    recognition.interimResults =
+      false;
+
+
+    recognition.start();
+
+    setListening(true);
+
+
+    recognition.onresult = (
+      event
+    ) => {
+
+      setPrompt(
+        event.results[0][0]
+          .transcript
+      );
+
+    };
+
+
+    recognition.onend = () => {
+
+      setListening(false);
+
+    };
+
   };
 
-  recognition.onend = () => {
-    setListening(false);
-  };
-};
+
+  /* ===================================================
+     RENDER
+  =================================================== */
+
   return (
 
     <div className="blueprint-home-page">
 
-
+      {/* =================================================
+          CREDIT
+      ================================================= */}
 
       <div className="blueprint-top-credit">
 
-        Free plan ·
-
+{t("freePlan")} ·
         <a>
-          Upgrade
-        </a>
+{t("upgrade")}        </a>
 
       </div>
 
 
-
-
+      {/* =================================================
+          TEAM AVATARS
+      ================================================= */}
 
       <div
         className="blueprint-team-orbs"
         aria-label="Atoms team"
       >
 
+        {avatars.map(
+          (avatar, index) => (
 
-        {Array.from(
-          {length:7},
-          (_,index)=>(
-
-
-          <div
-            key={index}
-            className="avatar-wrapper"
-
-            onMouseEnter={() =>
-              setHoveredAgent(index)
-            }
-
-            onMouseLeave={() =>
-              setHoveredAgent(null)
-            }
-
-          >
-
-
-
-            {hoveredAgent===index && (
-
-              <div className="blueprint-agent-tooltip">
-
-                {agents[index]}
-
-              </div>
-
-            )}
-
-
-
-
-
-            <i
-
-              className={
-                `blueprint-team-avatar avatar-${index+1}`
+            <div
+              key={index}
+              className="avatar-wrapper"
+              onMouseEnter={() =>
+                setHoveredAgent(index)
               }
+              onMouseLeave={() =>
+                setHoveredAgent(null)
+              }
+            >
+
+              {hoveredAgent ===
+                index && (
+
+                <div className="blueprint-agent-tooltip">
+
+                  {
+                    agents[index]
+                  }
+
+                </div>
+
+              )}
 
 
-              style={{
-  backgroundImage: `url(${avatars[index]})`
-}}
-            />
+              <i
+                className={
+                  `blueprint-team-avatar avatar-${
+                    index + 1
+                  }`
+                }
+                style={{
+                  backgroundImage:
+                    `url(${avatar})`,
+                }}
+              />
 
+            </div>
 
-          </div>
-
-
-        ))}
-
-
+          )
+        )}
 
       </div>
 
 
-
-
+      {/* =================================================
+          TITLE
+      ================================================= */}
 
       <h1>
+  {t("homeTitle")}
+</h1>
 
-        Your next product starts here, saswe eng.
+      {/* =================================================
+          MESSAGES
+      ================================================= */}
 
-      </h1>
-
-
-
-
-
-
-      {messages.length>0 && (
+      {messages.length > 0 && (
 
         <div className="blueprint-sent-messages">
 
+          {messages.map(
+            (message) => (
 
-          {messages.map(message=>(
+              <p
+                key={
+                  message.id
+                }
+                className={
+                  message.type
+                }
+              >
 
+                {message.type ===
+                  "assistant" && (
 
-            <p
-              key={message.id}
-              className={message.type}
-            >
+                  <b>
+                    Alex
+                  </b>
 
-              {message.type==="assistant" &&
-                <b>
-                  Alex
-                </b>
-              }
+                )}
 
+                {
+                  message.text
+                }
 
-              {message.text}
+              </p>
 
-
-            </p>
-
-
-          ))}
-
-
-
-
+            )
+          )}
 
 
           {typing && (
@@ -1057,665 +1705,436 @@ const startVoice = () => {
                 Alex
               </b>
 
-
               <i />
               <i />
               <i />
-
 
             </p>
 
           )}
-
-
 
         </div>
 
       )}
 
 
-
-
-
+      {/* =================================================
+          PROMPT
+      ================================================= */}
 
       <div className="blueprint-home-prompt">
 
-
         <input
-
           value={prompt}
-
-          onChange={(event)=>
-            setPrompt(event.target.value)
+          onChange={(event) =>
+            setPrompt(
+              event.target.value
+            )
           }
+          onKeyDown={(event) => {
 
+            if (
+              event.key ===
+              "Enter"
+            ) {
 
-          onKeyDown={(event)=>
-            event.key==="Enter" && onSend()
-          }
+              onSend();
 
+            }
 
-          placeholder=
-          "Ask the team to bring your idea to life"
-
+          }}
+         placeholder={t("askPlaceholder")}
         />
-
-
-
 
 
         <footer>
 
-<div className="prompt-action">
+          {/* =============================================
+              PLUS
+          ============================================= */}
 
-<button
-  onClick={() => {
-    setShowPlusMenu(!showPlusMenu);
-    setShowThemeMenu(false);
-  }}
->
-  <FiPlus />
-</button>
+          <div className="prompt-action">
 
+            <button
+              type="button"
+              onClick={() => {
 
-{showPlusMenu && (
-  <div className="blueprint-plus-menu">
+                setShowPlusMenu(
+                  (current) =>
+                    !current
+                );
 
-    <button>
-      Upload file
-    </button>
+                setShowThemeMenu(
+                  false
+                );
 
-    <button>
-      Add image
-    </button>
+              }}
+            >
 
-    <button>
-      Connect tools
-    </button>
+              <FiPlus />
 
-  </div>
-)}
-
-</div>
+            </button>
 
 
+            {showPlusMenu && (
 
-<div className="prompt-action">
+              <div className="blueprint-plus-menu">
 
-<button
-  onClick={() => {
-    setShowThemeMenu(!showThemeMenu);
-    setShowPlusMenu(false);
-  }}
->
-  {theme}
-  <FiChevronDown />
-</button>
+                <button type="button">
+{t("uploadFile")}
+                </button>
+
+                <button type="button">
+{t("addImage")}                </button>
+
+                <button type="button">
+{t("connectTools")}                </button>
+
+              </div>
+
+            )}
+
+          </div>
 
 
-{showThemeMenu && (
+          {/* =============================================
+              THEME
+          ============================================= */}
+
+          <div className="prompt-action">
+
+            <button
+              type="button"
+              onClick={() => {
+
+                setShowThemeMenu(
+                  (current) =>
+                    !current
+                );
+
+                setShowPlusMenu(
+                  false
+                );
+
+              }}
+            >
+
+              {theme}
+
+              <FiChevronDown />
+
+            </button>
+
+
+           {showThemeMenu && (
+
   <div className="blueprint-theme-menu">
 
-    <button onClick={() => setTheme("System")}>
-      System
-    </button>
+    <button
+      type="button"
+      onClick={() => {
+        const dark = window.matchMedia(
+          "(prefers-color-scheme: dark)"
+        ).matches;
 
-    <button onClick={() => setTheme("Light")}>
-      Light
-    </button>
+        setTheme(dark ? "Dark" : "Light");
+        setShowThemeMenu(false);
+      }}
+    >
+{t("system")}    </button>
 
-    <button onClick={() => setTheme("Dark")}>
-      Dark
-    </button>
+    <button
+      type="button"
+      onClick={() => {
+setTheme("light");
+        setShowThemeMenu(false);
+      }}
+    >
+{t("light")}    </button>
+
+    <button
+      type="button"
+      onClick={() => {
+setTheme("dark");
+        setShowThemeMenu(false);
+      }}
+    >
+{t("dark")}    </button>
 
   </div>
+
 )}
 
-</div>
-
-
+          </div>
 
 
           <span />
 
 
+          {/* =============================================
+              BUILD
+          ============================================= */}
 
+          <button
+            type="button"
+          >
 
-
-          <button>
-
-            Build
-
+{t("build")}
             <FiChevronDown />
 
           </button>
 
 
-
-
-
-         <button
-    onClick={startVoice}
-    className={listening ? "recording" : ""}
->
-    <FiMic />
-</button>
-
-
-
-
+          {/* =============================================
+              MIC
+          ============================================= */}
 
           <button
+            type="button"
+            onClick={startVoice}
+            className={
+              listening
+                ? "recording"
+                : ""
+            }
+          >
 
+            <FiMic />
+
+          </button>
+
+
+          {/* =============================================
+              SEND
+          ============================================= */}
+
+          <button
+            type="button"
             className="go"
-
             onClick={onSend}
-
           >
 
             ↑
 
           </button>
 
-
-
         </footer>
 
 
-
-
-
+        {/* =================================================
+            TOOLS
+        ================================================= */}
 
         <aside>
 
-
           <FiZap />
 
-
-          Connect your tools to Atoms
-
-
+{t("connectAtoms")}
           <span />
 
           <b>
             ● ● ● ●
           </b>
 
-
           <FiX />
-
 
         </aside>
 
-
-
       </div>
 
-
-
     </div>
-
   );
-
 }
-function Resources({
-  resourceTab,
-  setResourceTab,
-  
-  resourceFilter,
-  setResourceFilter
-}) {
 
 
-  const templates = [
-    ["Landing Page Template", "Atoms · ◉ 3K", "purple"],
-    ["Dashboard Template", "Atoms · ◉ 5K", "dark"],
-    ["AI Website Template", "Atoms · ◉ 2K", "green"],
-  ];
+/* =====================================================
+   PROFILE PAGE
+===================================================== */
 
+function ProfilePage() {
 
   return (
 
-    <section className="blueprint-catalog">
+    <section className="blueprint-profile-page">
 
+      <div className="blueprint-profile-cover" />
 
-      <header>
+      <div className="blueprint-profile-avatar">
+        S
+      </div>
 
-        <h2>
-          Resources
-        </h2>
+      <button className="blueprint-edit-profile">
+        Edit profile
+      </button>
 
+      <h1>
+        saswe eng
+      </h1>
 
-        
-      </header>
+      <p>
+        0 saves | 0 views
+      </p>
 
+      <div className="blueprint-profile-tabs">
 
+        <b>
+          Public Projects
+        </b>
 
-
-
-      <div className="blueprint-tabs">
-
-
-        <button
-          className={
-            resourceTab==="Discover"
-            ?
-            "active"
-            :
-            ""
-          }
-
-          onClick={() =>
-            setResourceTab("Discover")
-          }
-
-        >
-          Discover
-        </button>
-
-
-
-
-        <button
-
-          className={
-            resourceTab==="Templates"
-            ?
-            "active"
-            :
-            ""
-          }
-
-          onClick={() =>
-            setResourceTab("Templates")
-          }
-
-        >
-
-          Templates
-
-        </button>
-
+        <span>
+          Saved
+        </span>
 
       </div>
 
-
-
-
-
-      <div className="blueprint-filters">
-
-
-        {[
-          "All",
-          "E-commerce",
-          "Website",
-          "Game",
-          "Productivity",
-          "Data Analysis",
-          "Latest",
-        ].map((x)=>(
-
-
-          <button
-
-            key={x}
-
-            className={
-              resourceFilter===x
-              ?
-              "filter-active"
-              :
-              ""
-            }
-
-
-            onClick={() =>
-              setResourceFilter(x)
-            }
-
-          >
-
-            {x}
-
-          </button>
-
-
-        ))}
-
-
-      </div>
-
-
-
-
-
-
-      <div className="blueprint-resource-grid">
-
-
-        {(resourceTab==="Discover"
-          ?
-          resources
-          :
-          templates
-        )
-
-        .filter(item =>
-          resourceFilter==="All" ||
-          item[3]===resourceFilter
-        )
-
-        .map(([title,meta,tone],index)=>(
-
-
-          <article key={title}>
-
-
-            <div
-              className={`blueprint-resource-image ${tone}`}
-            >
-
-              <span>
-
-                {
-                  index % 2
-                  ?
-                  "حول أفكارك إلى فيديوهات احترافية"
-                  :
-                  "Trading Dashboard"
-                }
-
-              </span>
-
-
-            </div>
-
-
-
-
-            <footer>
-
-
-              <b className="blueprint-resource-avatar">
-
-                {title[0]}
-
-              </b>
-
-
-
-              <div>
-
-                <strong>
-                  {title}
-                </strong>
-
-
-                <small>
-                  {meta}
-                </small>
-
-
-              </div>
-
-
-            </footer>
-
-
-          </article>
-
-
-        ))}
-
-
-      </div>
-
-
+      <h3>
+        Other Projects
+      </h3>
+
+      <div className="blueprint-profile-projects" />
 
     </section>
-
-
   );
-
 }
 
 
-
-
-
-
-function ProfilePage(){
-
-
-return (
-
-<section className="blueprint-profile-page">
-
-
-<div className="blueprint-profile-cover" />
-
-
-<div className="blueprint-profile-avatar">
-
-S
-
-</div>
-
-
-
-<button className="blueprint-edit-profile">
-
-Edit profile
-
-</button>
-
-
-
-
-<h1>
-saswe eng
-</h1>
-
-
-
-<p>
-0 saves | 0 views
-</p>
-
-
-
-
-<div className="blueprint-profile-tabs">
-
-
-<b>
-Public Projects
-</b>
-
-
-
-<span>
-Saved
-</span>
-
-
-</div>
-
-
-
-
-<h3>
-Other Projects
-</h3>
-
-
-
-<div className="blueprint-profile-projects">
-
-</div>
-
-
-</section>
-
-);
-
-
-}
-
-
-
-
-
+/* =====================================================
+   PROJECTS
+===================================================== */
 
 function Projects({
   conversations,
   onConversation,
 }) {
 
+  return (
 
-return (
+    <section className="blueprint-catalog blueprint-projects">
 
-<section className="blueprint-catalog blueprint-projects">
+      <header>
 
+        <h2>
+          My Projects
+        </h2>
 
-<header>
+      </header>
 
-<h2>
-My Projects
-</h2>
 
+      <div className="blueprint-filters blueprint-project-filter">
 
+        <span>
+          Starred
+        </span>
 
+      </div>
 
 
+      {conversations.length === 0 ? (
 
-</header>
+        <p className="no-projects">
 
+          Start a new chat from the
+          Atoms button to create your
+          first project.
 
+        </p>
 
+      ) : (
 
-<div className="blueprint-filters blueprint-project-filter">
+        <div className="blueprint-project-grid">
 
-<span>
-Starred
-</span>
+          {conversations.map(
+            (conversation) => (
 
-</div>
+              <article
+                key={
+                  conversation.id
+                }
+                onClick={() =>
+                  onConversation(
+                    conversation.id
+                  )
+                }
+              >
 
+                <div className="blueprint-empty-project">
 
+                  <span className="blueprint-project-logo">
 
+                    <i />
+                    <i />
+                    <i />
 
+                  </span>
 
-{
-conversations.length===0
+                </div>
 
-?
 
-<p className="no-projects">
+                <footer>
 
-Start a new chat from the Atoms button to create your first project.
+                  <div>
 
-</p>
+                    <strong>
+                      {
+                        conversation.title
+                      }
+                    </strong>
 
+                    <small>
+                      {
+                        conversation.createdAt ||
+                        "2026/07/26"
+                      }
+                    </small>
 
-:
+                  </div>
 
-<div className="blueprint-project-grid">
+                  <FiMoreHorizontal />
 
+                </footer>
 
-{conversations.map(conversation=>(
+              </article>
 
+            )
+          )}
 
-<article
+        </div>
 
-key={conversation.id}
+      )}
 
-onClick={() =>
-onConversation(conversation.id)
-}
-
->
-
-
-
-<div className="blueprint-empty-project">
-
-
-<span className="blueprint-project-logo">
-
-<i/>
-<i/>
-<i/>
-
-</span>
-
-
-</div>
-
-
-
-
-<footer>
-
-
-<div>
-
-<strong>
-{conversation.title}
-</strong>
-
-
-<small>
-
-{conversation.createdAt || "2026/07/26"}
-
-</small>
-
-
-</div>
-
-
-
-
-<FiMoreHorizontal />
-
-
-</footer>
-
-
-
-</article>
-
-
-))}
-
-
-
-</div>
-
-
+    </section>
+  );
 }
 
 
+/* =====================================================
+   SETTINGS MODAL
+===================================================== */
 
-</section>
-
-);
-
-
-}
-function SettingsModal({ tab, onTab, onClose }) {
+function SettingsModal({
+  tab,
+  onTab,
+  onClose,
+}) {
 
   const tabs = [
+
     ["Domains", FiGlobe],
+
     ["People", FiUsers],
+
     ["General", FiSliders],
+
     ["Connectors", FiZap],
+
     ["Plans and credits", FiPackage],
+
     ["Cloud & AI", FiGrid],
+
     ["Account", FiUser],
+
     ["Preference", FiSliders],
+
   ];
 
 
@@ -1724,7 +2143,6 @@ function SettingsModal({ tab, onTab, onClose }) {
     <div className="blueprint-modal-backdrop">
 
       <section className="blueprint-settings-modal">
-
 
         <aside>
 
@@ -1738,19 +2156,21 @@ function SettingsModal({ tab, onTab, onClose }) {
           </small>
 
 
-          {tabs.slice(0,1).map(([n,I])=>(
+          {tabs
+            .slice(0, 1)
+            .map(
+              ([n, I]) => (
 
-            <Tab
-              key={n}
-              n={n}
-              I={I}
-              tab={tab}
-              onTab={onTab}
-            />
+                <Tab
+                  key={n}
+                  n={n}
+                  I={I}
+                  tab={tab}
+                  onTab={onTab}
+                />
 
-          ))}
-
-
+              )
+            )}
 
 
           <small>
@@ -1758,19 +2178,21 @@ function SettingsModal({ tab, onTab, onClose }) {
           </small>
 
 
-          {tabs.slice(1,6).map(([n,I])=>(
+          {tabs
+            .slice(1, 6)
+            .map(
+              ([n, I]) => (
 
-            <Tab
-              key={n}
-              n={n}
-              I={I}
-              tab={tab}
-              onTab={onTab}
-            />
+                <Tab
+                  key={n}
+                  n={n}
+                  I={I}
+                  tab={tab}
+                  onTab={onTab}
+                />
 
-          ))}
-
-
+              )
+            )}
 
 
           <small>
@@ -1778,27 +2200,26 @@ function SettingsModal({ tab, onTab, onClose }) {
           </small>
 
 
-          {tabs.slice(6).map(([n,I])=>(
+          {tabs
+            .slice(6)
+            .map(
+              ([n, I]) => (
 
-            <Tab
-              key={n}
-              n={n}
-              I={I}
-              tab={tab}
-              onTab={onTab}
-            />
+                <Tab
+                  key={n}
+                  n={n}
+                  I={I}
+                  tab={tab}
+                  onTab={onTab}
+                />
 
-          ))}
-
+              )
+            )}
 
         </aside>
 
 
-
-
-
         <main>
-
 
           <button
             className="blueprint-modal-close"
@@ -1810,764 +2231,621 @@ function SettingsModal({ tab, onTab, onClose }) {
           </button>
 
 
-
-          <SettingsContent tab={tab}/>
-
+          <SettingsContent
+            tab={tab}
+          />
 
         </main>
 
-
       </section>
 
-
     </div>
-
   );
-
 }
 
 
+/* =====================================================
+   TAB
+===================================================== */
 
+function Tab({
+  n,
+  I,
+  tab,
+  onTab,
+}) {
 
+  return (
 
+    <button
+      className={
+        tab === n
+          ? "active"
+          : ""
+      }
+      onClick={() =>
+        onTab(n)
+      }
+    >
 
-function Tab({n,I,tab,onTab}){
+      <I />
 
-return (
+      {n}
 
-<button
+      {n ===
+        "Cloud & AI" && (
 
-className={
-  tab===n
-  ?
-  "active"
-  :
-  ""
-}
+        <em>
+          ✦ Free
+        </em>
 
-onClick={() =>
-  onTab(n)
-}
+      )}
 
->
-
-<I/>
-
-{n}
-
-
-{n==="Cloud & AI" &&
-
-<em>
-✦ Free
-</em>
-
-}
-
-
-</button>
-
-
-);
-
+    </button>
+  );
 }
 
 
+/* =====================================================
+   SETTINGS CONTENT
+===================================================== */
 
+function SettingsContent({
+  tab,
+}) {
 
+  /* ===================================================
+     PEOPLE
+  =================================================== */
 
+  if (tab === "People") {
 
+    return (
 
-function SettingsContent({tab}){
+      <>
 
+        <h2>
+          People <em>Free</em>
+        </h2>
 
-if(tab==="People")
 
-return (
+        <div className="blueprint-settings-card">
 
-<>
+          <h3>
+            Invite workspace members
+          </h3>
 
-<h2>
-People <em>Free</em>
-</h2>
+          <p>
+            Upgrade to invite members and
+            collaborate on all projects.
+          </p>
 
 
+          <div className="blueprint-invite">
 
-<div className="blueprint-settings-card">
+            <input
+              placeholder="Add emails"
+            />
 
+            <button>
+              Upgrade to invite members
+            </button>
 
-<h3>
-Invite workspace members
-</h3>
+          </div>
 
+        </div>
 
-<p>
-Upgrade to invite members and collaborate on all projects.
-</p>
 
+        <div className="blueprint-members">
 
+          <header>
 
-<div className="blueprint-invite">
+            User
 
+            <span>
+              Role
+            </span>
 
-<input placeholder="Add emails"/>
+            <span>
+              Status
+            </span>
 
+            <span>
+              Total Usage
+            </span>
 
-<button>
-Upgrade to invite members
-</button>
+            <span>
+              Date Joined
+            </span>
 
+          </header>
 
-</div>
 
+          <p>
 
+            <b>
+              S
+            </b>
 
-</div>
+            saswe eng (you)
 
+            <span>
+              Owner
+            </span>
 
+            <span className="blueprint-active-badge">
+              Active
+            </span>
 
+            <span>
+              6.51 credits
+            </span>
 
+            <span>
+              Jul 26, 2026
+            </span>
 
-<div className="blueprint-members">
+          </p>
 
+        </div>
 
-<header>
+      </>
+    );
+  }
 
-User
 
-<span>
-Role
-</span>
+  /* ===================================================
+     CONNECTORS
+  =================================================== */
 
-<span>
-Status
-</span>
+  if (tab === "Connectors") {
 
-<span>
-Total Usage
-</span>
+    return (
 
-<span>
-Date Joined
-</span>
+      <>
 
+        <h2>
+          Connectors
+        </h2>
 
-</header>
 
+        <div className="blueprint-connector-list">
 
+          {[
+            "GitHub",
+            "Supabase",
+            "Stripe",
+            "Google Analytics 4",
+            "Google Search Console",
+            "Google Ads",
+          ].map(
+            (name) => (
 
+              <div key={name}>
 
-<p>
+                <b>
 
-<b>
-S
-</b>
+                  <FiCode />
 
-saswe eng (you)
+                  {name}
 
+                  <small>
+                    Connect {name} to manage
+                    your services and project
+                    data.
+                  </small>
 
-<span>
-Owner
-</span>
+                </b>
 
 
-<span className="blueprint-active-badge">
-Active
-</span>
+                <button>
+                  Connect
+                </button>
 
+              </div>
 
-<span>
-6.51 credits
-</span>
+            )
+          )}
 
+        </div>
 
-<span>
-Jul 26, 2026
-</span>
+      </>
+    );
+  }
 
 
-</p>
+  /* ===================================================
+     PLANS
+  =================================================== */
 
+  if (
+    tab ===
+    "Plans and credits"
+  ) {
 
-</div>
+    return (
 
+      <>
 
-</>
-);
+        <h2>
+          Plans and credits <em>Free</em>
+        </h2>
 
 
+        <div className="blueprint-credits-card">
 
+          <b>
+            Credits remaining
+          </b>
 
+          <strong>
+            15 / 15
+          </strong>
 
+          <i>
+            <span />
+          </i>
 
+          <small>
+            • 15 daily credits reset on
+            Jul 28
+          </small>
 
-if(tab==="Connectors")
+        </div>
 
-return (
 
-<>
+        <div className="blueprint-plan-tabs">
+          Plan Payment
+        </div>
 
-<h2>
-Connectors
-</h2>
 
+        <div className="blueprint-plans">
 
+          {[
+            ["Free", "$0"],
+            ["Pro", "$15.8"],
+            ["Max", "$79"],
+          ].map(
+            ([name, price]) => (
 
-<div className="blueprint-connector-list">
+              <article key={name}>
 
+                <h2>
+                  {name}
+                </h2>
 
-{
+                <strong>
 
-[
-"GitHub",
-"Supabase",
-"Stripe",
-"Google Analytics 4",
-"Google Search Console",
-"Google Ads",
-]
+                  {price}
 
-.map(n=>(
+                  <small>
+                    / month
+                  </small>
 
+                </strong>
 
-<div key={n}>
+                <p>
+                  Unlock more features
+                </p>
 
+              </article>
 
-<b>
+            )
+          )}
 
-<FiCode/>
+        </div>
 
-{n}
+      </>
+    );
+  }
 
 
-<small>
-Connect {n} to manage your services and project data.
-</small>
+  /* ===================================================
+     PREFERENCE
+  =================================================== */
 
+  if (
+    tab ===
+    "Preference"
+  ) {
 
-</b>
+    return (
 
+      <>
 
+        <h2>
+          Preference
+        </h2>
 
-<button>
-Connect
-</button>
+        <h3>
+          Language
+        </h3>
 
+        <p>
+          Change the language used
+          in the user interface.
+        </p>
 
-</div>
+        <hr />
 
+        <h3>
+          Theme
+        </h3>
 
-))
+        <p>
+          Customize how Atoms looks
+          on your device.
+        </p>
 
 
+        <div className="blueprint-themes">
+
+          <b>
+            System
+          </b>
+
+          <b className="chosen">
+            Light
+          </b>
+
+          <b>
+            Dark
+          </b>
+
+        </div>
+
+      </>
+    );
+  }
+
+
+  /* ===================================================
+     DOMAINS
+  =================================================== */
+
+  if (tab === "Domains") {
+
+    return (
+
+      <>
+
+        <h2>
+          Domains ⓘ
+        </h2>
+
+        <h3>
+          Connected Domains
+        </h3>
+
+        <p>
+          Manage your connected domains
+        </p>
+
+
+        <div className="blueprint-notice">
+
+          The project hasn't been
+          published yet
+
+          <button>
+            Publish
+          </button>
+
+        </div>
+
+
+        <div className="blueprint-domain-row">
+
+          <FiGlobe />
+
+          <span>
+
+            <b>
+              Connect Existing Domain
+            </b>
+
+            <small>
+              Upgrade your subscription
+            </small>
+
+          </span>
+
+          <button>
+            Connect domain
+          </button>
+
+        </div>
+
+      </>
+    );
+  }
+
+
+  /* ===================================================
+     ACCOUNT
+  =================================================== */
+
+  if (tab === "Account") {
+
+    return (
+
+      <>
+
+        <h2>
+          Account Settings
+        </h2>
+
+
+        <div className="blueprint-account-row">
+
+          Avatar
+
+          <b>
+            S
+          </b>
+
+        </div>
+
+
+        <div className="blueprint-account-row">
+
+          Username
+
+          <span>
+            saswe eng✎
+          </span>
+
+        </div>
+
+
+        <div className="blueprint-account-row">
+
+          Email
+
+          <span>
+            engsaswe@gmail.com
+          </span>
+
+        </div>
+
+      </>
+    );
+  }
+
+
+  /* ===================================================
+     CLOUD & AI
+  =================================================== */
+
+  if (
+    tab ===
+    "Cloud & AI"
+  ) {
+
+    return (
+
+      <>
+
+        <h2>
+          Cloud & AI
+        </h2>
+
+
+        <div className="blueprint-warning">
+
+          ⓘ Your Cloud & AI Balance is
+          crucial for keeping your
+          published projects running.
+
+        </div>
+
+
+        <div className="blueprint-cloud-cards">
+
+          <article>
+
+            <h3>
+              ◕ Cloud & AI
+            </h3>
+
+            <strong>
+              $0.00
+            </strong>
+
+            <button>
+              Upgrade
+            </button>
+
+          </article>
+
+
+          <article>
+
+            <h3>
+              Cloud $25.00 / $25.00
+            </h3>
+
+            <hr />
+
+            <h3>
+              AI $1.00 / $1.00
+            </h3>
+
+          </article>
+
+        </div>
+
+      </>
+    );
+  }
+
+
+  /* ===================================================
+     GENERAL
+  =================================================== */
+
+  return (
+
+    <>
+
+      <h2>
+        General
+      </h2>
+
+
+      <h3>
+        Default Model
+      </h3>
+
+
+      <div className="blueprint-setting-line">
+
+        Model
+
+        <span>
+          Claude Opus 4.7⌄
+        </span>
+
+      </div>
+
+
+      <h3>
+        Permissions
+      </h3>
+
+
+      <div className="blueprint-setting-line">
+
+        Set Default Access for
+        Projects
+
+        <span>
+          ◎ Public⌄
+        </span>
+
+      </div>
+
+
+      <h3>
+        Credit Balance Reminder
+      </h3>
+
+
+      <div className="blueprint-setting-line">
+
+        Show remaining credits
+
+        <i className="blueprint-toggle" />
+
+      </div>
+
+    </>
+  );
 }
 
 
-
-</div>
-
-
-</>
-
-);
-
-
-
-
-
-
-
-
-if(tab==="Plans and credits")
-
-return (
-
-<>
-
-
-<h2>
-Plans and credits <em>Free</em>
-</h2>
-
-
-
-<div className="blueprint-credits-card">
-
-
-<b>
-Credits remaining
-</b>
-
-
-<strong>
-15 / 15
-</strong>
-
-
-
-<i>
-<span/>
-</i>
-
-
-<small>
-• 15 daily credits reset on Jul 28
-</small>
-
-
-</div>
-
-
-
-
-
-<div className="blueprint-plan-tabs">
-
-Plan Payment
-
-</div>
-
-
-
-
-
-<div className="blueprint-plans">
-
-
-{
-
-[
-["Free","$0"],
-["Pro","$15.8"],
-["Max","$79"],
-]
-
-.map(([n,p])=>(
-
-
-<article key={n}>
-
-
-<h2>
-{n}
-</h2>
-
-
-<strong>
-
-{p}
-
-<small>
-/ month
-</small>
-
-</strong>
-
-
-
-<p>
-Unlock more features
-</p>
-
-
-</article>
-
-
-))
-
-
-}
-
-
-</div>
-
-
-</>
-
-);
-
-
-
-
-
-
-
-
-if(tab==="Preference")
-
-return (
-
-<>
-
-
-<h2>
-Preference
-</h2>
-
-
-
-<h3>
-Language
-</h3>
-
-
-<p>
-Change the language used in the user interface.
-</p>
-
-
-
-<hr/>
-
-
-
-<h3>
-Theme
-</h3>
-
-
-<p>
-Customize how Atoms looks on your device.
-</p>
-
-
-
-<div className="blueprint-themes">
-
-
-<b>
-System
-</b>
-
-
-<b className="chosen">
-Light
-</b>
-
-
-<b>
-Dark
-</b>
-
-
-</div>
-
-
-
-</>
-
-);
-
-
-
-
-
-
-
-
-if(tab==="Domains")
-
-return (
-
-<>
-
-
-<h2>
-Domains ⓘ
-</h2>
-
-
-
-<h3>
-Connected Domains
-</h3>
-
-
-<p>
-Manage your connected domains
-</p>
-
-
-
-
-<div className="blueprint-notice">
-
-
-The project hasn't been published yet
-
-
-<button>
-Publish
-</button>
-
-
-</div>
-
-
-
-
-
-<div className="blueprint-domain-row">
-
-
-<FiGlobe/>
-
-
-
-<span>
-
-<b>
-Connect Existing Domain
-</b>
-
-
-<small>
-Upgrade your subscription
-</small>
-
-
-</span>
-
-
-
-
-<button>
-Connect domain
-</button>
-
-
-
-</div>
-
-
-</>
-
-);
-
-
-
-
-
-
-
-if(tab==="Account")
-
-return (
-
-<>
-
-
-<h2>
-Account Settings
-</h2>
-
-
-
-<div className="blueprint-account-row">
-
-Avatar
-
-<b>
-S
-</b>
-
-
-</div>
-
-
-
-
-<div className="blueprint-account-row">
-
-Username
-
-<span>
-saswe eng✎
-</span>
-
-
-</div>
-
-
-
-
-<div className="blueprint-account-row">
-
-Email
-
-<span>
-engsaswe@gmail.com
-</span>
-
-
-</div>
-
-
-</>
-
-);
-
-
-
-
-
-
-
-if(tab==="Cloud & AI")
-
-return (
-
-<>
-
-
-<h2>
-Cloud & AI
-</h2>
-
-
-
-<div className="blueprint-warning">
-
-ⓘ Your Cloud & AI Balance is crucial for keeping your published projects running.
-
-</div>
-
-
-
-
-
-<div className="blueprint-cloud-cards">
-
-
-<article>
-
-<h3>
-◕ Cloud & AI
-</h3>
-
-
-<strong>
-$0.00
-</strong>
-
-
-<button>
-Upgrade
-</button>
-
-
-</article>
-
-
-
-
-
-<article>
-
-<h3>
-Cloud $25.00 / $25.00
-</h3>
-
-
-<hr/>
-
-
-<h3>
-AI $1.00 / $1.00
-</h3>
-
-
-</article>
-
-
-</div>
-
-
-</>
-
-);
-
-
-
-
-
-
-
-return (
-
-<>
-
-
-<h2>
-General
-</h2>
-
-
-
-<h3>
-Default Model
-</h3>
-
-
-
-<div className="blueprint-setting-line">
-
-Model
-
-<span>
-Claude Opus 4.7⌄
-</span>
-
-
-</div>
-
-
-
-
-<h3>
-Permissions
-</h3>
-
-
-
-<div className="blueprint-setting-line">
-
-Set Default Access for Projects
-
-
-<span>
-◎ Public⌄
-</span>
-
-
-</div>
-
-
-
-
-<h3>
-Credit Balance Reminder
-</h3>
-
-
-
-<div className="blueprint-setting-line">
-
-Show remaining credits
-
-
-<i className="blueprint-toggle"/>
-
-
-</div>
-
-
-</>
-
-);
-
-
-}
-
-
-export default AtomsApp;  
+/* =====================================================
+   EXPORT
+===================================================== */
+
+export default AtomsApp;
