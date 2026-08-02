@@ -233,6 +233,59 @@ freelancerFooter: "3 open reviews · updated 6h ago",
 fitnessFooter: "Draft · edited yesterday",
 parkingFooter: "Fetching failed · retry available",
 bookstoreFooter: "10 sections · updated 5 days ago",
+ 
+home: "Home",
+resources: "Resources",
+newChat: "New Chat",
+myProjects: "My Projects",
+
+homeTitle: "Your next product starts here, software engineer.",
+
+askPlaceholder: "Ask the team to bring your idea to life",
+
+freePlan: "Free plan",
+
+upgrade: "Upgrade",
+
+uploadFile: "Upload file",
+
+addImage: "Add image",
+
+connectTools: "Connect tools",
+
+system: "System",
+light: "Light",
+dark: "Dark",
+
+build: "Build",
+
+connectAtoms: "Connect your tools to Atoms",
+
+recents: "Recents",
+
+yourChats: "Your chats will appear here",
+
+joinCommunity: "Join our Community",
+
+earnCredits: "Earn up to 25 credits",
+
+getFreeCredits: "Get Free Credits",
+
+get10Credits: "Get 10 credits each",
+
+settings: "Settings",
+
+plans: "Plans",
+
+profile: "Profile",
+
+appearance: "Appearance",
+
+helpCenter: "Help Center",
+
+homepage: "Homepage",
+
+signOut: "Sign out",
 homeFreePlan: "Free plan",
 homeTeamAriaLabel: "Atoms team",
 homeAgentAlex: "Alex is a Product Manager",
@@ -255,10 +308,9 @@ homeBuild: "Build",
 homeConnectToolsNotice:
   "Connect your tools to Atoms",
 speechNotSupported:
-  "Speech Recognition is not supported.",
-  },
+  "Speech Recognition is not supported.",},
   ar: {
-homeFreePlan: "الخطة المجانية",
+    homeFreePlan: "الخطة المجانية",
 homeTeamAriaLabel: "فريق Atoms",
 homeAgentAlex: "Alex هو مدير منتج",
 homeAgentEmma: "Emma هي مصممة واجهات مستخدم",
@@ -510,7 +562,60 @@ bookstoreFooter: "10 أقسام · تم التحديث منذ 5 أيام",
     notebookNotActivated: "دفتر الملاحظات غير مفعل بعد.",
       rememberPassword: "تذكرت كلمة المرور؟",
   backToLogin: "العودة إلى تسجيل الدخول",
-  },
+ home: "الرئيسية",
+resources: "الموارد",
+newChat: "محادثة جديدة",
+myProjects: "مشاريعي",
+
+homeTitle: "ابدأ منتجك القادم هنا",
+
+askPlaceholder: "اطلب من الفريق تحويل فكرتك إلى مشروع",
+
+freePlan: "الخطة المجانية",
+
+upgrade: "ترقية",
+
+uploadFile: "رفع ملف",
+
+addImage: "إضافة صورة",
+
+connectTools: "ربط الأدوات",
+
+system: "النظام",
+
+light: "فاتح",
+
+dark: "داكن",
+
+build: "بناء",
+
+connectAtoms: "اربط أدواتك مع Atoms",
+
+recents: "الأخيرة",
+
+yourChats: "ستظهر محادثاتك هنا",
+
+joinCommunity: "انضم إلى مجتمعنا",
+
+earnCredits: "اكسب حتى 25 رصيدًا",
+
+getFreeCredits: "احصل على رصيد مجاني",
+
+get10Credits: "احصل على 10 أرصدة لكل دعوة",
+
+settings: "الإعدادات",
+
+plans: "الخطط",
+
+profile: "الملف الشخصي",
+
+appearance: "المظهر",
+
+helpCenter: "مركز المساعدة",
+
+homepage: "الصفحة الرئيسية",
+
+signOut: "تسجيل الخروج", },
 };
 
 export function LanguageProvider({ children }) {
@@ -539,8 +644,10 @@ export function LanguageProvider({ children }) {
 
 export function useTranslation() {
   const context = useContext(LanguageContext);
+
   if (!context) {
     throw new Error("useTranslation must be used inside LanguageProvider");
   }
+
   return context;
 }
