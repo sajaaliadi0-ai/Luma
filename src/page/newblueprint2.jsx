@@ -1001,8 +1001,7 @@ const nav = [
         <button
           className="new-chat-brand"
           onClick={onNewChat}
-          title="New chat"
-        >
+title={t("newChat")}        >
 
           <span className="blueprint-atoms-symbol">
 
@@ -1045,7 +1044,7 @@ const nav = [
         </b>
 
         <span>
-          saswe eng's Atoms
+           eng Atoms
         </span>
 
         <FiChevronDown />
@@ -2368,6 +2367,8 @@ function Tab({
 function SettingsContent({
   tab,
 }) {
+    const { t } = useTranslation();
+
   const [accountActive, setAccountActive] = useState(true);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -2451,384 +2452,488 @@ function SettingsContent({
      PEOPLE
   =================================================== */
 
-  if (tab === "People") {
+  if (tab === "people") {
 
-    return (
+  return (
 
-      <>
+    <>
 
-        <h2>
-          People <em>Free</em>
-        </h2>
-
-
-        <div className="blueprint-settings-card">
-
-          <h3>
-            Invite workspace members
-          </h3>
-
-          <p>
-            Upgrade to invite members and
-            collaborate on all projects.
-          </p>
+      <h2>
+        {t("people")} <em>{t("free")}</em>
+      </h2>
 
 
-          <div className="blueprint-invite">
+      <div className="blueprint-settings-card">
 
-            <input
-              placeholder="Add emails"
-            />
-
-            <button>
-              Upgrade to invite members
-            </button>
-
-          </div>
-
-        </div>
+        <h3>
+          {t("inviteWorkspaceMembers")}
+        </h3>
 
 
-        <div className="blueprint-members">
-
-          <header>
-
-            User
-
-            <span>
-              Role
-            </span>
-
-            <span>
-              Status
-            </span>
-
-            <span>
-              Total Usage
-            </span>
-
-            <span>
-              Date Joined
-            </span>
-
-          </header>
+        <p>
+          {t("upgradeToInviteMembers")}
+          {" "}
+          {t("collaborateProjects")}
+        </p>
 
 
-          <p>
+        <div className="blueprint-invite">
 
-            <b>
-              S
-            </b>
+          <input
+            placeholder={t("addEmails")}
+          />
 
-            saswe eng (you)
 
-            <span>
-              Owner
-            </span>
-
-            <span className="blueprint-active-badge">
-              Active
-            </span>
-
-            <span>
-              6.51 credits
-            </span>
-
-            <span>
-              Jul 26, 2026
-            </span>
-
-          </p>
+          <button>
+            {t("upgradeToInviteMembers")}
+          </button>
 
         </div>
 
-      </>
-    );
-  }
+      </div>
 
+
+
+      <div className="blueprint-members">
+
+
+        <header>
+
+          {t("user")}
+
+
+          <span>
+            {t("role")}
+          </span>
+
+
+          <span>
+            {t("status")}
+          </span>
+
+
+          <span>
+            {t("totalUsage")}
+          </span>
+
+
+          <span>
+            {t("dateJoined")}
+          </span>
+
+
+        </header>
+
+
+
+        <p>
+
+          <b>
+            S
+          </b>
+
+
+          saswe eng ({t("you")})
+
+
+          <span>
+            {t("owner")}
+          </span>
+
+
+          <span className="blueprint-active-badge">
+            {t("active")}
+          </span>
+
+
+          <span>
+            6.51 {t("credits")}
+          </span>
+
+
+          <span>
+            Jul 26, 2026
+          </span>
+
+
+        </p>
+
+
+      </div>
+
+
+    </>
+  );
+}
 
   /* ===================================================
      CONNECTORS
   =================================================== */
 
-  if (tab === "Connectors") {
+ if (tab === "connectors") {
 
-    return (
+  return (
 
-      <>
+    <>
 
-        <h2>
-          Connectors
-        </h2>
-
-
-        <div className="blueprint-connector-list">
-
-          {[
-            "GitHub",
-            "Supabase",
-            "Stripe",
-            "Google Analytics 4",
-            "Google Search Console",
-            "Google Ads",
-          ].map(
-            (name) => (
-
-              <div key={name}>
-
-                <b>
-
-                  <FiCode />
-
-                  {name}
-
-                  <small>
-                    Connect {name} to manage
-                    your services and project
-                    data.
-                  </small>
-
-                </b>
+      <h2>
+        {t("connectors")}
+      </h2>
 
 
-                <button>
-                  Connect
-                </button>
 
-              </div>
+      <div className="blueprint-connector-list">
 
-            )
-          )}
 
-        </div>
+        {[
+          "GitHub",
+          "Supabase",
+          "Stripe",
+          "Google Analytics 4",
+          "Google Search Console",
+          "Google Ads",
+        ].map(
+          (name) => (
 
-      </>
-    );
-  }
 
+            <div key={name}>
+
+
+              <b>
+
+
+                <FiCode />
+
+
+                {name}
+
+
+                <small>
+
+                  {t("connectServiceData", {
+                    name
+                  })}
+
+
+                </small>
+
+
+              </b>
+
+
+
+              <button>
+
+                {t("connect")}
+
+              </button>
+
+
+            </div>
+
+
+          )
+        )}
+
+
+      </div>
+
+
+    </>
+  );
+}
 
   /* ===================================================
      PLANS
   =================================================== */
 
-  if (
-    tab ===
-    "Plans and credits"
-  ) {
+  if (tab === "plansCredits") {
 
-    return (
+  return (
 
-      <>
+    <>
 
-        <h2>
-          Plans and credits <em>Free</em>
-        </h2>
+      <h2>
 
+        {t("plansCredits")}{" "}
 
-        <div className="blueprint-credits-card">
+        <em>
+          {t("free")}
+        </em>
 
-          <b>
-            Credits remaining
-          </b>
-
-          <strong>
-            15 / 15
-          </strong>
-
-          <i>
-            <span />
-          </i>
-
-          <small>
-            • 15 daily credits reset on
-            Jul 28
-          </small>
-
-        </div>
+      </h2>
 
 
-        <div className="blueprint-plan-tabs">
-          Plan Payment
-        </div>
+
+      <div className="blueprint-credits-card">
 
 
-        <div className="blueprint-plans">
+        <b>
+          {t("creditsRemaining")}
+        </b>
 
-          {[
-            ["Free", "$0"],
-            ["Pro", "$15.8"],
-            ["Max", "$79"],
-          ].map(
-            ([name, price]) => (
 
-              <article key={name}>
 
-                <h2>
-                  {name}
-                </h2>
+        <strong>
+          15 / 15
+        </strong>
 
-                <strong>
 
-                  {price}
 
-                  <small>
-                    / month
-                  </small>
+        <i>
+          <span />
+        </i>
 
-                </strong>
 
-                <p>
-                  Unlock more features
-                </p>
 
-              </article>
+        <small>
 
-            )
-          )}
+          • {t("dailyCreditsReset", {
+              count: 15,
+              date: "Jul 28"
+          })}
 
-        </div>
+        </small>
 
-      </>
-    );
-  }
 
+
+      </div>
+
+
+
+      <div className="blueprint-plan-tabs">
+
+        {t("planPayment")}
+
+      </div>
+            <div className="blueprint-plans">
+
+        {[
+          ["free", "$0"],
+          ["pro", "$15.8"],
+          ["max", "$79"],
+        ].map(
+          ([name, price]) => (
+
+            <article key={name}>
+
+              <h2>
+                {t(name)}
+              </h2>
+
+
+              <strong>
+
+                {price}
+
+                <small>
+                  {t("month")}
+                </small>
+
+              </strong>
+
+
+              <p>
+                {t("unlockFeatures")}
+              </p>
+
+
+            </article>
+
+          )
+        )}
+
+      </div>
+
+
+    </>
+  );
+}
 
   /* ===================================================
      PREFERENCE
   =================================================== */
 
-  if (
-    tab ===
-    "Preference"
-  ) {
+  if (tab === "preference") {
 
-    return (
+  return (
 
-      <>
+    <>
 
-        <h2>
-          Preference
-        </h2>
-
-        <h3>
-          Language
-        </h3>
-
-        <p>
-          Change the language used
-          in the user interface.
-        </p>
-
-        <hr />
-
-        <h3>
-          Theme
-        </h3>
-
-        <p>
-          Customize how Atoms looks
-          on your device.
-        </p>
+      <h2>
+        {t("preference")}
+      </h2>
 
 
-        <div className="blueprint-themes">
 
-          <b>
-            System
-          </b>
+      <h3>
+        {t("language")}
+      </h3>
 
-          <b className="chosen">
-            Light
-          </b>
 
-          <b>
-            Dark
-          </b>
 
-        </div>
+      <p>
+        {t("changeLanguage")}
+      </p>
 
-      </>
-    );
-  }
 
+
+      <hr />
+
+
+
+      <h3>
+        {t("theme")}
+      </h3>
+
+
+
+      <p>
+        {t("customizeAppearance")}
+      </p>
+
+
+
+      <div className="blueprint-themes">
+
+
+        <b>
+          {t("system")}
+        </b>
+
+
+
+        <b className="chosen">
+          {t("light")}
+        </b>
+
+
+
+        <b>
+          {t("dark")}
+        </b>
+
+
+      </div>
+
+
+    </>
+  );
+}
 
   /* ===================================================
      DOMAINS
   =================================================== */
 
-  if (tab === "Domains") {
+  if (tab === "domains") {
 
-    return (
+  return (
 
-      <>
+    <>
 
-        <h2>
-          Domains ⓘ
-        </h2>
-
-        <h3>
-          Connected Domains
-        </h3>
-
-        <p>
-          Manage your connected domains
-        </p>
+      <h2>
+        {t("domains")} ⓘ
+      </h2>
 
 
-        <div className="blueprint-notice">
 
-          The project hasn't been
-          published yet
-
-          <button>
-            Publish
-          </button>
-
-        </div>
+      <h3>
+        {t("connectedDomains")}
+      </h3>
 
 
-        <div className="blueprint-domain-row">
 
-          <FiGlobe />
+      <p>
+        {t("manageConnectedDomains")}
+      </p>
 
-          <span>
 
-            <b>
-              Connect Existing Domain
-            </b>
 
-            <small>
-              Upgrade your subscription
-            </small>
+      <div className="blueprint-notice">
 
-          </span>
 
-          <button>
-            Connect domain
-          </button>
+        {t("notPublished")}
 
-        </div>
 
-      </>
-    );
-  }
+
+        <button>
+
+          {t("publish")}
+
+        </button>
+
+
+      </div>
+
+
+
+
+
+      <div className="blueprint-domain-row">
+
+
+        <FiGlobe />
+
+
+
+        <span>
+
+
+          <b>
+
+            {t("connectExistingDomain")}
+
+          </b>
+
+
+
+          <small>
+
+            {t("upgradeSubscription")}
+
+          </small>
+
+
+        </span>
+
+
+
+
+        <button>
+
+          {t("connectDomain")}
+
+        </button>
+
+
+
+      </div>
+
+
+
+    </>
+  );
+}
 
 
   /* ===================================================
      ACCOUNT
   =================================================== */
-if (tab === "Account") {
+if (tab === "account") {
 
   return (
+
     <>
+
       <h2>
-        Account Settings
+        {t("accountSettings")}
       </h2>
+
 
 
       <div className="blueprint-account-row">
 
-        Avatar
+        {t("avatar")}
 
         <b>
           S
@@ -2837,273 +2942,433 @@ if (tab === "Account") {
       </div>
 
 
+
+
       <div className="blueprint-account-row">
 
-        Username
+        {t("username")}
+
 
         <span>
-          saswe eng✎
+          saswe eng ✎
         </span>
+
 
       </div>
 
 
+
+
       <div className="blueprint-account-row">
 
-        Email
+        {t("email")}
+
 
         <span>
           engsaswe@gmail.com
         </span>
 
+
       </div>
 
 
-      {/* =========================================
-          ACCOUNT MANAGEMENT
-      ========================================= */}
+
 
       <div className="blueprint-account-profile">
 
+
         <h3>
-          Profile
+          {t("profile")}
         </h3>
 
+
+
         <p>
-          Manage your profile and account information.
+          {t("manageProfile")}
         </p>
 
 
-        {/* SUCCESS */}
+
 
         {message && (
+
           <div className="account-success-message">
+
             {message}
+
           </div>
+
         )}
 
 
-        {/* ERROR */}
+
 
         {error && (
+
           <div className="account-error-message">
+
             {error}
+
           </div>
+
         )}
 
 
-        {/* =========================================
-            ACCOUNT STATUS
-        ========================================= */}
+
+
 
         <div className="account-management-row">
 
+
           <div className="account-management-info">
 
+
             <strong>
-              Account status
+
+              {t("accountStatus")}
+
             </strong>
 
+
+
             <span>
+
               {accountActive
-                ? "Your account is currently active."
-                : "Your account is currently deactivated."
+
+                ? t("accountActive")
+
+                : t("accountDeactivated")
+
               }
+
             </span>
+
 
           </div>
 
 
-          {/* TOGGLE */}
+
+
 
           <button
+
             type="button"
+
             className={`account-toggle ${
               accountActive ? "active" : ""
             }`}
+
             onClick={handleAccountStatus}
+
             disabled={loading}
-            aria-label="Toggle account status"
+
+            aria-label={t("toggleAccountStatus")}
+
           >
+
 
             <span />
 
+
           </button>
+
+
 
         </div>
 
 
-        {/* =========================================
-            DELETE ACCOUNT
-        ========================================= */}
+
+
+
+
 
         <div className="account-danger-zone">
 
+
           <div className="account-management-info">
 
+
             <strong>
-              Delete account
+
+              {t("deleteAccount")}
+
             </strong>
 
+
+
             <span>
-              Permanently delete your account and all associated data.
+
+              {t("deleteAccountWarning")}
+
             </span>
+
 
           </div>
 
 
+
+
+
           <button
+
             type="button"
+
             className="account-delete-button"
+
             onClick={handleDeleteAccount}
+
             disabled={deleteLoading}
+
+
           >
 
+
             {deleteLoading
-              ? "Deleting..."
-              : "Delete account"
+
+              ? t("deleting")
+
+              : t("deleteAccount")
+
             }
+
 
           </button>
 
+
+
         </div>
+
+
 
       </div>
 
-    </>
-  );
-}
 
+
+    </>
+
+  );
+
+}
   /* ===================================================
      CLOUD & AI
   =================================================== */
+if (tab === "cloudAI") {
 
-  if (
-    tab ===
-    "Cloud & AI"
-  ) {
+  return (
 
-    return (
-
-      <>
-
-        <h2>
-          Cloud & AI
-        </h2>
+    <>
 
 
-        <div className="blueprint-warning">
+      <h2>
 
-          ⓘ Your Cloud & AI Balance is
-          crucial for keeping your
-          published projects running.
+        {t("cloudAI")}
 
-        </div>
+      </h2>
 
 
-        <div className="blueprint-cloud-cards">
-
-          <article>
-
-            <h3>
-              ◕ Cloud & AI
-            </h3>
-
-            <strong>
-              $0.00
-            </strong>
-
-            <button>
-              Upgrade
-            </button>
-
-          </article>
 
 
-          <article>
-
-            <h3>
-              Cloud $25.00 / $25.00
-            </h3>
-
-            <hr />
-
-            <h3>
-              AI $1.00 / $1.00
-            </h3>
-
-          </article>
-
-        </div>
-
-      </>
-    );
-  }
+      <div className="blueprint-warning">
 
 
+        ⓘ {t("cloudWarning")}
+
+
+
+      </div>
+
+
+
+
+
+
+      <div className="blueprint-cloud-cards">
+
+
+        <article>
+
+
+          <h3>
+
+            ◕ {t("cloudAI")}
+
+          </h3>
+
+
+
+          <strong>
+
+            $0.00
+
+          </strong>
+
+
+
+          <button>
+
+            {t("upgrade")}
+
+          </button>
+
+
+
+        </article>
+
+
+
+
+
+        <article>
+
+
+          <h3>
+
+            {t("cloudBalance")}
+
+          </h3>
+
+
+
+          <hr />
+
+
+
+          <h3>
+
+            {t("aiBalance")}
+
+          </h3>
+
+
+
+        </article>
+
+
+
+      </div>
+
+
+
+    </>
+
+  );
+
+}
   /* ===================================================
      GENERAL
   =================================================== */
 
   return (
 
-    <>
-
-      <h2>
-        General
-      </h2>
+  <>
 
 
-      <h3>
-        Default Model
-      </h3>
+    <h2>
+
+      {t("general")}
+
+    </h2>
 
 
-      <div className="blueprint-setting-line">
-
-        Model
-
-        <span>
-          Claude Opus 4.7⌄
-        </span>
-
-      </div>
 
 
-      <h3>
-        Permissions
-      </h3>
+
+    <h3>
+
+      {t("defaultModel")}
+
+    </h3>
 
 
-      <div className="blueprint-setting-line">
-
-        Set Default Access for
-        Projects
-
-        <span>
-          ◎ Public⌄
-        </span>
-
-      </div>
 
 
-      <h3>
-        Credit Balance Reminder
-      </h3>
+
+    <div className="blueprint-setting-line">
 
 
-      <div className="blueprint-setting-line">
+      {t("model")}
 
-        Show remaining credits
 
-        <i className="blueprint-toggle" />
 
-      </div>
+      <span>
 
-    </>
-  );
-}
+        Claude Opus 4.7⌄
 
+      </span>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <h3>
+
+      {t("permissions")}
+
+    </h3>
+
+
+
+
+
+    <div className="blueprint-setting-line">
+
+
+      {t("defaultAccess")}
+
+
+
+      <span>
+
+        ◎ {t("public")}⌄
+
+      </span>
+
+
+
+    </div>
+
+
+
+
+
+
+
+    <h3>
+
+      {t("creditReminder")}
+
+    </h3>
+
+
+
+
+
+
+    <div className="blueprint-setting-line">
+
+
+      {t("showCredits")}
+
+
+
+      <i className="blueprint-toggle" />
+
+
+
+    </div>
+
+
+
+
+  </>
+
+);}
 
 /* =====================================================
    EXPORT
