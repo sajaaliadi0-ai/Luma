@@ -1,0 +1,73 @@
+.dual-workspace {
+
+    width:100%;
+    height:100vh;
+
+    display:grid;
+
+    /* تثبيت ترتيب الأعمدة */
+    grid-template-columns: 1fr 1fr;
+
+    direction:ltr;
+
+    background:var(--bg);
+    color:var(--text);
+
+    overflow:hidden;
+}
+
+
+/* LEFT */
+
+.dual-workspace-left {
+
+    background:var(--card);
+
+    border-right:1px solid var(--border);
+
+    overflow:hidden;
+
+    direction:inherit;
+}
+
+
+/* RIGHT */
+
+.dual-workspace-right {
+
+    background:var(--bg);
+
+    overflow:hidden;
+
+    direction:inherit;
+}
+
+
+
+/* محتوى الصفحات يرجع حسب اللغة */
+
+.dual-workspace-left *,
+.dual-workspace-right * {
+
+    direction:inherit;
+
+}
+
+
+
+/* DARK MODE */
+
+[data-theme="dark"] .dual-workspace-left {
+
+    background:var(--card);
+
+    border-color:rgba(255,255,255,.08);
+
+}
+
+
+[data-theme="dark"] .dual-workspace-right {
+
+    background:var(--bg);
+
+}
