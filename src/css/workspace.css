@@ -19,8 +19,8 @@ html,
 body{
     width:100%;
     height:100%;
-    background:#f5f7fc;
-    color:#111827;
+    background:var(--bg);
+    color:var(--text);
 }
 
 body{
@@ -57,7 +57,7 @@ PAGE
     width:100%;
     height:100vh;
     display:flex;
-    background:#f5f7fc;
+    background:var(--bg);
     overflow:hidden;
 }
 
@@ -70,9 +70,9 @@ SIDEBAR
     width:270px;
     min-width:270px;
 
-    background:#ffffff;
+    background:var(--card);
 
-    border-right:1px solid #ebeef5;
+    border-right:1px solid var(--border);
 
     display:flex;
     flex-direction:column;
@@ -81,7 +81,7 @@ SIDEBAR
     padding:26px;
 
     box-shadow:
-        0 10px 35px rgba(15,23,42,.03);
+        var(--shadow);
 
     z-index:10;
 }
@@ -106,7 +106,7 @@ SIDEBAR
 
     background:linear-gradient(
         135deg,
-        #6366f1,
+        var(--primary),
         #7c3aed
     );
 
@@ -127,14 +127,14 @@ SIDEBAR
 
     font-size:22px;
     font-weight:700;
-    color:#111827;
+    color:var(--text);
 }
 
 .workspace-logo p{
 
     margin-top:2px;
 
-    color:#8a94a6;
+    color:var(--text2);
 
     font-size:13px;
 }
@@ -146,6 +146,7 @@ SIDEBAR
     display:flex;
     flex-direction:column;
     gap:8px;
+    margin-top:20px;
 }
 
 .workspace-menu button{
@@ -162,7 +163,7 @@ SIDEBAR
 
     background:transparent;
 
-    color:#667085;
+    color:var(--text2);
 
     font-size:15px;
     font-weight:500;
@@ -177,33 +178,25 @@ SIDEBAR
 
 .workspace-menu button:hover{
 
-    background:#f5f7ff;
-    color:#4f46e5;
+    background:var(--primary-soft);
+    color:var(--primary);
 }
 
 .workspace-menu .active{
 
-    background:#eef2ff;
-    color:#4f46e5;
+    background:var(--primary-soft);
+    color:var(--primary);
+
     font-weight:700;
 }
 
-.workspace-menu{
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    margin-top:20px;
-}
-
 /* AI CARD */
-
-
 
 .workspace-ai-card button:hover{
 
     transform:translateY(-2px);
 
-    background:#5548ee;
+    background:var(--primary-hover);
 
     box-shadow:
         0 12px 30px rgba(99,102,241,.30);
@@ -221,8 +214,9 @@ MAIN
 
     padding:28px 34px;
 
-    background:#f5f7fc;
+    background:var(--bg);
 }
+
 /* ===================================
 NAVBAR
 =================================== */
@@ -231,9 +225,9 @@ NAVBAR
 
     height:72px;
 
-    background:#fff;
+    background:var(--card);
 
-    border:1px solid #eceef5;
+    border:1px solid var(--border);
 
     border-radius:22px;
 
@@ -246,7 +240,7 @@ NAVBAR
     margin-bottom:34px;
 
     box-shadow:
-        0 10px 30px rgba(15,23,42,.04);
+        var(--shadow);
 }
 
 /* SEARCH */
@@ -262,16 +256,16 @@ NAVBAR
 
     padding:0 16px;
 
-    background:#f7f8fc;
+    background:var(--bg);
 
-    border:1px solid #ebeef5;
+    border:1px solid var(--border);
 
     border-radius:14px;
 }
 
 .workspace-search svg{
 
-    color:#9ca3af;
+    color:var(--text2);
     font-size:18px;
 }
 
@@ -286,12 +280,12 @@ NAVBAR
 
     font-size:15px;
 
-    color:#111827;
+    color:var(--text);
 }
 
 .workspace-search input::placeholder{
 
-    color:#9ca3af;
+    color:var(--text2);
 }
 
 .workspace-shortcut{
@@ -300,15 +294,14 @@ NAVBAR
 
     border-radius:8px;
 
-    background:#fff;
+    background:var(--card);
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border);
 
-    color:#6b7280;
+    color:var(--text2);
 
     font-size:12px;
 }
-
 /* RIGHT */
 
 .workspace-right{
@@ -326,12 +319,12 @@ NAVBAR
     display:flex;
     align-items:center;
     justify-content:center;
-
+color: #9c8edb;
     border-radius:14px;
 
-    background:#f8f9fc;
+    background:var(--bg);
 
-    border:1px solid #eceef5;
+    border:1px solid var(--border);
 
     transition:.25s;
 }
@@ -343,9 +336,8 @@ NAVBAR
 
 .workspace-icon-btn:hover{
 
-    background:#eef2ff;
-
-    color:#4f46e5;
+    background:var(--primary-soft);
+    color:var(--primary);
 
     transform:translateY(-2px);
 }
@@ -359,11 +351,11 @@ NAVBAR
 
     background:linear-gradient(
         135deg,
-        #6366f1,
+        var(--primary),
         #7c3aed
     );
 
-    color:white;
+    color:#fff;
 
     display:flex;
     justify-content:center;
@@ -396,14 +388,14 @@ HEADER
 
     letter-spacing:-1px;
 
-    color:#111827;
+    color:var(--text);
 }
 
 .workspace-subtitle{
 
     margin-top:10px;
 
-    color:#8b93a5;
+    color:var(--text2);
 
     font-size:15px;
 }
@@ -418,23 +410,23 @@ HERO
     justify-content:space-between;
     align-items:center;
 
-    min-height:170px;   /* كان أكبر */
+    min-height:170px;
 
-    padding:24px 30px;  /* صغر الحواف */
+    padding:24px 30px;
 
     border-radius:24px;
 
     background:linear-gradient(
         135deg,
-        #dbeafe 0%,
-        #e0f2fe 50%,
-        #eff6ff 100%
+        var(--primary-soft) 0%,
+        var(--bg) 100%
     );
 
-    border:1px solid #bfdbfe;
+    border:1px solid var(--border);
 
     margin-bottom:24px;
 }
+
 .workspace-hero-left{
 
     display:flex;
@@ -444,7 +436,7 @@ HERO
 
 .workspace-hero-robot{
 
-width:260px;
+    width:260px;
     animation:workspaceFloat 4s infinite ease-in-out;
 }
 
@@ -455,13 +447,15 @@ width:260px;
     font-weight:700;
 
     margin-bottom:10px;
+
+    color:var(--text);
 }
 
 .workspace-hero-left p{
 
     max-width:480px;
 
-    color:#6b7280;
+    color:var(--text2);
 
     line-height:1.7;
 
@@ -493,7 +487,7 @@ width:260px;
 
     border-radius:15px;
 
-    background:#6366f1;
+    background:var(--primary);
 
     color:#fff;
 
@@ -506,7 +500,7 @@ width:260px;
 
 .workspace-btn:hover{
 
-    background:#5548ee;
+    background:var(--primary-hover);
 
     transform:translateY(-2px);
 
@@ -525,20 +519,20 @@ width:260px;
 
     padding:0 16px;
 
-    background:#fff;
+    background:var(--card);
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border);
 
     border-radius:14px;
 
-    color:#4b5563;
+    color:var(--text);
 
     transition:.25s;
 }
 
 .workspace-sort:hover{
 
-    border-color:#c7d2fe;
+    border-color:var(--primary);
 
     transform:translateY(-2px);
 }
@@ -564,11 +558,11 @@ FILTERS
 
     border-radius:999px;
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border);
 
-    background:#fff;
+    background:var(--card);
 
-    color:#6b7280;
+    color:var(--text2);
 
     font-size:14px;
 
@@ -579,22 +573,21 @@ FILTERS
 
 .workspace-filter-btn:hover{
 
-    background:#eef2ff;
+    background:var(--primary-soft);
 
-    color:#4f46e5;
+    color:var(--primary);
 
-    border-color:#c7d2fe;
+    border-color:var(--primary);
 }
 
 .workspace-filter-btn.active{
 
-    background:#6366f1;
+    background:var(--primary);
 
     color:#fff;
 
-    border-color:#6366f1;
+    border-color:var(--primary);
 }
-
 /* ===================================
 GRID
 =================================== */
@@ -603,8 +596,7 @@ GRID
 
     display:grid;
 
-    grid-template-columns:
-    repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
 
     gap:24px;
 
@@ -617,9 +609,9 @@ CARDS
 
 .workspace-card{
 
-    background:#fff;
+    background:var(--card);
 
-    border:1px solid #ebeef5;
+    border:1px solid var(--border);
 
     border-radius:24px;
 
@@ -632,19 +624,17 @@ CARDS
     flex-direction:column;
 
     transition:
-    transform .25s,
-    box-shadow .25s;
+        transform .25s,
+        box-shadow .25s;
 
-    box-shadow:
-        0 8px 24px rgba(15,23,42,.04);
+    box-shadow:var(--shadow);
 }
 
 .workspace-card:hover{
 
     transform:translateY(-8px);
 
-    box-shadow:
-        0 20px 45px rgba(15,23,42,.10);
+    box-shadow:0 20px 45px rgba(15,23,42,.10);
 }
 
 .workspace-card-top{
@@ -672,18 +662,18 @@ CARDS
 
     border-radius:10px;
 
-    background:#f8f9fc;
+    background:var(--bg);
 
-    color:#6b7280;
+    color:var(--text2);
 
     transition:.25s;
 }
 
 .workspace-more:hover{
 
-    background:#eef2ff;
+    background:var(--primary-soft);
 
-    color:#4f46e5;
+    color:var(--primary);
 }
 
 .workspace-card-title{
@@ -694,7 +684,7 @@ CARDS
 
     font-weight:700;
 
-    color:#111827;
+    color:var(--text);
 
     margin-bottom:18px;
 }
@@ -717,35 +707,30 @@ BADGES
 .workspace-purple{
 
     background:#ede9fe;
-
     color:#7c3aed;
 }
 
 .workspace-green{
 
     background:#dcfce7;
-
     color:#16a34a;
 }
 
 .workspace-orange{
 
     background:#ffedd5;
-
     color:#ea580c;
 }
 
 .workspace-gray{
 
     background:#f3f4f6;
-
     color:#64748b;
 }
 
 .workspace-red{
 
     background:#fee2e2;
-
     color:#dc2626;
 }
 
@@ -768,13 +753,13 @@ TAGS
 
     border-radius:12px;
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border);
 
-    background:#f9fafb;
+    background:var(--bg);
 
     font-size:13px;
 
-    color:#4b5563;
+    color:var(--text2);
 }
 
 /* ===================================
@@ -808,20 +793,18 @@ USERS
 
     color:#fff;
 
-    border:3px solid #fff;
+    border:3px solid var(--card);
 
     margin-right:-8px;
 
-    background:#6366f1;
+    background:var(--primary);
 }
 
 .workspace-user:nth-child(2){
-
     background:#14b8a6;
 }
 
 .workspace-user:nth-child(3){
-
     background:#f59e0b;
 }
 
@@ -831,7 +814,7 @@ USERS
 
     height:1px;
 
-    background:#eef2f7;
+    background:var(--border);
 
     margin:22px 0;
 }
@@ -852,14 +835,14 @@ FOOTER
 
     font-size:13px;
 
-    color:#6b7280;
+    color:var(--text2);
 }
 
 .workspace-open{
 
     background:none;
 
-    color:#6366f1;
+    color:var(--primary);
 
     font-weight:700;
 
@@ -868,7 +851,7 @@ FOOTER
 
 .workspace-open:hover{
 
-    color:#4338ca;
+    color:var(--primary-hover);
 }
 
 /* ===================================
@@ -905,15 +888,15 @@ FLOATING ROBOT
 
     width:170px;
 
-    background:#fff;
+    background:var(--card);
 
-    border:1px solid #e8ebf4;
+    border:1px solid var(--border);
 
     border-radius:18px;
 
     padding:16px;
 
-    box-shadow:0 18px 40px rgba(15,23,42,.08);
+    box-shadow:var(--shadow);
 }
 
 .workspace-help-message strong{
@@ -924,14 +907,14 @@ FLOATING ROBOT
 
     margin-bottom:8px;
 
-    color:#111827;
+    color:var(--text);
 }
 
 .workspace-help-message p{
 
     font-size:13px;
 
-    color:#6b7280;
+    color:var(--text2);
 
     line-height:1.6;
 }
@@ -958,7 +941,7 @@ FLOATING ROBOT
 
     background:linear-gradient(
         135deg,
-        #6366f1,
+        var(--primary),
         #7c3aed
     );
 
@@ -982,18 +965,9 @@ ANIMATION
 
 @keyframes workspaceFloat{
 
-    0%{
-        transform:translateY(0);
-    }
-
-    50%{
-        transform:translateY(-14px);
-    }
-
-    100%{
-        transform:translateY(0);
-    }
-
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-14px);}
+    100%{transform:translateY(0);}
 }
 
 /* ===================================
@@ -1007,193 +981,24 @@ SCROLLBAR
 
 .workspace-main::-webkit-scrollbar-track{
 
-    background:#eef2f7;
+    background:var(--bg);
 }
 
 .workspace-main::-webkit-scrollbar-thumb{
 
-    background:#c7d2fe;
+    background:var(--primary);
 
     border-radius:30px;
 }
 
 .workspace-main::-webkit-scrollbar-thumb:hover{
 
-    background:#a5b4fc;
+    background:var(--primary-hover);
 }
 
 /* ===================================
-RESPONSIVE
-=================================== */
-
-@media (max-width:1400px){
-
-    .workspace-grid{
-
-        grid-template-columns:repeat(2,1fr);
-    }
-
-}
-
-@media (max-width:1100px){
-
-    .workspace-sidebar{
-
-        width:230px;
-        min-width:230px;
-    }
-
-    .workspace-search{
-
-        width:340px;
-    }
-
-    .workspace-hero{
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    min-height:170px;   /* كان أكبر */
-
-    padding:24px 30px;  /* صغر الحواف */
-
-    border-radius:24px;
-
-    background:linear-gradient(
-        135deg,
-        #dbeafe 0%,
-        #e0f2fe 50%,
-        #eff6ff 100%
-    );
-
-    border:1px solid #bfdbfe;
-
-    margin-bottom:24px;
-}
-    .workspace-hero-right{
-
-        width:100%;
-
-        align-items:flex-start;
-    }
-
-}
-
-@media (max-width:900px){
-
-    .workspace-page{
-
-        flex-direction:column;
-    }
-
-    .workspace-sidebar{
-
-        width:100%;
-
-        min-width:100%;
-
-        border-right:none;
-
-        border-bottom:1px solid #eceef5;
-    }
-
-    .workspace-navbar{
-
-        flex-direction:column;
-
-        height:auto;
-
-        gap:18px;
-
-        padding:20px;
-    }
-
-    .workspace-search{
-
-        width:100%;
-    }
-
-    .workspace-grid{
-
-        grid-template-columns:1fr;
-    }
-
-    .workspace-floating-robot{
-
-        display:none;
-    }
-
-}
-
-@media (max-width:600px){
-
-    .workspace-main{
-
-        padding:18px;
-    }
-
-    .workspace-title{
-
-        font-size:34px;
-    }
-
-    .workspace-hero{
-
-        padding:24px;
-    }
-
-    .workspace-hero-left{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-    }
-
-    .workspace-hero-robot{
-
-        width:110px;
-    }
-
-    .workspace-card{
-
-        padding:20px;
-    }
-
-    .workspace-filters{
-
-        overflow-x:auto;
-
-        flex-wrap:nowrap;
-
-        padding-bottom:8px;
-    }
-
-}
-
-.workspace-sort{
-
-    width:190px;
-    height:46px;
-
-    border:1px solid #e5e7eb;
-    border-radius:14px;
-
-    background:#fff;
-
-    padding:0 14px;
-
-    font-size:14px;
-
-    color:#374151;
-
-    cursor:pointer;
-
-    outline:none;
-}
-/* ===========================
 NOTIFICATIONS
-=========================== */
+=================================== */
 
 .workspace-notifications{
 
@@ -1204,15 +1009,15 @@ NOTIFICATIONS
 
     width:320px;
 
-    background:#ffffff;
+    background:var(--card);
 
-    border:1px solid #e5e7eb;
+    border:1px solid var(--border);
 
     border-radius:18px;
 
     overflow:hidden;
 
-    box-shadow:0 18px 45px rgba(15,23,42,.12);
+    box-shadow:var(--shadow);
 
     z-index:999;
 }
@@ -1223,9 +1028,9 @@ NOTIFICATIONS
 
     font-size:14px;
 
-    color:#374151;
+    color:var(--text);
 
-    border-bottom:1px solid #f1f5f9;
+    border-bottom:1px solid var(--border);
 
     cursor:pointer;
 
@@ -1239,264 +1044,24 @@ NOTIFICATIONS
 
 .workspace-notification-item:hover{
 
-    background:#eef2ff;
+    background:var(--primary-soft);
 
-    color:#4f46e5;
+    color:var(--primary);
+
 }
 
-/* الدارك مود */
-
-.dark .workspace-notifications{
-
-    background:#1f2937;
-
-    border-color:#374151;
+.workspace-admin-btn {
+  background: #6d5dfc;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 8px 16px;
+  margin-right: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
 }
 
-.dark .workspace-notification-item{
-
-    color:#e5e7eb;
-
-    border-bottom:1px solid #374151;
-}
-
-.dark .workspace-notification-item:hover{
-
-    background:#374151;
-
-    color:white;
-}
-
-/* ===========================
-DARK MODE
-=========================== */
-
-.workspace-page.dark{
-    background:#0f172a;
-}
-
-.workspace-page.dark .workspace-main{
-    background:#0f172a;
-}
-
-.workspace-page.dark .workspace-sidebar{
-    background:#111827;
-    border-right:1px solid #374151;
-}
-
-.workspace-page.dark .workspace-navbar,
-.workspace-page.dark .workspace-card,
-.workspace-page.dark .workspace-hero{
-    background:#1f2937;
-    border-color:#374151;
-}
-
-.workspace-page.dark .workspace-title,
-.workspace-page.dark .workspace-card-title,
-.workspace-page.dark h2{
-    color:#ffffff;
-}
-
-.workspace-page.dark p,
-.workspace-page.dark span{
-    color:#eceef1;
-}
-
-.workspace-page.dark .workspace-search{
-    background:#374151;
-    border-color:#4b5563;
-}
-
-.workspace-page.dark .workspace-search input{
-    color:#ffffff;
-}
-
-.workspace-page.dark .workspace-filter-btn{
-    background:#374151;
-    color:#ffffff;
-    border-color:#4b5563;
-}
-
-.workspace-page.dark .workspace-tag{
-    background:#374151;
-    border-color:#4b5563;
-    color:#ffffff;
-}
-/* ===========================
-   DARK MODE - WORKSPACE ONLY
-=========================== */
-
-.workspace-page.dark{
-    background:#111827;
-    color:#f9fafb;
-}
-
-.workspace-page.dark .workspace-main{
-    background:#111827;
-}
-
-.workspace-page.dark .workspace-sidebar{
-    background:#111827;
-    border-right:1px solid #293241;
-}
-
-.workspace-page.dark .workspace-navbar{
-    background:#1f2937;
-    border-color:#374151;
-}
-
-.workspace-page.dark .workspace-search{
-    background:#1f2937;
-    border-color:#374151;
-}
-
-.workspace-page.dark .workspace-search input{
-    color:white;
-}
-
-.workspace-page.dark .workspace-search input::placeholder{
-    color:#9ca3af;
-}
-
-.workspace-page.dark .workspace-shortcut{
-    background:#374151;
-    color:white;
-    border:none;
-}
-
-.workspace-page.dark .workspace-title,
-.workspace-page.dark h1,
-.workspace-page.dark h2,
-.workspace-page.dark h3{
-    color:white;
-}
-
-.workspace-page.dark .workspace-subtitle,
-.workspace-page.dark p{
-    color:#cbd5e1;
-}
-
-.workspace-page.dark .workspace-card{
-    background:#1f2937;
-    border-color:#374151;
-}
-
-.workspace-page.dark .workspace-tag{
-    background:#374151;
-    color:white;
-    border-color:#4b5563;
-}
-
-.workspace-page.dark .workspace-card-divider{
-    background:#374151;
-}
-
-.workspace-page.dark .workspace-footer{
-    color:#cbd5e1;
-}
-
-.workspace-page.dark .workspace-filter-btn{
-    background:#374151;
-    color:white;
-    border-color:#4b5563;
-}
-
-.workspace-page.dark .workspace-filter-btn.active{
-    background:#6366f1;
-    color:white;
-}
-
-.workspace-page.dark .workspace-icon-btn{
-    background:#1f2937;
-    border-color:#374151;
-    color:white;
-}
-
-.workspace-page.dark .workspace-avatar{
-    background:#6366f1;
-}
-
-.workspace-page.dark .workspace-sort{
-    background:#1f2937;
-    color:white;
-    border-color:#374151;
-}
-
-.workspace-page.dark .workspace-more{
-    background:#374151;
-    color:white;
-}
-
-.workspace-page.dark .workspace-menu button{
-    color:#cbd5e1;
-}
-
-.workspace-page.dark .workspace-menu button:hover{
-    background:#374151;
-}
-
-.workspace-page.dark .workspace-menu .active{
-    background:#eef2ff;
-    color:#4f46e5;
-}
-/* Active button in Dark Mode */
-
-.workspace-page.dark .workspace-menu .active{
-    background:#4f46e5;
-    color:#ffffff;
-}
-
-.workspace-page.dark .workspace-menu .active span,
-.workspace-page.dark .workspace-menu .active svg{
-    color:#ffffff;
-}
-
-.workspace-page.dark .workspace-logo h2{
-    color:white;
-}
-
-.workspace-page.dark .workspace-logo p{
-    color:#94a3b8;
-}
-
-.workspace-page.dark .workspace-hero{
-    background:#1e3a5f;
-    border-color:#2563eb;
-}
-
-.workspace-page.dark .workspace-open{
-    color:#818cf8;
-}
-
-.workspace-page.dark .workspace-open:hover{
-    color:#a5b4fc;
-}
-
-/* ==========================
-   BADGES - DARK MODE
-========================== */
-
-.workspace-page.dark .workspace-purple{
-    background:#3b2a63;
-    color:#c4b5fd;
-}
-
-.workspace-page.dark .workspace-green{
-    background:#143326;
-    color:#4ade80;
-}
-
-.workspace-page.dark .workspace-orange{
-    background:#4a2d12;
-    color:#fb923c;
-}
-
-.workspace-page.dark .workspace-gray{
-    background:#374151;
-    color:#d1d5db;
-}
-
-.workspace-page.dark .workspace-red{
-    background:#4a1d1d;
-    color:#f87171;
+.workspace-admin-btn:hover {
+  background: #5648d8;
 }
