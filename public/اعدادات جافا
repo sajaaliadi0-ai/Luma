@@ -1,0 +1,283 @@
+import { useState } from "react";
+import Sidebar from "../components/Sidebar/Sidebar";
+import "../css/Settings.css";
+
+function SystemSettings({ dark, setDark }) {
+  const [settings, setSettings] = useState({
+    maintenanceMode: false,
+    registrationEnabled: true,
+    emailVerification: true,
+    notifications: true,
+    allowBlueprintCreation: true,
+    allowAiChat: true,
+  });
+
+  const handleToggle = (key) => {
+    setSettings((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  return (
+    <div className={`system-settings-page ${dark ? "dark" : ""}`}>
+      {/* Existing Sidebar */}
+      <Sidebar dark={dark} setDark={setDark} />
+
+      {/* Main Content */}
+      <main className="system-settings-main">
+
+        {/* ================= HEADER ================= */}
+
+        <header className="system-settings-header">
+          <div>
+            <h1>System Settings</h1>
+            <p>
+              Manage system configuration and platform behavior.
+            </p>
+          </div>
+        </header>
+
+
+        {/* ================= GENERAL SETTINGS ================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+            <div>
+              <h2>General Settings</h2>
+              <p>
+                Configure the main behavior of the LUMA platform.
+              </p>
+            </div>
+          </div>
+
+
+          <div className="system-settings-list">
+
+            {/* Maintenance Mode */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>Maintenance Mode</h3>
+                <p>
+                  Temporarily disable access to the platform
+                  while maintenance is being performed.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.maintenanceMode
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() => handleToggle("maintenanceMode")}
+                aria-label="Toggle maintenance mode"
+              >
+                <span></span>
+              </button>
+            </div>
+
+
+            {/* Registration */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>User Registration</h3>
+                <p>
+                  Allow new users to create accounts on the platform.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.registrationEnabled
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() => handleToggle("registrationEnabled")}
+                aria-label="Toggle user registration"
+              >
+                <span></span>
+              </button>
+            </div>
+
+
+            {/* Email Verification */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>Email Verification</h3>
+                <p>
+                  Require users to verify their email address
+                  before accessing the platform.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.emailVerification
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() => handleToggle("emailVerification")}
+                aria-label="Toggle email verification"
+              >
+                <span></span>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+
+        {/* ================= PLATFORM SETTINGS ================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+            <div>
+              <h2>Platform Features</h2>
+              <p>
+                Control which features are available to users.
+              </p>
+            </div>
+          </div>
+
+
+          <div className="system-settings-list">
+
+            {/* Notifications */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>Notifications</h3>
+                <p>
+                  Enable system notifications for platform users.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.notifications
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() => handleToggle("notifications")}
+                aria-label="Toggle notifications"
+              >
+                <span></span>
+              </button>
+            </div>
+
+
+            {/* Blueprint */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>Blueprint Creation</h3>
+                <p>
+                  Allow users to create new engineering blueprints.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.allowBlueprintCreation
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("allowBlueprintCreation")
+                }
+                aria-label="Toggle blueprint creation"
+              >
+                <span></span>
+              </button>
+            </div>
+
+
+            {/* AI Chat */}
+
+            <div className="system-settings-item">
+              <div className="system-settings-item-info">
+                <h3>AI Chat</h3>
+                <p>
+                  Allow users to communicate with the LUMA AI assistant.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.allowAiChat
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() => handleToggle("allowAiChat")}
+                aria-label="Toggle AI chat"
+              >
+                <span></span>
+              </button>
+            </div>
+
+          </div>
+        </section>
+
+
+        {/* ================= SYSTEM INFORMATION ================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+            <div>
+              <h2>System Information</h2>
+              <p>
+                Basic information about the current platform.
+              </p>
+            </div>
+          </div>
+
+
+          <div className="system-settings-info-grid">
+
+            <div className="system-settings-info-box">
+              <span>Platform</span>
+              <strong>LUMA</strong>
+            </div>
+
+            <div className="system-settings-info-box">
+              <span>Environment</span>
+              <strong>Production</strong>
+            </div>
+
+            <div className="system-settings-info-box">
+              <span>System Status</span>
+
+              <strong className="system-settings-status">
+                <span></span>
+                Operational
+              </strong>
+            </div>
+
+            <div className="system-settings-info-box">
+              <span>Version</span>
+              <strong>1.0.0</strong>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  );
+}
+
+export default SystemSettings;
