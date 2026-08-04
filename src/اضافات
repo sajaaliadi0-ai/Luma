@@ -1,0 +1,40 @@
+import Sidebar from "../components/Sidebar/Sidebar";
+
+
+return (
+
+<div className="dashboard-layout">
+
+<Sidebar active="Logs"/>
+
+
+<div className="page-content">
+
+// محتوى Logs هنا
+
+
+</div>
+
+
+</div>
+
+)
+
+
+
+هاد لاي صفحة css .dashboard-layout {
+
+display:flex;
+
+}
+
+
+.page-content {
+
+margin-left:250px;
+
+width:calc(100% - 250px);
+
+min-height:100vh;
+
+}
