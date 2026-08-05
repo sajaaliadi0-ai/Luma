@@ -44,12 +44,10 @@ const agents = [
 
 
 
-function Home() {
-
+function Home({ dark, setDark, themeMode, setThemeMode }) {
 
   const navigate = useNavigate();
   const { t } = useTranslation();
-
 
   const [prompt, setPrompt] = useState("");
   const [listening, setListening] = useState(false);
@@ -57,94 +55,14 @@ function Home() {
   const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showPlusMenu, setShowPlusMenu] = useState(false);
 
-  const [theme, setTheme] = useState("Light");
+  const theme =
+    themeMode === "system"
+      ? "System"
+      : themeMode === "dark"
+      ? "Dark"
+      : "Light";
 
   const [hoveredAgent, setHoveredAgent] = useState(null);
-
-
-
-  // =================================
-  // LOAD GLOBAL THEME
-  // =================================
-
- useEffect(() => {
-
-  if(theme === "Dark") {
-
-    document.documentElement.setAttribute(
-      "data-theme",
-      "dark"
-    );
-
-  } 
-  else {
-
-    document.documentElement.removeAttribute(
-      "data-theme"
-    );
-
-  }
-
-}, [theme]);
-
-
-
-  // =================================
-  // APPLY THEME
-  // =================================
-
-  const applyTheme = (value) => {
-
-
-    if (value === "Dark") {
-
-
-      document.documentElement.setAttribute(
-        "data-theme",
-        "dark"
-      );
-
-
-    } else if (value === "Light") {
-
-
-      document.documentElement.removeAttribute(
-        "data-theme"
-      );
-
-
-    } else {
-
-
-      const prefersDark =
-        window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-
-
-
-      if (prefersDark) {
-
-
-        document.documentElement.setAttribute(
-          "data-theme",
-          "dark"
-        );
-
-
-      } else {
-
-
-        document.documentElement.removeAttribute(
-          "data-theme"
-        );
-
-
-      }
-
-    }
-
-  };
 
 
 
@@ -259,25 +177,17 @@ function Home() {
 
 
   const handleThemeChange = (value) => {
-
-
-    setTheme(value);
-
-
     setShowThemeMenu(false);
 
+    const normalized = value.toLowerCase();
 
-
-    localStorage.setItem(
-      "theme",
-      value
-    );
-
-
-
-    applyTheme(value);
-
-
+    if (normalized === "system") {
+      setThemeMode("system");
+    } else if (normalized === "dark") {
+      setThemeMode("dark");
+    } else {
+      setThemeMode("light");
+    }
   };
 
 

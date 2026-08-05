@@ -33,7 +33,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/Landpage"
+          path="/"
           element={<Landpage dark={dark} setDark={setDark} />}
         />
 
@@ -43,7 +43,7 @@ function App() {
         />
 
         <Route
-          path="/work"
+          path="/Work"
           element={<Work dark={dark} setDark={setDark} />}
         />
 
@@ -102,7 +102,7 @@ function App() {
         />
 
 <Route
-          path="/"
+          path="/SystemState"
           element={<SystemState dark={dark} setDark={setDark} />}
         />
 

@@ -11,7 +11,7 @@ import {
   FiPlus
 } from "react-icons/fi";
 
-import axios from "axios";
+
 
 const projects = [
   {
@@ -67,16 +67,7 @@ const projects = [
 
 
 function Workspace() {
-const [isAdmin, setIsAdmin] = useState(false);
-useEffect(() => {
-  const getProfile = async () => {
-    const res = await axios.get("/api/auth/me");
 
-    setIsAdmin(res.data.role === "admin");
-  };
-
-  getProfile();
-}, []);
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
@@ -200,15 +191,9 @@ const toggleTheme = () => {
 
               )}
 
-{isAdmin && (
-  <button
-    className="workspace-admin-btn"
-    onClick={() => navigate("/admin")}
-  >
-    Admin
-  </button>
-)}
+
             </div>
+            
 
             {/* يستخدم الثيم العام */}
            <button
@@ -221,7 +206,12 @@ const toggleTheme = () => {
             <div className="workspace-avatar">
               AF
             </div>
-
+<button
+  className="workspace-admin-btn"
+  onClick={() => navigate("/Overview")}
+>
+  Admin
+</button>
           </div>
 
         </header>

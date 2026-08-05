@@ -19,17 +19,8 @@ const inputRefs = useRef([]);
 
 
     // ==========================
-    // Dark Mode
+    // Dark Mode is handled by the app root
     // ==========================
-    useEffect(()=>{
-        const savedTheme =
-        localStorage.getItem("theme");
-        if(savedTheme === "dark"){
-            document.body.classList.add("dark");
-        }
-    },[]);
-
-    
 
     // ==========================
     // OTP

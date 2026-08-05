@@ -797,9 +797,564 @@ service:"Service",
 uptime:"Uptime",
 load:"Load",
 running:"Running",
+  // ================= Users =================
+
+  usersTitle:
+    "Users",
+
+  usersDescription:
+    "Manage and monitor LUMA users.",
+
+  usersRefresh:
+    "Refresh",
+
+  usersLoading:
+    "Loading...",
+
+  usersLoadingUsers:
+    "Loading users...",
+
+  usersTotal:
+    "Total Users",
+
+  usersActive:
+    "Active Users",
+
+  usersInactive:
+    "Inactive Users",
+
+  usersSearchResults:
+    "Search Results",
+
+  usersAll:
+    "All Users",
+
+  usersAllDescription:
+    "View registered users and their information.",
+
+  usersSearchPlaceholder:
+    "Search users...",
+
+  usersUser:
+    "User",
+
+  usersEmail:
+    "Email",
+
+  usersRole:
+    "Role",
+
+  usersStatus:
+    "Status",
+
+  usersAction:
+    "Action",
+
+  usersView:
+    "View",
+
+  usersActiveStatus:
+    "Active",
+
+  usersInactiveStatus:
+    "Inactive",
+
+  usersNoUsers:
+    "No users found",
+
+  usersNoSearchResults:
+    "No users match your search.",
+
+  usersNoUsersToDisplay:
+    "There are no users to display.",
+
+  usersUnknownUser:
+    "Unknown User",
+
+  usersLoadError:
+    "Failed to load users. Please try again.",
+
+  usersTryAgain:
+    "Try Again",
+
+  usersDetails:
+    "User Details",
+
+  usersDetailsDescription:
+    "View user information.",
+
+  usersId:
+    "ID",
+
+  usersUsername:
+    "Username",
+
+  usersClose:
+    "Close",
+
+  usersUserRole:
+    "User",
+
+  usersAdminRole:
+    "Admin",
+
+  usersSuperAdminRole:
+    "Super Admin",
+// ================= Overview =================
+
+overviewSuperAdminDashboard:
+  "SUPER ADMIN DASHBOARD",
+
+overviewAdminDashboard:
+  "ADMIN DASHBOARD",
+
+overviewTitle:
+  "Overview",
+
+overviewDescription:
+  "Monitor your Luma platform from one place.",
+
+overviewSuperAdmin:
+  "Super Admin",
+
+overviewAdmin:
+  "Admin",
+
+overviewSuperAdministrator:
+  "Super Administrator",
+
+overviewAdministrator:
+  "Administrator",
+
+overviewControlCenter:
+  "LUMA CONTROL CENTER",
+
+overviewEverythingUnderControl:
+  "Everything is under control.",
+
+overviewBannerDescription:
+  "Track users, blueprints and platform activity from your dashboard.",
+
+overviewLive:
+  "LIVE",
+
+overviewActive:
+  "ACTIVE",
+
+overviewRecent:
+  "RECENT",
+
+overviewSystem:
+  "SYSTEM",
+
+overviewTotalUsers:
+  "Total Users",
+
+overviewRegisteredUsers:
+  "Registered platform users",
+
+overviewBlueprints:
+  "Blueprints",
+
+overviewGeneratedBlueprints:
+  "Generated project blueprints",
+
+overviewActivities:
+  "Activities",
+
+overviewRecordedActivities:
+  "Recorded platform activities",
+
+overviewSystemStatus:
+  "System Status",
+
+overviewSystemMonitoring:
+  "Platform system monitoring",
+
+overviewOnline:
+  "Online",
+
+overviewPlatform:
+  "PLATFORM",
+
+overviewSystemOverview:
+  "System Overview",
+
+overviewCurrentPlatformInfo:
+  "Current platform information",
+
+overviewSystemOperational:
+  "System Operational",
+
+overviewNoSystemStats:
+  "No system statistics available.",
+
+overviewTotalBlueprints:
+  "Total Blueprints",
+
+overviewMonitoring:
+  "MONITORING",
+
+overviewRecentActivity:
+  "Recent Activity",
+
+overviewLatestEvents:
+  "Latest platform events",
+
+overviewNoActivity:
+  "No activity available.",
+
+overviewPlatformActivity:
+  "Platform Activity",
+
+overviewSystemActivity:
+  "System activity",
+
+overviewAiCore:
+  "LUMA AI CORE",
+
+overviewAssistantReady:
+  "Your platform assistant is ready.",
+
+overviewAssistantDescription:
+  "Luma keeps your workspace organized, monitored and running smoothly.",
+  // System Settings
+systemSettings: "System Settings",
+systemSettingsDescription:
+  "Manage system configuration and platform behavior.",
+
+generalSettings: "General Settings",
+generalSettingsDescription:
+  "Configure the main behavior of the LUMA platform.",
+
+maintenanceMode: "Maintenance Mode",
+maintenanceModeDescription:
+  "Temporarily disable access to the platform while maintenance is being performed.",
+toggleMaintenanceMode: "Toggle maintenance mode",
+
+userRegistration: "User Registration",
+userRegistrationDescription:
+  "Allow new users to create accounts on the platform.",
+toggleUserRegistration: "Toggle user registration",
+
+emailVerification: "Email Verification",
+emailVerificationDescription:
+  "Require users to verify their email address before accessing the platform.",
+toggleEmailVerification: "Toggle email verification",
+
+platformFeatures: "Platform Features",
+platformFeaturesDescription:
+  "Control which features are available to users.",
+
+notifications: "Notifications",
+notificationsDescription:
+  "Enable system notifications for platform users.",
+toggleNotifications: "Toggle notifications",
+
+blueprintCreation: "Blueprint Creation",
+blueprintCreationDescription:
+  "Allow users to create new engineering blueprints.",
+toggleBlueprintCreation: "Toggle blueprint creation",
+
+aiChat: "AI Chat",
+aiChatDescription:
+  "Allow users to communicate with the LUMA AI assistant.",
+toggleAiChat: "Toggle AI chat",
+
+systemInformation: "System Information",
+systemInformationDescription:
+  "Basic information about the current platform.",
+
+platform: "Platform",
+environment: "Environment",
+production: "Production",
+systemStatus: "System Status",
+operational: "Operational",
+version: "Version",
+overview: "Overview",
+users: "Users",
+logout: "Logout",
 },
  ar: {
-  systemState:"حالة النظام",
+  overview: "نظرة عامة",
+users: "المستخدمون",
+logout: "تسجيل الخروج",
+  // System Settings
+systemSettings: "إعدادات النظام",
+systemSettingsDescription:
+  "إدارة إعدادات النظام وسلوك المنصة.",
+
+generalSettings: "الإعدادات العامة",
+generalSettingsDescription:
+  "تكوين السلوك الرئيسي لمنصة LUMA.",
+
+maintenanceMode: "وضع الصيانة",
+maintenanceModeDescription:
+  "تعطيل الوصول إلى المنصة مؤقتًا أثناء إجراء أعمال الصيانة.",
+toggleMaintenanceMode: "تفعيل أو تعطيل وضع الصيانة",
+
+userRegistration: "تسجيل المستخدمين",
+userRegistrationDescription:
+  "السماح للمستخدمين الجدد بإنشاء حسابات على المنصة.",
+toggleUserRegistration: "تفعيل أو تعطيل تسجيل المستخدمين",
+
+emailVerification: "التحقق من البريد الإلكتروني",
+emailVerificationDescription:
+  "مطالبة المستخدمين بالتحقق من بريدهم الإلكتروني قبل الوصول إلى المنصة.",
+toggleEmailVerification: "تفعيل أو تعطيل التحقق من البريد الإلكتروني",
+
+platformFeatures: "ميزات المنصة",
+platformFeaturesDescription:
+  "التحكم في الميزات المتاحة للمستخدمين.",
+
+notifications: "الإشعارات",
+notificationsDescription:
+  "تفعيل إشعارات النظام لمستخدمي المنصة.",
+toggleNotifications: "تفعيل أو تعطيل الإشعارات",
+
+blueprintCreation: "إنشاء المخططات",
+blueprintCreationDescription:
+  "السماح للمستخدمين بإنشاء مخططات هندسية جديدة.",
+toggleBlueprintCreation: "تفعيل أو تعطيل إنشاء المخططات",
+
+aiChat: "محادثة الذكاء الاصطناعي",
+aiChatDescription:
+  "السماح للمستخدمين بالتواصل مع مساعد LUMA للذكاء الاصطناعي.",
+toggleAiChat: "تفعيل أو تعطيل محادثة الذكاء الاصطناعي",
+
+systemInformation: "معلومات النظام",
+systemInformationDescription:
+  "معلومات أساسية حول المنصة الحالية.",
+
+platform: "المنصة",
+environment: "البيئة",
+production: "الإنتاج",
+systemStatus: "حالة النظام",
+operational: "يعمل بشكل طبيعي",
+version: "الإصدار",
+  // ================= Overview =================
+
+overviewSuperAdminDashboard:
+  "لوحة تحكم المدير العام",
+
+overviewAdminDashboard:
+  "لوحة تحكم المدير",
+
+overviewTitle:
+  "نظرة عامة",
+
+overviewDescription:
+  "راقب منصة Luma الخاصة بك من مكان واحد.",
+
+overviewSuperAdmin:
+  "المدير العام",
+
+overviewAdmin:
+  "المدير",
+
+overviewSuperAdministrator:
+  "المدير العام للنظام",
+
+overviewAdministrator:
+  "المدير",
+
+overviewControlCenter:
+  "مركز تحكم LUMA",
+
+overviewEverythingUnderControl:
+  "كل شيء تحت السيطرة.",
+
+overviewBannerDescription:
+  "تابع المستخدمين والمخططات ونشاط المنصة من لوحة التحكم الخاصة بك.",
+
+overviewLive:
+  "مباشر",
+
+overviewActive:
+  "نشط",
+
+overviewRecent:
+  "حديث",
+
+overviewSystem:
+  "النظام",
+
+overviewTotalUsers:
+  "إجمالي المستخدمين",
+
+overviewRegisteredUsers:
+  "المستخدمون المسجلون في المنصة",
+
+overviewBlueprints:
+  "المخططات",
+
+overviewGeneratedBlueprints:
+  "مخططات المشاريع التي تم إنشاؤها",
+
+overviewActivities:
+  "الأنشطة",
+
+overviewRecordedActivities:
+  "الأنشطة المسجلة على المنصة",
+
+overviewSystemStatus:
+  "حالة النظام",
+
+overviewSystemMonitoring:
+  "مراقبة نظام المنصة",
+
+overviewOnline:
+  "متصل",
+
+overviewPlatform:
+  "المنصة",
+
+overviewSystemOverview:
+  "نظرة عامة على النظام",
+
+overviewCurrentPlatformInfo:
+  "معلومات المنصة الحالية",
+
+overviewSystemOperational:
+  "النظام يعمل بشكل طبيعي",
+
+overviewNoSystemStats:
+  "لا تتوفر إحصائيات للنظام.",
+
+overviewTotalBlueprints:
+  "إجمالي المخططات",
+
+overviewMonitoring:
+  "المراقبة",
+
+overviewRecentActivity:
+  "النشاط الأخير",
+
+overviewLatestEvents:
+  "أحدث أحداث المنصة",
+
+overviewNoActivity:
+  "لا يوجد نشاط متاح.",
+
+overviewPlatformActivity:
+  "نشاط المنصة",
+
+overviewSystemActivity:
+  "نشاط النظام",
+
+overviewAiCore:
+  "نواة LUMA للذكاء الاصطناعي",
+
+overviewAssistantReady:
+  "مساعد المنصة جاهز.",
+
+overviewAssistantDescription:
+  "تحافظ Luma على تنظيم مساحة العمل ومراقبتها وتشغيلها بسلاسة.",
+  // ================= المستخدمون =================
+
+  usersTitle:
+    "المستخدمون",
+
+  usersDescription:
+    "إدارة ومتابعة مستخدمي LUMA.",
+
+  usersRefresh:
+    "تحديث",
+
+  usersLoading:
+    "جارٍ التحميل...",
+
+  usersLoadingUsers:
+    "جارٍ تحميل المستخدمين...",
+
+  usersTotal:
+    "إجمالي المستخدمين",
+
+  usersActive:
+    "المستخدمون النشطون",
+
+  usersInactive:
+    "المستخدمون غير النشطين",
+
+  usersSearchResults:
+    "نتائج البحث",
+
+  usersAll:
+    "جميع المستخدمين",
+
+  usersAllDescription:
+    "عرض المستخدمين المسجلين ومعلوماتهم.",
+
+  usersSearchPlaceholder:
+    "البحث عن مستخدمين...",
+
+  usersUser:
+    "المستخدم",
+
+  usersEmail:
+    "البريد الإلكتروني",
+
+  usersRole:
+    "الصلاحية",
+
+  usersStatus:
+    "الحالة",
+
+  usersAction:
+    "الإجراء",
+
+  usersView:
+    "عرض",
+
+  usersActiveStatus:
+    "نشط",
+
+  usersInactiveStatus:
+    "غير نشط",
+
+  usersNoUsers:
+    "لم يتم العثور على مستخدمين",
+
+  usersNoSearchResults:
+    "لا يوجد مستخدمون يطابقون بحثك.",
+
+  usersNoUsersToDisplay:
+    "لا يوجد مستخدمون لعرضهم.",
+
+  usersUnknownUser:
+    "مستخدم غير معروف",
+
+  usersLoadError:
+    "فشل تحميل المستخدمين. يرجى المحاولة مرة أخرى.",
+
+  usersTryAgain:
+    "حاول مرة أخرى",
+
+  usersDetails:
+    "تفاصيل المستخدم",
+
+  usersDetailsDescription:
+    "عرض معلومات المستخدم.",
+
+  usersId:
+    "المعرّف",
+
+  usersUsername:
+    "اسم المستخدم",
+
+  usersClose:
+    "إغلاق",
+
+  usersUserRole:
+    "مستخدم",
+
+  usersAdminRole:
+    "مدير",
+
+  usersSuperAdminRole:
+    "مدير النظام",
+
+systemState:"حالة النظام",
 systemStateDescription:"مراقبة البنية التحتية وصحة المنصة",
 loadingSystemData:"جاري تحميل بيانات النظام...",
 totalServices:"إجمالي الخدمات",
@@ -874,11 +1429,11 @@ updated: "آخر تحديث",
   navOutput: "الناتج",
   navPricing: "الأسعار",
 
-  productNav: "المنتج",
-  councilNav: "المجلس",
-  howNav: "كيف يعمل",
-  outputNav: "الناتج",
-  pricingNav: "الأسعار",
+  product: "المنتج",
+  council: "المجلس",
+  how: "كيف يعمل",
+  output: "الناتج",
+  pricing: "الأسعار",
 
   languageToggle: "English",
 

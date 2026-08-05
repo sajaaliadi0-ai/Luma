@@ -85,11 +85,11 @@ function Landpage({ dark, setDark }) {
         </div>
 
         <nav className="nav-links">
-          <a href="#hero">{t("productNav")}</a>
-          <a href="#council">{t("councilNav")}</a>
-          <a href="#how">{t("howNav")}</a>
-          <a href="#output">{t("outputNav")}</a>
-          <a href="#pricing">{t("pricingNav")}</a>
+          <a href="#hero">{t("product")}</a>
+          <a href="#council">{t("council")}</a>
+          <a href="#how">{t("how")}</a>
+          <a href="#output">{t("output")}</a>
+          <a href="#pricing">{t("pricing")}</a>
         </nav>
 
         <div className="nav-right">
@@ -145,7 +145,7 @@ function Landpage({ dark, setDark }) {
 
           <button
             className="login"
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/Overview")}
           >
             {t("loginButton")}
           </button>
@@ -485,7 +485,7 @@ function Landpage({ dark, setDark }) {
         <div className="container">
 
          <h2 className="section-title">
-  {t("howNav")}
+  {t("how")}
 </h2>
 
           <div className="steps-container">

@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "../i18n";
 import Sidebar from "../components/Sidebar/Sidebar";
 import "../css/Settings.css";
 
 function SystemSettings({ dark, setDark }) {
+  const { t } = useTranslation();
+
   const [settings, setSettings] = useState({
     maintenanceMode: false,
     registrationEnabled: true,
@@ -21,21 +24,32 @@ function SystemSettings({ dark, setDark }) {
 
   return (
     <div className={`system-settings-page ${dark ? "dark" : ""}`}>
-      {/* Existing Sidebar */}
+
+      {/* ================= SIDEBAR ================= */}
+
       <Sidebar dark={dark} setDark={setDark} />
 
-      {/* Main Content */}
+
+      {/* ================= MAIN CONTENT ================= */}
+
       <main className="system-settings-main">
 
         {/* ================= HEADER ================= */}
 
         <header className="system-settings-header">
+
           <div>
-            <h1>System Settings</h1>
+
+            <h1>
+              {t("systemSettings")}
+            </h1>
+
             <p>
-              Manage system configuration and platform behavior.
+              {t("systemSettingsDescription")}
             </p>
+
           </div>
+
         </header>
 
 
@@ -44,12 +58,19 @@ function SystemSettings({ dark, setDark }) {
         <section className="system-settings-card">
 
           <div className="system-settings-card-header">
+
             <div>
-              <h2>General Settings</h2>
+
+              <h2>
+                {t("generalSettings")}
+              </h2>
+
               <p>
-                Configure the main behavior of the LUMA platform.
+                {t("generalSettingsDescription")}
               </p>
+
             </div>
+
           </div>
 
 
@@ -58,13 +79,19 @@ function SystemSettings({ dark, setDark }) {
             {/* Maintenance Mode */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>Maintenance Mode</h3>
+
+                <h3>
+                  {t("maintenanceMode")}
+                </h3>
+
                 <p>
-                  Temporarily disable access to the platform
-                  while maintenance is being performed.
+                  {t("maintenanceModeDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -73,23 +100,33 @@ function SystemSettings({ dark, setDark }) {
                     ? "system-settings-toggle-active"
                     : ""
                 }`}
-                onClick={() => handleToggle("maintenanceMode")}
-                aria-label="Toggle maintenance mode"
+                onClick={() =>
+                  handleToggle("maintenanceMode")
+                }
+                aria-label={t("toggleMaintenanceMode")}
               >
                 <span></span>
               </button>
+
             </div>
 
 
-            {/* Registration */}
+            {/* User Registration */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>User Registration</h3>
+
+                <h3>
+                  {t("userRegistration")}
+                </h3>
+
                 <p>
-                  Allow new users to create accounts on the platform.
+                  {t("userRegistrationDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -98,24 +135,33 @@ function SystemSettings({ dark, setDark }) {
                     ? "system-settings-toggle-active"
                     : ""
                 }`}
-                onClick={() => handleToggle("registrationEnabled")}
-                aria-label="Toggle user registration"
+                onClick={() =>
+                  handleToggle("registrationEnabled")
+                }
+                aria-label={t("toggleUserRegistration")}
               >
                 <span></span>
               </button>
+
             </div>
 
 
             {/* Email Verification */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>Email Verification</h3>
+
+                <h3>
+                  {t("emailVerification")}
+                </h3>
+
                 <p>
-                  Require users to verify their email address
-                  before accessing the platform.
+                  {t("emailVerificationDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -124,14 +170,18 @@ function SystemSettings({ dark, setDark }) {
                     ? "system-settings-toggle-active"
                     : ""
                 }`}
-                onClick={() => handleToggle("emailVerification")}
-                aria-label="Toggle email verification"
+                onClick={() =>
+                  handleToggle("emailVerification")
+                }
+                aria-label={t("toggleEmailVerification")}
               >
                 <span></span>
               </button>
+
             </div>
 
           </div>
+
         </section>
 
 
@@ -140,12 +190,19 @@ function SystemSettings({ dark, setDark }) {
         <section className="system-settings-card">
 
           <div className="system-settings-card-header">
+
             <div>
-              <h2>Platform Features</h2>
+
+              <h2>
+                {t("platformFeatures")}
+              </h2>
+
               <p>
-                Control which features are available to users.
+                {t("platformFeaturesDescription")}
               </p>
+
             </div>
+
           </div>
 
 
@@ -154,12 +211,19 @@ function SystemSettings({ dark, setDark }) {
             {/* Notifications */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>Notifications</h3>
+
+                <h3>
+                  {t("notifications")}
+                </h3>
+
                 <p>
-                  Enable system notifications for platform users.
+                  {t("notificationsDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -168,23 +232,33 @@ function SystemSettings({ dark, setDark }) {
                     ? "system-settings-toggle-active"
                     : ""
                 }`}
-                onClick={() => handleToggle("notifications")}
-                aria-label="Toggle notifications"
+                onClick={() =>
+                  handleToggle("notifications")
+                }
+                aria-label={t("toggleNotifications")}
               >
                 <span></span>
               </button>
+
             </div>
 
 
-            {/* Blueprint */}
+            {/* Blueprint Creation */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>Blueprint Creation</h3>
+
+                <h3>
+                  {t("blueprintCreation")}
+                </h3>
+
                 <p>
-                  Allow users to create new engineering blueprints.
+                  {t("blueprintCreationDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -196,22 +270,30 @@ function SystemSettings({ dark, setDark }) {
                 onClick={() =>
                   handleToggle("allowBlueprintCreation")
                 }
-                aria-label="Toggle blueprint creation"
+                aria-label={t("toggleBlueprintCreation")}
               >
                 <span></span>
               </button>
+
             </div>
 
 
             {/* AI Chat */}
 
             <div className="system-settings-item">
+
               <div className="system-settings-item-info">
-                <h3>AI Chat</h3>
+
+                <h3>
+                  {t("aiChat")}
+                </h3>
+
                 <p>
-                  Allow users to communicate with the LUMA AI assistant.
+                  {t("aiChatDescription")}
                 </p>
+
               </div>
+
 
               <button
                 type="button"
@@ -220,14 +302,18 @@ function SystemSettings({ dark, setDark }) {
                     ? "system-settings-toggle-active"
                     : ""
                 }`}
-                onClick={() => handleToggle("allowAiChat")}
-                aria-label="Toggle AI chat"
+                onClick={() =>
+                  handleToggle("allowAiChat")
+                }
+                aria-label={t("toggleAiChat")}
               >
                 <span></span>
               </button>
+
             </div>
 
           </div>
+
         </section>
 
 
@@ -236,39 +322,85 @@ function SystemSettings({ dark, setDark }) {
         <section className="system-settings-card">
 
           <div className="system-settings-card-header">
+
             <div>
-              <h2>System Information</h2>
+
+              <h2>
+                {t("systemInformation")}
+              </h2>
+
               <p>
-                Basic information about the current platform.
+                {t("systemInformationDescription")}
               </p>
+
             </div>
+
           </div>
 
 
           <div className="system-settings-info-grid">
 
-            <div className="system-settings-info-box">
-              <span>Platform</span>
-              <strong>LUMA</strong>
-            </div>
+            {/* Platform */}
 
             <div className="system-settings-info-box">
-              <span>Environment</span>
-              <strong>Production</strong>
+
+              <span>
+                {t("platform")}
+              </span>
+
+              <strong>
+                LUMA
+              </strong>
+
             </div>
 
+
+            {/* Environment */}
+
             <div className="system-settings-info-box">
-              <span>System Status</span>
+
+              <span>
+                {t("environment")}
+              </span>
+
+              <strong>
+                {t("production")}
+              </strong>
+
+            </div>
+
+
+            {/* System Status */}
+
+            <div className="system-settings-info-box">
+
+              <span>
+                {t("systemStatus")}
+              </span>
 
               <strong className="system-settings-status">
+
                 <span></span>
-                Operational
+
+                {t("operational")}
+
               </strong>
+
             </div>
 
+
+            {/* Version */}
+
             <div className="system-settings-info-box">
-              <span>Version</span>
-              <strong>1.0.0</strong>
+
+              <span>
+                {t("version")}
+              </span>
+
+              <strong>
+                1.0.0
+              </strong>
+
             </div>
 
           </div>
@@ -276,6 +408,7 @@ function SystemSettings({ dark, setDark }) {
         </section>
 
       </main>
+
     </div>
   );
 }

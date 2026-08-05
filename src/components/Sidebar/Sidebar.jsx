@@ -1,4 +1,3 @@
-import {} from "react";
 import { useNavigate } from "react-router-dom";
 
 import {
@@ -8,297 +7,222 @@ import {
   FiActivity,
   FiFileText,
   FiSettings,
-  FiLogOut
+  FiLogOut,
 } from "react-icons/fi";
+
+import { useTranslation } from "../../i18n";
 
 import "./Sidebar.css";
 
 
 const Sidebar = ({ active }) => {
 
-
   const navigate = useNavigate();
 
+  const { t } = useTranslation();
 
-  // قراءة صلاحية المستخدم
+
+  // ================= ROLE =================
+
   const role = localStorage.getItem("role");
 
 
+  // ================= ADMIN ITEMS =================
 
   const adminItems = [
 
     {
-      name:"Overview",
-      path:"/Overview",
-      icon:<FiHome/>
+      name: "Overview",
+      label: t("overview"),
+      path: "/Overview",
+      icon: <FiHome />,
     },
-
 
     {
-      name:"Users",
-      path:"/Users",
-      icon:<FiUsers/>
+      name: "Users",
+      label: t("users"),
+      path: "/Users",
+      icon: <FiUsers />,
     },
-
 
     {
-      name:"Blueprints",
-      path:"/BlueprintsAdmen",
-      icon:<FiBox/>
+      name: "Blueprints",
+      label: t("blueprints"),
+      path: "/BlueprintsAdmen",
+      icon: <FiBox />,
     },
-
 
     {
-      name:"Logs",
-      path:"/Logs",
-      icon:<FiFileText/>
+      name: "Logs",
+      label: t("logs"),
+      path: "/Logs",
+      icon: <FiFileText />,
     },
-
-     {
- name:"System State",
-      path:"/",
+   {
+     name : "SystemState",
+       label: t("systemState"),
+      path: "/SystemState",
       icon:<FiActivity/>
     },
 
     {
-      name:"Settings",
-      path:"/Settings",
-      icon:<FiSettings/>
-    }  
+      name: "Settings",
+      label: t("settings"),
+      path: "/Settings",
+      icon: <FiSettings />,
+    },
 
   ];
 
 
-
-
-
+  // ================= SUPER ADMIN ITEMS =================
 
   const superAdminItems = [
 
     {
-      name:"Overview",
-      path:"/",
-      icon:<FiHome/>
+      name: "Overview",
+      label: t("overview"),
+      path: "/",
+      icon: <FiHome />,
     },
-
 
     {
-      name:"Users",
-      path:"/Users",
-      icon:<FiUsers/>
+      name: "Users",
+      label: t("users"),
+      path: "/Users",
+      icon: <FiUsers />,
     },
-
 
     {
-      name:"Blueprints",
-      path:"/BlueprintsAdmen",
-      icon:<FiBox/>
+      name: "Blueprints",
+      label: t("blueprints"),
+      path: "/BlueprintsAdmen",
+      icon: <FiBox />,
     },
-
-
-   
 
     {
-      name:"Logs",
-      path:"/Logs",
-      icon:<FiFileText/>
+      name: "Logs",
+      label: t("logs"),
+      path: "/Logs",
+      icon: <FiFileText />,
     },
- {
-      name:"System State",
-      path:"/",
-      icon:<FiActivity/>
-    },
-
 
     {
-      name:"Settings",
-      path:"/Settings",
-      icon:<FiSettings/>
-    }
+      name: "SystemState",
+      label: t("systemState"),
+      path: "/SystemState",
+      icon: <FiActivity />,
+    },
+
+    {
+      name: "Settings",
+      label: t("settings"),
+      path: "/Settings",
+      icon: <FiSettings />,
+    },
 
   ];
 
 
-
-
+  // ================= SELECT MENU =================
 
   const menuItems =
-  role === "superadmin"
-  ?
-  superAdminItems
-  :
-  adminItems;
+    role === "superadmin"
+      ? superAdminItems
+      : adminItems;
 
 
+  // ================= LOGOUT =================
 
-
-
-
-
-  const logout = ()=>{
-
+  const logout = () => {
 
     localStorage.removeItem("token");
 
     localStorage.removeItem("role");
 
-
     navigate("/login");
-
 
   };
 
 
+  // ================= UI =================
 
+  return (
 
+    <aside className="sidebar">
 
 
+      {/* ================= LOGO ================= */}
 
-return (
+      <div className="sidebar-logo">
 
+        <div className="logo-circle">
+          L
+        </div>
 
-<aside className="sidebar">
+        <span>
+          Luma
+        </span>
 
+      </div>
 
 
-<div className="sidebar-logo">
+      {/* ================= MENU ================= */}
 
+      <div className="sidebar-menu">
 
-<div className="logo-circle">
+        {menuItems.map((item) => (
 
-L
+          <div
+            key={item.name}
+            className={
+              active === item.name
+                ? "sidebar-link active"
+                : "sidebar-link"
+            }
+            onClick={() => navigate(item.path)}
+          >
 
-</div>
+            <span className="icon">
+              {item.icon}
+            </span>
 
+            <span>
+              {item.label}
+            </span>
 
-<span>
+          </div>
 
-Luma
+        ))}
 
-</span>
+      </div>
 
 
-</div>
+      {/* ================= FOOTER ================= */}
 
+      <div className="sidebar-footer">
 
+        <div
+          className="sidebar-link logout"
+          onClick={logout}
+        >
 
+          <span className="icon">
+            <FiLogOut />
+          </span>
 
+          <span>
+            {t("logout")}
+          </span>
 
+        </div>
 
+      </div>
 
-<div className="sidebar-menu">
 
+    </aside>
 
-
-{
-
-menuItems.map(item=>(
-
-
-<div
-
-
-key={item.name}
-
-
-className={
-
-active === item.name
-
-?
-
-"sidebar-link active"
-
-:
-
-"sidebar-link"
-
-}
-
-
-
-onClick={()=>navigate(item.path)}
-
-
->
-
-
-<span className="icon">
-
-{item.icon}
-
-</span>
-
-
-
-<span>
-
-{item.name}
-
-</span>
-
-
-
-</div>
-
-
-))
-
-
-}
-
-
-
-</div>
-
-
-
-
-
-
-
-
-<div className="sidebar-footer">
-
-
-<div
-
-className="sidebar-link logout"
-
-onClick={logout}
-
->
-
-
-<span className="icon">
-
-<FiLogOut/>
-
-</span>
-
-
-<span>
-
-Logout
-
-</span>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-</aside>
-
-
-);
-
-
+  );
 };
 
 

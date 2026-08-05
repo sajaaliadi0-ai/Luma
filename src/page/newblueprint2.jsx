@@ -119,20 +119,9 @@ function getSavedActiveConversation() {
    ATOMS APP
 ===================================================== */
 
-function AtomsApp() {
+function AtomsApp({ dark, setDark, themeMode, setThemeMode }) {
 
-  const [theme, setTheme] = useState(() => {
-  return localStorage.getItem("theme") || "light";
-});
-
-useEffect(() => {
-  console.log(theme);
-
-localStorage.setItem("theme", theme);
-
-document.documentElement.setAttribute("data-theme", theme);
-
-}, [theme]);
+  const theme = themeMode || "light";
 
   const navigate = useNavigate();
 
@@ -830,19 +819,19 @@ navigate("/landing-page");    }
         {page === "Home" && (
 
           <Home
-  prompt={prompt}
-  setPrompt={setPrompt}
-  messages={
-    conversations.find(
-      (conversation) =>
-        conversation.id === activeConversationId
-    )?.messages || []
-  }
-  typing={typing}
-  onSend={sendMessage}
-  theme={theme}
-  setTheme={setTheme}
-/>
+            prompt={prompt}
+            setPrompt={setPrompt}
+            messages={
+              conversations.find(
+                (conversation) =>
+                  conversation.id === activeConversationId
+              )?.messages || []
+            }
+            typing={typing}
+            onSend={sendMessage}
+            themeMode={themeMode}
+            setThemeMode={setThemeMode}
+          />
 
         )}
 
@@ -1477,10 +1466,11 @@ function Home({
   messages,
   typing,
   onSend,
-  theme,
-  setTheme,
+  themeMode,
+  setThemeMode,
 }) {
-const { t } = useTranslation();
+  const theme = themeMode || "light";
+  const { t } = useTranslation();
   const [listening, setListening] =
     useState(false);
 
@@ -1833,11 +1823,7 @@ const { t } = useTranslation();
     <button
       type="button"
       onClick={() => {
-        const dark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-
-setTheme(dark ? "dark" : "light");
+        setThemeMode("system");
         setShowThemeMenu(false);
       }}
     >
@@ -1846,7 +1832,7 @@ setTheme(dark ? "dark" : "light");
     <button
       type="button"
       onClick={() => {
-setTheme("light");
+setThemeMode("light");
         setShowThemeMenu(false);
       }}
     >
@@ -1855,7 +1841,7 @@ setTheme("light");
     <button
       type="button"
       onClick={() => {
-setTheme("dark");
+setThemeMode("dark");
         setShowThemeMenu(false);
       }}
     >
