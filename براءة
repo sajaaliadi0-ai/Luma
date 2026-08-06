@@ -1,0 +1,317 @@
+Branch
+
+You are working on the admin-darkmode-translation branch which already exists on GitHub. Start from there:
+
+git fetch origin
+git checkout admin-darkmode-translation
+
+Pages you own in this branch
+
+All of these pages exist in src/page/ on the admin-darkmode-translation branch. Your job is to connect each one to the real backend API, handle all states, and make the pages actually functional for the user:
+
+Page file
+
+Route
+
+What it is
+
+home.jsx
+
+/Home
+
+Landing/chat page for the AI assistant — the main entry point after login
+
+new-blueprint.jsx
+
+/new-blueprint
+
+Step 1 of blueprint creation: user fills in idea and settings
+
+newblueprint2.jsx
+
+/newblueprint2
+
+AI chat workspace — shows agent conversation during generation
+
+DualWorkspace.jsx
+
+/DualWorkspace
+
+Side-by-side layout: blueprint form + AI chat (combines new-blueprint + newblueprint2)
+
+Settings.jsx
+
+/Settings
+
+User profile and preferences settings
+
+Resources.jsx
+
+/Resources
+
+Resources/templates library page
+
+What each page needs
+
+1. home.jsx
+
+Current state: The file has a chat-style UI with a text input. It stores a prompt in sessionStorage and redirects to newblueprint2.
+
+What to verify and complete:
+
+On page load, show a greeting with the logged-in user's name:
+
+const user = JSON.parse(localStorage.getItem('user') || '{}')
+// Display: `Hi, ${user.full_name || 'there'}! 👋`
+
+The text input is where the user types their project idea. On submit:
+
+Store the text in sessionStorage.setItem('blueprintPrompt', text)
+
+Navigate to /DualWorkspace
+
+The page is already working mostly — just make sure the greeting uses real user data and the navigation goes to /DualWorkspace not /newblueprint2 directly.
+
+Dark mode is already handled via themeMode prop — do not add dark/setDark props (they were already removed from this file).
+
+2. new-blueprint.jsx
+
+Current state: The file has the blueprint creation form. It reads the prompt from sessionStorage. It has a form with project type, complexity, and language selectors.
+
+What to complete:
+
+Step 1 — Read the idea from sessionStorage
+
+useEffect(() => {
+  const savedPrompt = sessionStorage.getItem('blueprintPrompt')
+  if (savedPrompt) {
+    setIdeaText(savedPrompt)
+    sessionStorage.removeItem('blueprintPrompt')
+  }
+}, [])
+
+Step 2 — Validate before submitting
+
+ideaText must not be empty
+
+ideaText must be at least 20 characters
+
+Show the error message inside the UI (not alert())
+
+Step 3 — Call the API
+
+const handleSubmit = async () => {
+  setError('')
+  if (ideaText.trim().length < 20) {
+    setError('Please describe your idea in at least 20 characters.')
+    return
+  }
+  try {
+    setLoading(true)
+    const response = await api.post('/api/blueprints', {
+      title: ideaText.slice(0, 80),
+      idea_text: ideaText.trim(),
+      project_type: projectType,
+      complexity: complexity,
+      output_language: outputLanguage,
+    })
+    const blueprint = response.data.blueprint || response.data.data || response.data
+    navigate(`/newblueprint2?id=${blueprint.id}`)
+  } catch (err) {
+    const message = err.response?.data?.message
+    setError(message || 'Something went wrong. Please try again.')
+  } finally {
+    setLoading(false)
+  }
+}
+
+Step 4 — Loading state on the button
+
+<button onClick={handleSubmit} disabled={loading}>
+  {loading ? 'Creating blueprint...' : 'Generate Blueprint'}
+</button>
+
+3. newblueprint2.jsx
+
+Current state: This is the AI chat workspace. It already has most of the UI built. ESLint issues have been fixed (unused vars, setState in effect). The themeMode/setThemeMode props are the dark mode source.
+
+What to complete:
+
+Step 1 — Read the blueprint ID from URL
+
+import { useSearchParams } from 'react-router-dom'
+const [searchParams] = useSearchParams()
+const blueprintId = searchParams.get('id')
+
+Step 2 — Fetch blueprint metadata on mount
+
+useEffect(() => {
+  if (!blueprintId) return
+  api.get(`/api/blueprints/${blueprintId}`).then(res => {
+    const bp = res.data.blueprint || res.data
+    setCurrentBlueprint(bp)
+  })
+}, [blueprintId])
+
+Step 3 — Subscribe to SSE for live updates
+
+useEffect(() => {
+  if (!blueprintId) return
+  const token = localStorage.getItem('token')
+  const apiBase = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+  const sse = new EventSource(`${apiBase}/api/blueprints/${blueprintId}/events?token=${token}`)
+  
+  sse.onmessage = () => {
+    // Refetch sections whenever an event arrives
+    api.get(`/api/blueprints/${blueprintId}/sections`).then(r => {
+      setSections(r.data.sections || r.data)
+    })
+  }
+  
+  sse.onerror = () => sse.close()
+  return () => sse.close()
+}, [blueprintId])
+
+Step 4 — Display sections
+
+The conversation panel in the chat should show each blueprint section as an agent message:
+
+Agent name = section.sectionKey or section.title
+
+Message content = section.contentMarkdown (split by newlines into paragraphs)
+
+Show a "generating..." spinner for sections that aren't done yet
+
+4. DualWorkspace.jsx
+
+Current state: This page renders NewBlueprint on the left and NewBlueprint2 on the right side by side using the CSS layout in dualWorkspace.css.
+
+What to verify:
+
+The split layout should work: left side = form to enter idea, right side = chat/result
+
+The blueprintPrompt in sessionStorage is the communication bridge between them
+
+When the user submits on the left form, the right panel picks it up via sessionStorage and starts a new conversation
+
+Make sure DualWorkspace is included in the protected routes (only accessible when logged in)
+
+If the layout is broken:
+
+Open dualWorkspace.css and make sure the wrapper has display: flex
+
+Left panel: width: 40%; overflow-y: auto
+
+Right panel: width: 60%; overflow-y: auto
+
+5. Settings.jsx
+
+Current state: The file exists with a sidebar and settings form UI.
+
+What to build:
+
+Load user data on mount
+
+useEffect(() => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  setFullName(user.full_name || '')
+  setEmail(user.email || '')
+}, [])
+
+Save changes to profile
+
+const handleSave = async () => {
+  try {
+    setLoading(true)
+    const res = await api.patch('/api/users/me', { full_name: fullName })
+    // Update localStorage with new user data
+    localStorage.setItem('user', JSON.stringify(res.data.user || res.data))
+    setSuccess('Profile updated successfully.')
+  } catch (err) {
+    setError(err.response?.data?.message || 'Failed to update profile.')
+  } finally {
+    setLoading(false)
+  }
+}
+
+Dark mode toggle
+
+The settings page should have a toggle for dark mode
+
+When toggled, call setThemeMode('dark' or 'light') which is passed as a prop from App.jsx
+
+Also persist the preference: localStorage.setItem('theme', newTheme)
+
+Language toggle
+
+Show a dropdown or two buttons: English / عربي
+
+Use setLanguage from useTranslation() to switch
+
+6. Resources.jsx
+
+Current state: This page shows a library of blueprint templates or examples.
+
+What to build:
+
+Fetch a list of blueprints from the backend to show as "examples":
+
+api.get('/api/blueprints?status=completed&limit=12')
+
+Show each completed blueprint as a card with: title, project type, complexity, creation date
+
+Add a "Use this idea" button on each card:
+
+Store the blueprint's ideaText in sessionStorage.setItem('blueprintPrompt', bp.ideaText)
+
+Navigate to /DualWorkspace
+
+Add a search input that filters by title on the client side
+
+Loading, empty, and error states are all required
+
+Dark mode consistency
+
+All pages in this branch receive themeMode and setThemeMode props (not dark/setDark). The value is either 'light' or 'dark'. Apply the theme by setting a class on the page wrapper:
+
+<div className={`page-wrapper ${themeMode === 'dark' ? 'dark' : ''}`}>
+
+The CSS variables for dark mode are already defined in src/css/theme.css. Do not add new CSS variables — use the existing ones.
+
+Translation (i18n)
+
+All user-visible text in these pages must go through the t() function from useTranslation(). If you add a new string that isn't already in i18n.jsx, add it there.
+
+For Arabic text, also check that the page supports RTL layout when language === 'ar'. The body direction is set globally, but make sure form inputs and flex layouts don't break under RTL.
+
+Branch and PR
+
+Work on admin-darkmode-translation
+
+When done, open a PR from admin-darkmode-translation → main
+
+Title: feat(user-pages): wire user-facing pages to real API [LF-6]
+
+Definition of Done
+
+[ ] home.jsx shows logged-in user's name and submits to sessionStorage then navigates.
+
+[ ] new-blueprint.jsx reads from sessionStorage, validates idea length, calls POST /api/blueprints, navigates on success, shows errors in UI.
+
+[ ] newblueprint2.jsx reads blueprint ID from URL, fetches blueprint data, subscribes to SSE events, and shows sections as they arrive.
+
+[ ] DualWorkspace.jsx renders both panels side by side and the data flows correctly between them.
+
+[ ] Settings.jsx loads user data, saves profile changes via PATCH /api/users/me, has a working dark mode toggle and language toggle.
+
+[ ] Resources.jsx fetches completed blueprints, search works, "Use this idea" button works.
+
+[ ] All pages respect dark mode via themeMode prop.
+
+[ ] All user-visible text goes through t() from i18n.
+
+[ ] All pages show loading, empty, and error states.
+
+[ ] No console.log left in production code.
+
+[ ] npm run build && npm run lint && npm run prettier all pass with zero errors.
