@@ -1,0 +1,5 @@
+homeGreeting: 'Hi, {{name}}!',
+there: 'there',
+
+homeGreeting: 'مرحباً، {{name}}!',
+there: 'هناك',
