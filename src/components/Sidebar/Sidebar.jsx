@@ -14,23 +14,18 @@ import { useTranslation } from "../../i18n";
 
 import "./Sidebar.css";
 
-
 const Sidebar = ({ active }) => {
-
   const navigate = useNavigate();
 
   const { t } = useTranslation();
-
 
   // ================= ROLE =================
 
   const role = localStorage.getItem("role");
 
-
   // ================= ADMIN ITEMS =================
 
   const adminItems = [
-
     {
       name: "Overview",
       label: t("overview"),
@@ -58,11 +53,11 @@ const Sidebar = ({ active }) => {
       path: "/Logs",
       icon: <FiFileText />,
     },
-   {
-     name : "SystemState",
-       label: t("systemState"),
+    {
+      name: "SystemState",
+      label: t("systemState"),
       path: "/SystemState",
-      icon:<FiActivity/>
+      icon: <FiActivity />,
     },
 
     {
@@ -71,14 +66,11 @@ const Sidebar = ({ active }) => {
       path: "/Settings",
       icon: <FiSettings />,
     },
-
   ];
-
 
   // ================= SUPER ADMIN ITEMS =================
 
   const superAdminItems = [
-
     {
       name: "Overview",
       label: t("overview"),
@@ -120,110 +112,65 @@ const Sidebar = ({ active }) => {
       path: "/Settings",
       icon: <FiSettings />,
     },
-
   ];
-
 
   // ================= SELECT MENU =================
 
-  const menuItems =
-    role === "superadmin"
-      ? superAdminItems
-      : adminItems;
-
+  const menuItems = role === "superadmin" ? superAdminItems : adminItems;
 
   // ================= LOGOUT =================
 
   const logout = () => {
-
     localStorage.removeItem("token");
 
     localStorage.removeItem("role");
 
     navigate("/login");
-
   };
-
 
   // ================= UI =================
 
   return (
-
     <aside className="sidebar">
-
-
       {/* ================= LOGO ================= */}
 
       <div className="sidebar-logo">
+        <div className="logo-circle">L</div>
 
-        <div className="logo-circle">
-          L
-        </div>
-
-        <span>
-          Luma
-        </span>
-
+        <span>Luma</span>
       </div>
-
 
       {/* ================= MENU ================= */}
 
       <div className="sidebar-menu">
-
         {menuItems.map((item) => (
-
           <div
             key={item.name}
             className={
-              active === item.name
-                ? "sidebar-link active"
-                : "sidebar-link"
+              active === item.name ? "sidebar-link active" : "sidebar-link"
             }
             onClick={() => navigate(item.path)}
           >
+            <span className="icon">{item.icon}</span>
 
-            <span className="icon">
-              {item.icon}
-            </span>
-
-            <span>
-              {item.label}
-            </span>
-
+            <span>{item.label}</span>
           </div>
-
         ))}
-
       </div>
-
 
       {/* ================= FOOTER ================= */}
 
       <div className="sidebar-footer">
-
-        <div
-          className="sidebar-link logout"
-          onClick={logout}
-        >
-
+        <div className="sidebar-link logout" onClick={logout}>
           <span className="icon">
             <FiLogOut />
           </span>
 
-          <span>
-            {t("logout")}
-          </span>
-
+          <span>{t("logout")}</span>
         </div>
-
       </div>
-
-
     </aside>
-
   );
 };
-
 
 export default Sidebar;

@@ -21,50 +21,50 @@ function Landpage({ dark, setDark }) {
       number: "3",
       title: t("step3Title"),
       text: t("step3Text"),
-    }
+    },
   ];
 
   const blueprintCards = [
     {
       icon: "▣",
       title: t("requirementsTitle"),
-      text: t("requirementsText")
+      text: t("requirementsText"),
     },
     {
       icon: "⌘",
       title: t("architectureTitle"),
-      text: t("architectureText")
+      text: t("architectureText"),
     },
     {
       icon: "◉",
       title: t("databaseTitle"),
-      text: t("databaseText")
+      text: t("databaseText"),
     },
     {
       icon: "⚡",
       title: t("apiTitle"),
-      text: t("apiText")
+      text: t("apiText"),
     },
     {
       icon: "▤",
       title: t("uxTitle"),
-      text: t("uxText")
+      text: t("uxText"),
     },
     {
       icon: "🔒",
       title: t("securityTitle"),
-      text: t("securityText")
+      text: t("securityText"),
     },
     {
       icon: "✓",
       title: t("testingTitle"),
-      text: t("testingText")
+      text: t("testingText"),
     },
     {
       icon: "◌",
       title: t("devopsTitle"),
-      text: t("devopsText")
-    }
+      text: t("devopsText"),
+    },
   ];
 
   const toggleLanguage = () => {
@@ -72,13 +72,10 @@ function Landpage({ dark, setDark }) {
   };
 
   return (
-
     <div className="home">
-
       {/* ================= NAVBAR ================= */}
 
       <header className="navbar">
-
         <div className="logo">
           <div className="logo-icon">L</div>
           <span>Luma Architect</span>
@@ -93,14 +90,8 @@ function Landpage({ dark, setDark }) {
         </nav>
 
         <div className="nav-right">
-
-          <button
-            className="theme-btn"
-            onClick={() => setDark(!dark)}
-          >
-
+          <button className="theme-btn" onClick={() => setDark(!dark)}>
             {dark ? (
-
               <svg
                 width="18"
                 height="18"
@@ -119,9 +110,7 @@ function Landpage({ dark, setDark }) {
                 <line x1="1" y1="12" x2="3" y2="12" />
                 <line x1="21" y1="12" x2="23" y2="12" />
               </svg>
-
             ) : (
-
               <svg
                 width="18"
                 height="18"
@@ -134,39 +123,26 @@ function Landpage({ dark, setDark }) {
               >
                 <path d="M21 12.79A9 9 0 1 1 11.21 3A7 7 0 0 0 21 12.79Z" />
               </svg>
-
             )}
-
           </button>
 
           <button className="lang-btn" onClick={toggleLanguage}>
             {t("languageToggle")}
           </button>
 
-          <button
-            className="login"
-            onClick={() => navigate("/Overview")}
-          >
+          <button className="login" onClick={() => navigate("/Overview")}>
             {t("loginButton")}
           </button>
 
-          <button
-            className="signup"
-            onClick={() => navigate("/work")}
-          >
+          <button className="signup" onClick={() => navigate("/work")}>
             {t("signupButton")}
           </button>
-
         </div>
-
       </header>
-            {/* ================= HERO ================= */}
+      {/* ================= HERO ================= */}
 
       <section id="hero" className="hero">
-
-        <div className="badge">
-          ● {t("heroBadge")}
-        </div>
+        <div className="badge">● {t("heroBadge")}</div>
 
         <h1>
           {t("heroTitle1")}
@@ -177,7 +153,6 @@ function Landpage({ dark, setDark }) {
         <p>{t("heroSubtitle")}</p>
 
         <div className="hero-buttons">
-
           <button
             className="primary-btn"
             onClick={() =>
@@ -199,76 +174,59 @@ function Landpage({ dark, setDark }) {
           >
             {t("heroSecondary")}
           </button>
-
         </div>
-
       </section>
 
       {/* ================= ENGINEERING COUNCIL ================= */}
 
       <section id="council" className="council">
-
         <div className="council-header">
-
           <div className="room-title">
-
             <span className="dot red"></span>
             <span className="dot yellow"></span>
             <span className="dot green"></span>
 
             <p>{t("councilTitle")}</p>
-
           </div>
 
-          <div className="progress">
-            ● {t("councilProgress")}
-          </div>
-
+          <div className="progress">● {t("councilProgress")}</div>
         </div>
 
         <div className="agents">
-
           <div className="agent-card">
-
             <div className="avatar">TU</div>
 
-              <div className="info">
-                <h3>Turing</h3>
-                <p>{t("agentAnalysingScope")}</p>
-              </div>
+            <div className="info">
+              <h3>Turing</h3>
+              <p>{t("agentAnalysingScope")}</p>
+            </div>
 
             <span className="status success"></span>
-
           </div>
 
           <div className="agent-card active">
-
             <div className="avatar">LO</div>
 
-              <div className="info">
-                <h3>Lovelace</h3>
-                <p>{t("agentDraftingFR")}</p>
-              </div>
+            <div className="info">
+              <h3>Lovelace</h3>
+              <p>{t("agentDraftingFR")}</p>
+            </div>
 
             <span className="status working"></span>
-
           </div>
 
           <div className="agent-card">
-
             <div className="avatar">BR</div>
 
-              <div className="info">
-                <h3>Brooks</h3>
-                <p>{t("agentLayeredArchitecture")}</p>
-              </div>
+            <div className="info">
+              <h3>Brooks</h3>
+              <p>{t("agentLayeredArchitecture")}</p>
+            </div>
 
             <span className="status success"></span>
-
           </div>
 
           <div className="agent-card active">
-
             <div className="avatar">CO</div>
 
             <div className="info">
@@ -277,11 +235,9 @@ function Landpage({ dark, setDark }) {
             </div>
 
             <span className="status working"></span>
-
           </div>
 
           <div className="agent-card">
-
             <div className="avatar">FI</div>
 
             <div className="info">
@@ -290,11 +246,9 @@ function Landpage({ dark, setDark }) {
             </div>
 
             <span className="status waiting"></span>
-
           </div>
 
           <div className="agent-card">
-
             <div className="avatar">NO</div>
 
             <div className="info">
@@ -303,26 +257,17 @@ function Landpage({ dark, setDark }) {
             </div>
 
             <span className="status waiting"></span>
-
           </div>
-
         </div>
-
       </section>
-            {/* ================= MEET THE AI ENGINEERING COUNCIL ================= */}
+      {/* ================= MEET THE AI ENGINEERING COUNCIL ================= */}
 
       <section id="team" className="team">
+        <h2 className="team-title">{t("teamTitle")}</h2>
 
-        <h2 className="team-title">
-          {t("teamTitle")}
-        </h2>
-
-        <p className="team-subtitle">
-          {t("teamSubtitle")}
-        </p>
+        <p className="team-subtitle">{t("teamSubtitle")}</p>
 
         <div className="team-grid">
-
           {/* Turing */}
           <div className="member">
             <div className="member-header">
@@ -332,9 +277,7 @@ function Landpage({ dark, setDark }) {
                 <span>Project Director</span>
               </div>
             </div>
-            <p>
-              {t("descProjectDirector")}
-            </p>
+            <p>{t("descProjectDirector")}</p>
           </div>
 
           {/* Grove */}
@@ -346,9 +289,7 @@ function Landpage({ dark, setDark }) {
                 <span>Business Analyst</span>
               </div>
             </div>
-            <p>
-              {t("descBusinessAnalyst")}
-            </p>
+            <p>{t("descBusinessAnalyst")}</p>
           </div>
 
           {/* Lovelace */}
@@ -360,9 +301,7 @@ function Landpage({ dark, setDark }) {
                 <span>Requirements Analyst</span>
               </div>
             </div>
-            <p>
-              {t("descRequirementsAnalyst")}
-            </p>
+            <p>{t("descRequirementsAnalyst")}</p>
           </div>
 
           {/* Brooks */}
@@ -374,9 +313,7 @@ function Landpage({ dark, setDark }) {
                 <span>System Architect</span>
               </div>
             </div>
-            <p>
-              {t("descSystemArchitect")}
-            </p>
+            <p>{t("descSystemArchitect")}</p>
           </div>
 
           {/* Codd */}
@@ -388,9 +325,7 @@ function Landpage({ dark, setDark }) {
                 <span>Database Engineer</span>
               </div>
             </div>
-            <p>
-              {t("descDatabaseEngineer")}
-            </p>
+            <p>{t("descDatabaseEngineer")}</p>
           </div>
 
           {/* Fielding */}
@@ -402,9 +337,7 @@ function Landpage({ dark, setDark }) {
                 <span>API Engineer</span>
               </div>
             </div>
-            <p>
-              {t("descApiEngineer")}
-            </p>
+            <p>{t("descApiEngineer")}</p>
           </div>
 
           {/* Norman */}
@@ -416,9 +349,7 @@ function Landpage({ dark, setDark }) {
                 <span>UI/UX Designer</span>
               </div>
             </div>
-            <p>
-              {t("descUiUxDesigner")}
-            </p>
+            <p>{t("descUiUxDesigner")}</p>
           </div>
 
           {/* Diffie */}
@@ -430,9 +361,7 @@ function Landpage({ dark, setDark }) {
                 <span>Security Engineer</span>
               </div>
             </div>
-            <p>
-              {t("descSecurityEngineer")}
-            </p>
+            <p>{t("descSecurityEngineer")}</p>
           </div>
 
           {/* Hopper */}
@@ -444,9 +373,7 @@ function Landpage({ dark, setDark }) {
                 <span>QA Engineer</span>
               </div>
             </div>
-            <p>
-              {t("descQaEngineer")}
-            </p>
+            <p>{t("descQaEngineer")}</p>
           </div>
 
           {/* Torvalds */}
@@ -458,9 +385,7 @@ function Landpage({ dark, setDark }) {
                 <span>DevOps Engineer</span>
               </div>
             </div>
-            <p>
-              {t("descDevOpsEngineer")}
-            </p>
+            <p>{t("descDevOpsEngineer")}</p>
           </div>
 
           {/* Knuth */}
@@ -472,191 +397,108 @@ function Landpage({ dark, setDark }) {
                 <span>Documentation Agent</span>
               </div>
             </div>
-            <p>
-              {t("descDocumentationAgent")}
-            </p>
+            <p>{t("descDocumentationAgent")}</p>
           </div>
-
         </div>
-
       </section>
-            <section id="how" className="how-section">
-
+      <section id="how" className="how-section">
         <div className="container">
-
-         <h2 className="section-title">
-  {t("how")}
-</h2>
+          <h2 className="section-title">{t("how")}</h2>
 
           <div className="steps-container">
-
             {steps.map((step, index) => (
-
               <div className="step-card" key={index}>
+                <div className="number">{step.number}</div>
 
-                <div className="number">
-                  {step.number}
-                </div>
+                <h3>{step.title}</h3>
 
-                <h3>
-                  {step.title}
-                </h3>
-
-                <p>
-                  {step.text}
-                </p>
-
+                <p>{step.text}</p>
               </div>
-
             ))}
-
           </div>
 
           {/* Blueprint */}
 
           <div id="output" className="blueprint">
+            <h2>{t("outputHeading")}</h2>
 
-            <h2>
-              {t("outputHeading")}
-            </h2>
-
-            <p className="subtitle">
-              {t("outputSubtitle")}
-            </p>
+            <p className="subtitle">{t("outputSubtitle")}</p>
 
             <div className="cards-grid">
-
               {blueprintCards.map((card, index) => (
-
                 <div className="blue-card" key={index}>
+                  <span className="card-icon">{card.icon}</span>
 
-                  <span className="card-icon">
-                    {card.icon}
-                  </span>
+                  <h4>{card.title}</h4>
 
-                  <h4>
-                    {card.title}
-                  </h4>
-
-                  <p>
-                    {card.text}
-                  </p>
-
+                  <p>{card.text}</p>
                 </div>
-
               ))}
-
             </div>
-
           </div>
-
         </div>
-              </section>
-              {/* ================= CTA ================= */}
+      </section>
+      {/* ================= CTA ================= */}
 
       <div id="pricing" className="cta">
+        <h2>{t("ctaTitle")}</h2>
 
-        <h2>
-          {t("ctaTitle")}
-        </h2>
+        <p>{t("ctaText")}</p>
 
-        <p>
-          {t("ctaText")}
-        </p>
-
-        <button
-          onClick={() => navigate("/work")}
-        >
-          {t("ctaButton")}
-        </button>
-
+        <button onClick={() => navigate("/work")}>{t("ctaButton")}</button>
       </div>
 
       {/* ================= FOOTER ================= */}
 
       <footer className="footer">
-
         <div className="footer-container">
-
           {/* Left */}
 
           <div className="footer-left">
-
             <div className="footer-brand">
-
-              <div className="logo-box">
-                L
-              </div>
+              <div className="logo-box">L</div>
 
               <div>
+                <h3>Luma Architect</h3>
 
-                <h3>
-                  Luma Architect
-                </h3>
-
-                <p>
-                    {t("footerBrandText")}
-                </p>
-
+                <p>{t("footerBrandText")}</p>
               </div>
-
             </div>
 
-            <small>
-                {t("footerCopyright")}
-            </small>
-
+            <small>{t("footerCopyright")}</small>
           </div>
 
           {/* Right */}
 
           <div className="footer-links">
-
             <div>
-
-              <h4>
-                Product
-              </h4>
+              <h4>Product</h4>
 
               <a href="#council">The Council</a>
               <a href="#how">How it works</a>
               <a href="#output">Sample output</a>
               <a href="#pricing">Pricing</a>
-
             </div>
 
             <div>
-
-              <h4>
-                Account
-              </h4>
+              <h4>Account</h4>
 
               <a onClick={() => navigate("/login")}>Log in</a>
               <a onClick={() => navigate("/Register")}>Create account</a>
               <a>Preferences</a>
-
             </div>
 
             <div>
-
-              <h4>
-                Legal
-              </h4>
+              <h4>Legal</h4>
 
               <a>Privacy</a>
               <a>Terms</a>
               <a>Contact</a>
-
             </div>
-
           </div>
-
         </div>
-
       </footer>
-
     </div>
-
   );
 }
 

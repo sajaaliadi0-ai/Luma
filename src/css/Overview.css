@@ -15,7 +15,6 @@
   box-sizing: border-box;
 }
 
-
 /* =========================================================
    DASHBOARD LAYOUT
 ========================================================= */
@@ -40,7 +39,6 @@
 
   background: var(--bg);
 }
-
 
 /* =========================================================
    HEADER
@@ -97,7 +95,6 @@
   font-size: 14px;
 }
 
-
 /* =========================================================
    PROFILE
 ========================================================= */
@@ -135,11 +132,7 @@
 
   border-radius: 12px;
 
-  background: linear-gradient(
-    135deg,
-    var(--primary),
-    #a78bfa
-  );
+  background: linear-gradient(135deg, var(--primary), #a78bfa);
 
   color: #ffffff;
 
@@ -147,8 +140,7 @@
 
   font-weight: 700;
 
-  box-shadow:
-    0 6px 15px rgba(124, 58, 237, 0.18);
+  box-shadow: 0 6px 15px rgba(124, 58, 237, 0.18);
 }
 
 .overview-profile-info strong {
@@ -179,10 +171,8 @@
 
   background: #22c55e;
 
-  box-shadow:
-    0 0 0 3px rgba(34, 197, 94, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
-
 
 /* =========================================================
    LUMA CONTROL BANNER
@@ -229,12 +219,11 @@
 
   border-radius: 50%;
 
-  background:
-    radial-gradient(
-      circle,
-      rgba(139, 92, 246, 0.12),
-      transparent 68%
-    );
+  background: radial-gradient(
+    circle,
+    rgba(139, 92, 246, 0.12),
+    transparent 68%
+  );
 }
 
 .overview-banner-content {
@@ -248,7 +237,6 @@
 
   gap: 18px;
 }
-
 
 /* =========================================================
    ROBOT
@@ -289,15 +277,9 @@
 
   border-radius: 10px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #2d243b,
-      #4b3d5d
-    );
+  background: linear-gradient(145deg, #2d243b, #4b3d5d);
 
-  box-shadow:
-    inset 0 0 0 2px #685982;
+  box-shadow: inset 0 0 0 2px #685982;
 }
 
 .overview-bot-eye {
@@ -308,8 +290,7 @@
 
   background: #c4b5fd;
 
-  box-shadow:
-    0 0 7px rgba(167, 139, 250, 0.9);
+  box-shadow: 0 0 7px rgba(167, 139, 250, 0.9);
 }
 
 .overview-bot-signal {
@@ -326,8 +307,7 @@
 
   background: var(--primary);
 
-  box-shadow:
-    0 0 0 4px rgba(139, 92, 246, 0.12);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
 }
 
 .overview-banner-label {
@@ -394,7 +374,6 @@
   background: #ddd6fe;
 }
 
-
 /* =========================================================
    STATISTICS
 ========================================================= */
@@ -402,8 +381,7 @@
 .overview-stats {
   display: grid;
 
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 
   gap: 18px;
 
@@ -563,7 +541,6 @@
   font-size: 10px;
 }
 
-
 /* =========================================================
    MAIN GRID
 ========================================================= */
@@ -571,8 +548,7 @@
 .overview-grid {
   display: grid;
 
-  grid-template-columns:
-    1.45fr 1fr;
+  grid-template-columns: 1.45fr 1fr;
 
   gap: 20px;
 
@@ -656,13 +632,12 @@
 
   border-radius: 11px;
 
-  background: rgba(139, 92, 246, 0.10);
+  background: rgba(139, 92, 246, 0.1);
 
   color: var(--primary);
 
   font-size: 15px;
 }
-
 
 /* =========================================================
    SYSTEM PANEL
@@ -712,8 +687,7 @@
 
   background: #22c55e;
 
-  box-shadow:
-    0 0 0 3px rgba(34, 197, 94, 0.15);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
 .system-live {
@@ -735,8 +709,7 @@
 .system-data-grid {
   display: grid;
 
-  grid-template-columns:
-    repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
 
   gap: 10px;
 }
@@ -770,7 +743,6 @@
 
   font-size: 14px;
 }
-
 
 /* =========================================================
    NO DATA
@@ -811,7 +783,6 @@
   font-size: 19px;
 }
 
-
 /* =========================================================
    ADMIN BLUEPRINT SUMMARY
 ========================================================= */
@@ -839,7 +810,7 @@
 
   border-radius: 16px;
 
-  background: rgba(139, 92, 246, 0.10);
+  background: rgba(139, 92, 246, 0.1);
 
   color: var(--primary);
 
@@ -893,14 +864,8 @@
 
   border-radius: inherit;
 
-  background:
-    linear-gradient(
-      90deg,
-      var(--primary),
-      #c4b5fd
-    );
+  background: linear-gradient(90deg, var(--primary), #c4b5fd);
 }
-
 
 /* =========================================================
    ACTIVITY
@@ -952,8 +917,7 @@
 
   background: var(--primary);
 
-  box-shadow:
-    0 0 0 4px rgba(139, 92, 246, 0.12);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
 }
 
 .activity-line {
@@ -1046,7 +1010,6 @@
   font-size: 11px;
 }
 
-
 /* =========================================================
    AI ROBOT PANEL
 ========================================================= */
@@ -1068,12 +1031,7 @@
 
   border-radius: 18px;
 
-  background:
-    linear-gradient(
-      135deg,
-      #27202f,
-      #352b42
-    );
+  background: linear-gradient(135deg, #27202f, #352b42);
 
   box-shadow: var(--shadow);
 }
@@ -1106,7 +1064,6 @@
   gap: 17px;
 }
 
-
 /* =========================================================
    AI ROBOT
 ========================================================= */
@@ -1126,12 +1083,7 @@
 
   border-radius: 15px;
 
-  background:
-    linear-gradient(
-      145deg,
-      #40364d,
-      #2c2434
-    );
+  background: linear-gradient(145deg, #40364d, #2c2434);
 
   border: 1px solid rgba(196, 181, 253, 0.18);
 }
@@ -1162,8 +1114,7 @@
 
   background: #c4b5fd;
 
-  box-shadow:
-    0 0 8px rgba(196, 181, 253, 0.8);
+  box-shadow: 0 0 8px rgba(196, 181, 253, 0.8);
 }
 
 .ai-head {
@@ -1192,8 +1143,7 @@
 
   background: #c4b5fd;
 
-  box-shadow:
-    0 0 7px rgba(196, 181, 253, 0.8);
+  box-shadow: 0 0 7px rgba(196, 181, 253, 0.8);
 }
 
 .ai-label {
@@ -1228,7 +1178,6 @@
   font-size: 10px;
 }
 
-
 /* =========================================================
    AI DECORATION
 ========================================================= */
@@ -1240,8 +1189,7 @@
 
   display: grid;
 
-  grid-template-columns:
-    repeat(3, 6px);
+  grid-template-columns: repeat(3, 6px);
 
   gap: 7px;
 
@@ -1263,27 +1211,21 @@
   opacity: 0.35;
 }
 
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
 
 @media (max-width: 1200px) {
-
   .overview-stats {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .overview-grid {
     grid-template-columns: 1fr;
   }
-
 }
 
-
 @media (max-width: 900px) {
-
   .page-content {
     width: calc(100% - 250px);
 
@@ -1297,12 +1239,9 @@
   .overview-banner {
     padding: 22px;
   }
-
 }
 
-
 @media (max-width: 700px) {
-
   .page-content {
     width: calc(100% - 70px);
 
@@ -1387,12 +1326,9 @@
   .ai-grid {
     display: none;
   }
-
 }
 
-
 @media (max-width: 450px) {
-
   .overview-page {
     padding: 17px 12px 25px;
   }
@@ -1424,13 +1360,11 @@
   .overview-card-header h3 {
     font-size: 14px;
   }
-
 }
 /* =========================================================
    OVERVIEW - DARK MODE
    MATCH USERS PAGE DARK MODE PATTERN
 ========================================================= */
-
 
 /* =========================
    MAIN LAYOUT
@@ -1445,7 +1379,6 @@
   background: #0f172a !important;
   color: #f8fafc !important;
 }
-
 
 /* =========================
    HEADER
@@ -1463,7 +1396,6 @@
   color: #a78bfa !important;
 }
 
-
 /* =========================
    PROFILE
 ========================= */
@@ -1471,7 +1403,7 @@
 .dashboard-layout.dark .overview-profile {
   background: #1e293b !important;
   border-color: #334155 !important;
-  box-shadow: 0 8px 25px rgba(0,0,0,.25) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
 }
 
 .dashboard-layout.dark .overview-profile-info strong {
@@ -1482,7 +1414,6 @@
   color: #94a3b8 !important;
 }
 
-
 /* =========================
    BANNER
 ========================= */
@@ -1490,7 +1421,7 @@
 .dashboard-layout.dark .overview-banner {
   background: #1e293b !important;
   border-color: #334155 !important;
-  box-shadow: 0 8px 25px rgba(0,0,0,.25) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
 }
 
 .dashboard-layout.dark .overview-banner h2 {
@@ -1510,7 +1441,6 @@
   border-color: #334155 !important;
 }
 
-
 /* =========================
    STAT CARDS
 ========================= */
@@ -1518,7 +1448,7 @@
 .dashboard-layout.dark .overview-stat-card {
   background: #1e293b !important;
   border-color: #334155 !important;
-  box-shadow: 0 8px 25px rgba(0,0,0,.25) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
 }
 
 .dashboard-layout.dark .overview-stat-info > span {
@@ -1537,7 +1467,6 @@
   background: #263247 !important;
   color: #cbd5e1 !important;
 }
-
 
 /* =========================
    STAT ICONS
@@ -1563,7 +1492,6 @@
   color: #86efac !important;
 }
 
-
 /* =========================
    MAIN CARDS
 ========================= */
@@ -1571,7 +1499,7 @@
 .dashboard-layout.dark .overview-card {
   background: #1e293b !important;
   border-color: #334155 !important;
-  box-shadow: 0 8px 25px rgba(0,0,0,.25) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25) !important;
 }
 
 .dashboard-layout.dark .overview-card-header {
@@ -1594,7 +1522,6 @@
   background: #312e81 !important;
   color: #c4b5fd !important;
 }
-
 
 /* =========================
    SYSTEM PANEL
@@ -1627,7 +1554,6 @@
   color: #f8fafc !important;
 }
 
-
 /* =========================
    BLUEPRINT SUMMARY
 ========================= */
@@ -1648,7 +1574,6 @@
 .dashboard-layout.dark .summary-line {
   background: #334155 !important;
 }
-
 
 /* =========================
    ACTIVITY
@@ -1687,7 +1612,6 @@
   color: #a78bfa !important;
 }
 
-
 /* =========================
    NO DATA
 ========================= */
@@ -1701,19 +1625,14 @@
   color: #a78bfa !important;
 }
 
-
 /* =========================
    AI PANEL
 ========================= */
 
 .dashboard-layout.dark .overview-ai-panel {
-  background: linear-gradient(
-    135deg,
-    #111827,
-    #1e293b
-  ) !important;
+  background: linear-gradient(135deg, #111827, #1e293b) !important;
 
-  box-shadow: 0 12px 30px rgba(0,0,0,.4) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4) !important;
 }
 
 .dashboard-layout.dark .overview-ai-left h3 {
@@ -1727,7 +1646,6 @@
 .dashboard-layout.dark .ai-label {
   color: #a78bfa !important;
 }
-
 
 /* =========================
    AI ROBOT
@@ -1761,7 +1679,6 @@ body.dark .overview-page small {
   color: #94a3b8 !important;
 }
 
-
 /* =========================
    ALL OVERVIEW WHITE BOXES
 ========================= */
@@ -1777,7 +1694,6 @@ body.dark .system-data-item {
   color: #f8fafc !important;
 }
 
-
 /* =========================
    THE MAIN INNER BOX
 ========================= */
@@ -1789,7 +1705,6 @@ body.dark .overview-no-data {
   background: transparent !important;
   color: #f8fafc !important;
 }
-
 
 /* =========================
    TEXT
@@ -1808,7 +1723,6 @@ body.dark .overview-page span {
   color: #cbd5e1;
 }
 
-
 /* =========================
    CARD HEADERS
 ========================= */
@@ -1816,7 +1730,6 @@ body.dark .overview-page span {
 body.dark .overview-card-header {
   border-bottom-color: #334155 !important;
 }
-
 
 /* =========================
    SYSTEM INNER PANEL
@@ -1826,7 +1739,6 @@ body.dark .overview-system-panel {
   background: #0f172a !important;
 }
 
-
 /* =========================
    STATISTICS
 ========================= */
@@ -1834,7 +1746,6 @@ body.dark .overview-system-panel {
 body.dark .overview-stat-card::after {
   background: rgba(139, 92, 246, 0.08) !important;
 }
-
 
 /* =========================
    ACTIVITY
@@ -1844,15 +1755,10 @@ body.dark .overview-activity-item {
   border-bottom-color: #334155 !important;
 }
 
-
 /* =========================
    AI PANEL
 ========================= */
 
 body.dark .overview-ai-panel {
-  background: linear-gradient(
-    135deg,
-    #111827,
-    #1e293b
-  ) !important;
+  background: linear-gradient(135deg, #111827, #1e293b) !important;
 }

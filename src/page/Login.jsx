@@ -9,16 +9,17 @@ function Login() {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
- const [email, setEmail] = useState(() => {
-  return localStorage.getItem("rememberedEmail") || "";
-});
+  const [email, setEmail] = useState(() => {
+    return localStorage.getItem("rememberedEmail") || "";
+  });
 
   const [password, setPassword] = useState("");
 
   const [showPassword, setShowPassword] = useState(false);
 
   const [rememberMe, setRememberMe] = useState(() => {
-return localStorage.getItem("rememberedEmail") !== null;  });
+    return localStorage.getItem("rememberedEmail") !== null;
+  });
 
   const [loading, setLoading] = useState(false);
 
@@ -27,107 +28,78 @@ return localStorage.getItem("rememberedEmail") !== null;  });
   const [success, setSuccess] = useState("");
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     setError("");
 
     setSuccess("");
 
-   if (email.trim() === "") {
-    setError(t("enterEmail"));
-    return;
-}
+    if (email.trim() === "") {
+      setError(t("enterEmail"));
+      return;
+    }
 
     if (password.trim() === "") {
-
       setError(t("enterPassword"));
 
       return;
-
     }
 
     if (password.length < 6) {
-
       setError(t("passwordMin6"));
 
       return;
-
     }
 
     try {
-
       setLoading(true);
-const response = await api.post(
-  "https://api.luma-agent.com/api/auth/login",
-  {
-    email,
-    password,
-  }
-);
-
-const data = response.data;
-     if (data.token) {
-  localStorage.setItem("token", data.token);
-}
-      localStorage.setItem(
-        "user",
-        JSON.stringify(data)
+      const response = await api.post(
+        "https://api.luma-agent.com/api/auth/login",
+        {
+          email,
+          password,
+        }
       );
 
+      const data = response.data;
+      if (data.token) {
+        localStorage.setItem("token", data.token);
+      }
+      localStorage.setItem("user", JSON.stringify(data));
+
       if (rememberMe) {
-
-       localStorage.setItem(
-  "rememberedEmail",
-  email
-);
+        localStorage.setItem("rememberedEmail", email);
       } else {
-
-       localStorage.removeItem(
-  "rememberedEmail"
-        );
-
+        localStorage.removeItem("rememberedEmail");
       }
 
-setSuccess(t("loginSuccess"));
+      setSuccess(t("loginSuccess"));
       setTimeout(() => {
-
         navigate("/work");
-
       }, 1500);
+    } catch (err) {
+      const message = err.response?.data?.message;
 
- } catch (err) {
-
-  const message = err.response?.data?.message;
-
-  if (
-    message === "Invalid email or password" ||
-    message === "Invalid credentials"
-  ) {
-    setError(t("invalidCredentials"));
-  } else {
-    setError(message || t("invalidCredentials"));
-  }
-
+      if (
+        message === "Invalid email or password" ||
+        message === "Invalid credentials"
+      ) {
+        setError(t("invalidCredentials"));
+      } else {
+        setError(message || t("invalidCredentials"));
+      }
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
   return (
-
     <div className="login-page-wrapper">
-
       <div className="login-page-container">
-
         <div className="login-page-card">
-                    <div className="login-page-logo">L</div>
+          <div className="login-page-logo">L</div>
 
           <div className="login-page-avatar">
-
             <div
               className={`login-page-robot ${
                 showPassword
@@ -135,11 +107,9 @@ setSuccess(t("loginSuccess"));
                   : "login-page-robot-close"
               }`}
             >
-
               <div className="login-page-robot-antenna"></div>
 
               <div className="login-page-robot-head">
-
                 <div className="login-page-robot-eye login-page-robot-eye-left"></div>
 
                 <div className="login-page-robot-eye login-page-robot-eye-right"></div>
@@ -149,52 +119,25 @@ setSuccess(t("loginSuccess"));
                 <div className="login-page-robot-hand login-page-robot-hand-left"></div>
 
                 <div className="login-page-robot-hand login-page-robot-hand-right"></div>
-
               </div>
-
             </div>
-
           </div>
 
-          <h1 className="login-page-title">
-            {t("loginWelcome")}
-          </h1>
+          <h1 className="login-page-title">{t("loginWelcome")}</h1>
 
-          <p className="login-page-subtitle">
-            {t("loginSubtitle")}
-          </p>
+          <p className="login-page-subtitle">{t("loginSubtitle")}</p>
 
-          {error && (
-
-            <div className="login-page-error-message">
-
-              {error}
-
-            </div>
-
-          )}
+          {error && <div className="login-page-error-message">{error}</div>}
 
           {success && (
-
-            <div className="login-page-success-message">
-
-              {success}
-
-            </div>
-
+            <div className="login-page-success-message">{success}</div>
           )}
 
-          <form
-            className="login-page-form"
-            onSubmit={handleSubmit}
-          >
-
+          <form className="login-page-form" onSubmit={handleSubmit}>
             <div className="login-page-input-group">
-
-<label htmlFor="email">{t("emailLabel")}</label>
+              <label htmlFor="email">{t("emailLabel")}</label>
 
               <div className="login-page-input-box">
-
                 <i className="fa-solid fa-user"></i>
                 <input
                   type="email"
@@ -204,22 +147,13 @@ setSuccess(t("loginSuccess"));
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
-
-
-
-
               </div>
-
             </div>
 
             <div className="login-page-input-group">
-
-              <label htmlFor="password">
-                {t("passwordLabel")}
-              </label>
+              <label htmlFor="password">{t("passwordLabel")}</label>
 
               <div className="login-page-input-box">
-
                 <i className="fa-solid fa-lock"></i>
 
                 <input
@@ -236,24 +170,16 @@ setSuccess(t("loginSuccess"));
                   className="login-page-password-toggle"
                   onClick={() => setShowPassword(!showPassword)}
                 >
-
                   <i
                     className={
-                      showPassword
-                        ? "fa-solid fa-eye-slash"
-                        : "fa-solid fa-eye"
+                      showPassword ? "fa-solid fa-eye-slash" : "fa-solid fa-eye"
                     }
                   ></i>
-
                 </button>
-
               </div>
-
             </div>
-                        <div className="login-page-options">
-
+            <div className="login-page-options">
               <label className="login-page-remember">
-
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -261,47 +187,25 @@ setSuccess(t("loginSuccess"));
                 />
 
                 {t("rememberMe")}
-
               </label>
 
-              <Link to="/ForgotPassword">
-                {t("forgotPassword")}
-              </Link>
-
+              <Link to="/ForgotPassword">{t("forgotPassword")}</Link>
             </div>
 
-            <button
-              type="submit"
-              className="login-page-btn"
-              disabled={loading}
-            >
-
-              {loading
-                ? t("loading")
-                : t("loginSubmit")}
-
+            <button type="submit" className="login-page-btn" disabled={loading}>
+              {loading ? t("loading") : t("loginSubmit")}
             </button>
-
           </form>
 
           <p className="login-page-bottom-text">
-
             {t("accountPrompt")}
 
-            <Link to="/Register">
-              {t("registerLink")}
-            </Link>
-
+            <Link to="/Register">{t("registerLink")}</Link>
           </p>
-
         </div>
-
       </div>
-
     </div>
-
   );
-
 }
 
 export default Login;

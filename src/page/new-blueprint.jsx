@@ -49,27 +49,9 @@ const IconAnalysis = (p) => (
 
 const IconMore = (p) => (
   <Icon {...p}>
-    <circle
-      cx="5"
-      cy="12"
-      r="1.4"
-      fill="currentColor"
-      stroke="none"
-    />
-    <circle
-      cx="12"
-      cy="12"
-      r="1.4"
-      fill="currentColor"
-      stroke="none"
-    />
-    <circle
-      cx="19"
-      cy="12"
-      r="1.4"
-      fill="currentColor"
-      stroke="none"
-    />
+    <circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none" />
+    <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+    <circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none" />
   </Icon>
 );
 
@@ -197,53 +179,35 @@ function TabCluster({ activeTab, onSelect }) {
 
   useEffect(() => {
     function handleClickOutside(e) {
-      if (
-        clusterRef.current &&
-        !clusterRef.current.contains(e.target)
-      ) {
+      if (clusterRef.current && !clusterRef.current.contains(e.target)) {
         setMoreOpen(false);
       }
     }
 
-    document.addEventListener(
-      "mousedown",
-      handleClickOutside
-    );
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        handleClickOutside
-      );
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
-  const activeMoreTab = MORE_TABS.find(
-    (tab) => tab.key === activeTab
-  );
+  const activeMoreTab = MORE_TABS.find((tab) => tab.key === activeTab);
 
   return (
-    <div
-      className="newBlueprint-tabcluster"
-      ref={clusterRef}
-    >
+    <div className="newBlueprint-tabcluster" ref={clusterRef}>
       {/* Main tabs */}
 
       {MAIN_TABS.map((tab) => {
         const TabIcon = tab.icon;
 
-        const isActive =
-          tab.key === activeTab;
+        const isActive = tab.key === activeTab;
 
         return (
           <button
             key={tab.key}
             type="button"
             className={
-              "newBlueprint-tab" +
-              (isActive
-                ? " newBlueprint-tab--active"
-                : "")
+              "newBlueprint-tab" + (isActive ? " newBlueprint-tab--active" : "")
             }
             onClick={() => {
               onSelect(tab.key);
@@ -253,9 +217,7 @@ function TabCluster({ activeTab, onSelect }) {
           >
             <TabIcon />
 
-            <span className="newBlueprint-tab-label">
-              {t(tab.label)}
-            </span>
+            <span className="newBlueprint-tab-label">{t(tab.label)}</span>
           </button>
         );
       })}
@@ -266,9 +228,7 @@ function TabCluster({ activeTab, onSelect }) {
         <button
           type="button"
           className="newBlueprint-tab newBlueprint-tab--active"
-          onClick={() =>
-            setMoreOpen((prev) => !prev)
-          }
+          onClick={() => setMoreOpen((prev) => !prev)}
           title={t(activeMoreTab.label)}
         >
           {(() => {
@@ -289,13 +249,9 @@ function TabCluster({ activeTab, onSelect }) {
         type="button"
         className={
           "newBlueprint-more-btn" +
-          (moreOpen
-            ? " newBlueprint-more-btn--open"
-            : "")
+          (moreOpen ? " newBlueprint-more-btn--open" : "")
         }
-        onClick={() =>
-          setMoreOpen((prev) => !prev)
-        }
+        onClick={() => setMoreOpen((prev) => !prev)}
         title={t("more")}
       >
         <IconMore />
@@ -304,15 +260,11 @@ function TabCluster({ activeTab, onSelect }) {
       {/* More menu */}
 
       {moreOpen && (
-        <div
-          className="newBlueprint-more-menu"
-          role="menu"
-        >
+        <div className="newBlueprint-more-menu" role="menu">
           {MORE_TABS.map((tab) => {
             const TabIcon = tab.icon;
 
-            const isActive =
-              tab.key === activeTab;
+            const isActive = tab.key === activeTab;
 
             return (
               <button
@@ -320,9 +272,7 @@ function TabCluster({ activeTab, onSelect }) {
                 type="button"
                 className={
                   "newBlueprint-more-item" +
-                  (isActive
-                    ? " newBlueprint-more-item--active"
-                    : "")
+                  (isActive ? " newBlueprint-more-item--active" : "")
                 }
                 onClick={() => {
                   onSelect(tab.key);
@@ -345,11 +295,7 @@ function TabCluster({ activeTab, onSelect }) {
 /* Tooltip Button                                                     */
 /* ------------------------------------------------------------------ */
 
-const TooltipButton = ({
-  children,
-  tooltip,
-  onClick,
-}) => (
+const TooltipButton = ({ children, tooltip, onClick }) => (
   <button
     className="newBlueprint-icon-btn newBlueprint-tooltip-btn"
     onClick={onClick}
@@ -371,7 +317,6 @@ const EmptyState = ({ message }) => {
     <div className="newBlueprint-empty-viewer">
       <div className="newBlueprint-robot">
         <div className="robot-character">
-
           <div className="robot-antenna">
             <span></span>
           </div>
@@ -408,17 +353,12 @@ const EmptyState = ({ message }) => {
               <span></span>
             </div>
           </div>
-
         </div>
       </div>
 
-      <h2>
-        {message}
-      </h2>
+      <h2>{message}</h2>
 
-      <p>
-        {t("emptyStateDetail")}
-      </p>
+      <p>{t("emptyStateDetail")}</p>
     </div>
   );
 };
@@ -433,22 +373,16 @@ const AnalyticsEmptyState = () => {
   return (
     <div className="newBlueprint-analysis-empty">
       <div className="newBlueprint-chart-icon">
-
         <div className="chart-bar chart-bar-big"></div>
 
         <div className="chart-bar chart-bar-medium"></div>
 
         <div className="chart-bar chart-bar-small"></div>
-
       </div>
 
-      <h2>
-        {t("siteAnalyticsTitle")}
-      </h2>
+      <h2>{t("siteAnalyticsTitle")}</h2>
 
-      <p>
-        {t("siteAnalyticsText")}
-      </p>
+      <p>{t("siteAnalyticsText")}</p>
     </div>
   );
 };
@@ -481,32 +415,19 @@ const FilesView = () => {
 
   return (
     <div className="newBlueprint-files-view">
-
       <div className="newBlueprint-file-header">
-        <h3>
-          {t("filesTitle")}
-        </h3>
+        <h3>{t("filesTitle")}</h3>
       </div>
 
       <div className="newBlueprint-file-tree">
         {filesContent.map((file, index) => (
-          <div
-            key={index}
-            className="newBlueprint-file-item"
-          >
-            <span>
-              {file.type === "folder"
-                ? "📁"
-                : "📄"}
-            </span>
+          <div key={index} className="newBlueprint-file-item">
+            <span>{file.type === "folder" ? "📁" : "📄"}</span>
 
-            <span>
-              {file.name}
-            </span>
+            <span>{file.name}</span>
           </div>
         ))}
       </div>
-
     </div>
   );
 };
@@ -518,11 +439,9 @@ const FilesView = () => {
 export default function NewBlueprint() {
   const { t } = useTranslation();
 
-  const [activeTab, setActiveTab] =
-    useState("viewer");
+  const [activeTab, setActiveTab] = useState("viewer");
 
-  const [drawerOpen, setDrawerOpen] =
-    useState(false);
+  const [drawerOpen] = useState(false);
 
   /*
     These are currently empty because
@@ -536,65 +455,43 @@ export default function NewBlueprint() {
 
   return (
     <div className="blueprint-container">
-
-      <div
-        className={`newBlueprint-page ${
-          drawerOpen ? "split-mode" : ""
-        }`}
-      >
-
+      <div className={`newBlueprint-page ${drawerOpen ? "split-mode" : ""}`}>
         {/* =========================================================
             TOP BAR
         ========================================================= */}
 
         <header className="newBlueprint-topbar">
-
           {/* LEFT */}
 
           <div className="newBlueprint-topbar-left">
-
-            <span
-              className="newBlueprint-logo"
-              title="Luma"
-            >
+            <span className="newBlueprint-logo" title="Luma">
               <span className="luma-character">
-
                 <span className="luma-ear luma-ear-left"></span>
 
                 <span className="luma-ear luma-ear-right"></span>
 
                 <span className="luma-face">
-
                   <span className="luma-eye luma-eye-left"></span>
 
                   <span className="luma-eye luma-eye-right"></span>
 
                   <span className="luma-smile"></span>
-
                 </span>
-
               </span>
             </span>
-
           </div>
 
           {/* CENTER */}
 
           <div className="newBlueprint-topbar-center">
-
             <div className="newBlueprint-divider" />
 
-            <TabCluster
-              activeTab={activeTab}
-              onSelect={setActiveTab}
-            />
-
+            <TabCluster activeTab={activeTab} onSelect={setActiveTab} />
           </div>
 
           {/* RIGHT */}
 
           <div className="newBlueprint-topbar-right">
-
             <button
               className="newBlueprint-btn newBlueprint-btn--ghost"
               disabled
@@ -616,9 +513,7 @@ export default function NewBlueprint() {
             >
               {t("workspacePublish")}
             </button>
-
           </div>
-
         </header>
 
         {/* =========================================================
@@ -627,30 +522,18 @@ export default function NewBlueprint() {
 
         {activeTab === "viewer" && (
           <div className="newBlueprint-subbar">
-
             <div></div>
 
             <div className="newBlueprint-subbar-center">
-
-              <TooltipButton
-                tooltip={t(
-                  "showDesktopPreview"
-                )}
-              >
+              <TooltipButton tooltip={t("showDesktopPreview")}>
                 <IconMonitor />
               </TooltipButton>
 
-              <TooltipButton
-                tooltip={t(
-                  "reloadAppViewer"
-                )}
-              >
+              <TooltipButton tooltip={t("reloadAppViewer")}>
                 <IconRefresh />
               </TooltipButton>
 
-              <TooltipButton
-                tooltip={t("homeButton")}
-              >
+              <TooltipButton tooltip={t("homeButton")}>
                 <IconHome />
               </TooltipButton>
 
@@ -658,9 +541,7 @@ export default function NewBlueprint() {
                 type="button"
                 className="newBlueprint-select"
                 onClick={() => {
-                  alert(
-                    t("noRoutesFound")
-                  );
+                  alert(t("noRoutesFound"));
                 }}
               >
                 {t("homeButton")}
@@ -668,23 +549,16 @@ export default function NewBlueprint() {
                 <IconChevronDown size={13} />
               </button>
 
-              <TooltipButton
-                tooltip={t("openNewTab")}
-              >
+              <TooltipButton tooltip={t("openNewTab")}>
                 <IconExternal />
               </TooltipButton>
-
             </div>
 
-            <a
-              href="#"
-              className="newBlueprint-console-link"
-            >
+            <a href="#" className="newBlueprint-console-link">
               <IconCode />
 
               {t("console")}
             </a>
-
           </div>
         )}
 
@@ -693,93 +567,62 @@ export default function NewBlueprint() {
         ========================================================= */}
 
         <main className="newBlueprint-stage">
-
           {/* -------------------------------------------------------
               APP VIEWER
           ------------------------------------------------------- */}
 
-          {activeTab === "viewer" && (
-            viewerContent ? (
-              <div className="newBlueprint-ai-content">
-                {viewerContent}
-              </div>
+          {activeTab === "viewer" &&
+            (viewerContent ? (
+              <div className="newBlueprint-ai-content">{viewerContent}</div>
             ) : (
-              <EmptyState
-                message={t(
-                  "emptyNoContentAppViewer"
-                )}
-              />
-            )
-          )}
+              <EmptyState message={t("emptyNoContentAppViewer")} />
+            ))}
 
           {/* -------------------------------------------------------
               EDIT
           ------------------------------------------------------- */}
 
-          {activeTab === "edit" && (
-            editContent ? (
-              <div className="newBlueprint-ai-content">
-                {editContent}
-              </div>
+          {activeTab === "edit" &&
+            (editContent ? (
+              <div className="newBlueprint-ai-content">{editContent}</div>
             ) : (
-              <EmptyState
-                message={t(
-                  "emptyNoContentEdit"
-                )}
-              />
-            )
-          )}
+              <EmptyState message={t("emptyNoContentEdit")} />
+            ))}
 
           {/* -------------------------------------------------------
               ANALYSIS
           ------------------------------------------------------- */}
 
-          {activeTab === "analysis" && (
-            analysisContent ? (
-              <div className="newBlueprint-ai-content">
-                {analysisContent}
-              </div>
+          {activeTab === "analysis" &&
+            (analysisContent ? (
+              <div className="newBlueprint-ai-content">{analysisContent}</div>
             ) : (
               <AnalyticsEmptyState />
-            )
-          )}
+            ))}
 
           {/* -------------------------------------------------------
               FILES
           ------------------------------------------------------- */}
 
-          {activeTab === "files" && (
-            <FilesView />
-          )}
+          {activeTab === "files" && <FilesView />}
 
           {/* -------------------------------------------------------
               TERMINAL
           ------------------------------------------------------- */}
 
-          {activeTab === "terminal" && (
-            terminalContent ? (
-              <div className="newBlueprint-ai-content">
-                {terminalContent}
-              </div>
+          {activeTab === "terminal" &&
+            (terminalContent ? (
+              <div className="newBlueprint-ai-content">{terminalContent}</div>
             ) : (
-              <EmptyState
-                message={t(
-                  "terminalNotActivated"
-                )}
-              />
-            )
-          )}
+              <EmptyState message={t("terminalNotActivated")} />
+            ))}
 
           {/* -------------------------------------------------------
               PLANNER
           ------------------------------------------------------- */}
 
           {activeTab === "planner" && (
-            <EmptyState
-              message={t(
-                "plannerNotActivated"
-              )}
-            />
+            <EmptyState message={t("plannerNotActivated")} />
           )}
 
           {/* -------------------------------------------------------
@@ -787,11 +630,7 @@ export default function NewBlueprint() {
           ------------------------------------------------------- */}
 
           {activeTab === "browser" && (
-            <EmptyState
-              message={t(
-                "browserNotActivated"
-              )}
-            />
+            <EmptyState message={t("browserNotActivated")} />
           )}
 
           {/* -------------------------------------------------------
@@ -799,17 +638,10 @@ export default function NewBlueprint() {
           ------------------------------------------------------- */}
 
           {activeTab === "notebook" && (
-            <EmptyState
-              message={t(
-                "notebookNotActivated"
-              )}
-            />
+            <EmptyState message={t("notebookNotActivated")} />
           )}
-
         </main>
-
       </div>
-
     </div>
   );
 }

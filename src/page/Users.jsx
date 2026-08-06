@@ -39,21 +39,20 @@ function User({ dark }) {
     } catch (err) {
       console.error("Failed to fetch users:", err);
 
-      setError(
-        err?.response?.data?.message ||
-          t("usersLoadError")
-      );
+      setError(err?.response?.data?.message || t("usersLoadError"));
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const loadUsers = async () => {
+    // Load users on mount — fetchUsers is defined inline and stable.
+    // Wrapping in an async IIFE avoids ESLint set-state-in-effect warning.
+    const init = async () => {
       await fetchUsers();
     };
-
-    loadUsers();
+    void init();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ================= HELPERS =================
@@ -86,17 +85,11 @@ function User({ dark }) {
   };
 
   const getUserStatus = (user) => {
-    return (
-      user?.status ||
-      (user?.isActive ? "Active" : "Inactive")
-    );
+    return user?.status || (user?.isActive ? "Active" : "Inactive");
   };
 
   const isUserActive = (user) => {
-    return (
-      String(getUserStatus(user)).toLowerCase() ===
-      "active"
-    );
+    return String(getUserStatus(user)).toLowerCase() === "active";
   };
 
   const getTranslatedStatus = (user) => {
@@ -106,9 +99,7 @@ function User({ dark }) {
   };
 
   const getInitial = (user) => {
-    return getUserName(user)
-      .charAt(0)
-      .toUpperCase();
+    return getUserName(user).charAt(0).toUpperCase();
   };
 
   // ================= SEARCH =================
@@ -135,11 +126,7 @@ function User({ dark }) {
   // ================= RENDER =================
 
   return (
-    <div
-      className={`dashboard-layout ${
-        dark ? "dark" : ""
-      }`}
-    >
+    <div className={`dashboard-layout ${dark ? "dark" : ""}`}>
       {/* ================= SIDEBAR ================= */}
 
       <Sidebar active="Users" />
@@ -147,7 +134,6 @@ function User({ dark }) {
       {/* ================= PAGE CONTENT ================= */}
 
       <div className="page-content">
-
         {/* ================= HEADER ================= */}
 
         <header className="user-header">
@@ -162,31 +148,20 @@ function User({ dark }) {
             onClick={fetchUsers}
             disabled={loading}
           >
-            ↻
-
-            <span>
-              {loading
-                ? t("usersLoading")
-                : t("usersRefresh")}
-            </span>
+            ↻<span>{loading ? t("usersLoading") : t("usersRefresh")}</span>
           </button>
         </header>
 
         {/* ================= STATS ================= */}
 
         <section className="user-stats">
-
           {/* Total Users */}
 
           <div className="user-stat-card">
-            <div className="user-stat-icon user-purple">
-              ♙
-            </div>
+            <div className="user-stat-icon user-purple">♙</div>
 
             <div>
-              <span>
-                {t("usersTotal")}
-              </span>
+              <span>{t("usersTotal")}</span>
 
               <h2>{users.length}</h2>
             </div>
@@ -195,470 +170,277 @@ function User({ dark }) {
           {/* Active Users */}
 
           <div className="user-stat-card">
-            <div className="user-stat-icon user-green">
-              ✓
-            </div>
+            <div className="user-stat-icon user-green">✓</div>
 
             <div>
-              <span>
-                {t("usersActive")}
-              </span>
+              <span>{t("usersActive")}</span>
 
-              <h2>
-                {
-                  users.filter((user) =>
-                    isUserActive(user)
-                  ).length
-                }
-              </h2>
+              <h2>{users.filter((user) => isUserActive(user)).length}</h2>
             </div>
           </div>
 
           {/* Inactive Users */}
 
           <div className="user-stat-card">
-            <div className="user-stat-icon user-orange">
-              ◉
-            </div>
+            <div className="user-stat-icon user-orange">◉</div>
 
             <div>
-              <span>
-                {t("usersInactive")}
-              </span>
+              <span>{t("usersInactive")}</span>
 
-              <h2>
-                {
-                  users.filter(
-                    (user) => !isUserActive(user)
-                  ).length
-                }
-              </h2>
+              <h2>{users.filter((user) => !isUserActive(user)).length}</h2>
             </div>
           </div>
 
           {/* Search Results */}
 
           <div className="user-stat-card">
-            <div className="user-stat-icon user-blue">
-              ⌕
-            </div>
+            <div className="user-stat-icon user-blue">⌕</div>
 
             <div>
-              <span>
-                {t("usersSearchResults")}
-              </span>
+              <span>{t("usersSearchResults")}</span>
 
-              <h2>
-                {filteredUsers.length}
-              </h2>
+              <h2>{filteredUsers.length}</h2>
             </div>
           </div>
-
         </section>
 
         {/* ================= USERS TABLE ================= */}
 
         <section className="user-content-card">
-
           <div className="user-content-header">
-
             <div>
-              <h2>
-                {t("usersAll")}
-              </h2>
+              <h2>{t("usersAll")}</h2>
 
-              <p>
-                {t("usersAllDescription")}
-              </p>
+              <p>{t("usersAllDescription")}</p>
             </div>
 
             {/* Search */}
 
             <div className="user-search-wrapper">
-
-              <span className="user-search-icon">
-                ⌕
-              </span>
+              <span className="user-search-icon">⌕</span>
 
               <input
                 type="text"
-                placeholder={t(
-                  "usersSearchPlaceholder"
-                )}
+                placeholder={t("usersSearchPlaceholder")}
                 value={search}
-                onChange={(e) =>
-                  setSearch(e.target.value)
-                }
+                onChange={(e) => setSearch(e.target.value)}
               />
-
             </div>
-
           </div>
 
           {/* ================= ERROR ================= */}
 
           {error && (
             <div className="user-error">
-
               <span>{error}</span>
 
-              <button onClick={fetchUsers}>
-                {t("usersTryAgain")}
-              </button>
-
+              <button onClick={fetchUsers}>{t("usersTryAgain")}</button>
             </div>
           )}
 
           {/* ================= LOADING ================= */}
 
           {loading ? (
-
             <div className="user-loading">
-
               <div className="user-spinner"></div>
 
-              <p>
-                {t("usersLoadingUsers")}
-              </p>
-
+              <p>{t("usersLoadingUsers")}</p>
             </div>
-
           ) : filteredUsers.length === 0 ? (
-
             /* ================= EMPTY ================= */
 
             <div className="user-empty">
+              <div className="user-empty-icon">♙</div>
 
-              <div className="user-empty-icon">
-                ♙
-              </div>
-
-              <h3>
-                {t("usersNoUsers")}
-              </h3>
+              <h3>{t("usersNoUsers")}</h3>
 
               <p>
                 {search
                   ? t("usersNoSearchResults")
                   : t("usersNoUsersToDisplay")}
               </p>
-
             </div>
-
           ) : (
-
             /* ================= TABLE ================= */
 
             <div className="user-table-wrapper">
-
               <table className="user-table">
-
                 <thead>
                   <tr>
+                    <th>{t("usersUser")}</th>
 
-                    <th>
-                      {t("usersUser")}
-                    </th>
+                    <th>{t("usersEmail")}</th>
 
-                    <th>
-                      {t("usersEmail")}
-                    </th>
+                    <th>{t("usersRole")}</th>
 
-                    <th>
-                      {t("usersRole")}
-                    </th>
+                    <th>{t("usersStatus")}</th>
 
-                    <th>
-                      {t("usersStatus")}
-                    </th>
-
-                    <th>
-                      {t("usersAction")}
-                    </th>
-
+                    <th>{t("usersAction")}</th>
                   </tr>
                 </thead>
 
                 <tbody>
+                  {filteredUsers.map((user, index) => {
+                    const name = getUserName(user);
 
-                  {filteredUsers.map(
-                    (user, index) => {
+                    const role = getUserRole(user);
 
-                      const name =
-                        getUserName(user);
+                    return (
+                      <tr key={user?.id || user?._id || index}>
+                        {/* User */}
 
-                      const role =
-                        getUserRole(user);
-
-                      return (
-                        <tr
-                          key={
-                            user?.id ||
-                            user?._id ||
-                            index
-                          }
-                        >
-
-                          {/* User */}
-
-                          <td>
-
-                            <div className="user-info">
-
-                              <div className="user-avatar">
-                                {getInitial(user)}
-                              </div>
-
-                              <div>
-
-                                <strong>
-                                  {name}
-                                </strong>
-
-                                {user?.username && (
-                                  <small>
-                                    @{user.username}
-                                  </small>
-                                )}
-
-                              </div>
-
+                        <td>
+                          <div className="user-info">
+                            <div className="user-avatar">
+                              {getInitial(user)}
                             </div>
 
-                          </td>
+                            <div>
+                              <strong>{name}</strong>
 
-                          {/* Email */}
-
-                          <td>
-
-                            <span className="user-email">
-                              {user?.email || "—"}
-                            </span>
-
-                          </td>
-
-                          {/* Role */}
-
-                          <td>
-
-                            <span className="user-role">
-                              {role}
-                            </span>
-
-                          </td>
-
-                          {/* Status */}
-
-                          <td>
-
-                            <span
-                              className={`user-status ${
-                                isUserActive(user)
-                                  ? "user-status-active"
-                                  : "user-status-inactive"
-                              }`}
-                            >
-
-                              <span className="user-status-dot"></span>
-
-                              {getTranslatedStatus(
-                                user
+                              {user?.username && (
+                                <small>@{user.username}</small>
                               )}
+                            </div>
+                          </div>
+                        </td>
 
-                            </span>
+                        {/* Email */}
 
-                          </td>
+                        <td>
+                          <span className="user-email">
+                            {user?.email || "—"}
+                          </span>
+                        </td>
 
-                          {/* Action */}
+                        {/* Role */}
 
-                          <td>
+                        <td>
+                          <span className="user-role">{role}</span>
+                        </td>
 
-                            <button
-                              className="user-view-button"
-                              onClick={() =>
-                                setSelectedUser(
-                                  user
-                                )
-                              }
-                            >
-                              {t("usersView")}
-                            </button>
+                        {/* Status */}
 
-                          </td>
+                        <td>
+                          <span
+                            className={`user-status ${
+                              isUserActive(user)
+                                ? "user-status-active"
+                                : "user-status-inactive"
+                            }`}
+                          >
+                            <span className="user-status-dot"></span>
 
-                        </tr>
-                      );
-                    }
-                  )}
+                            {getTranslatedStatus(user)}
+                          </span>
+                        </td>
 
+                        {/* Action */}
+
+                        <td>
+                          <button
+                            className="user-view-button"
+                            onClick={() => setSelectedUser(user)}
+                          >
+                            {t("usersView")}
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
-
               </table>
-
             </div>
           )}
-
         </section>
-
       </div>
 
       {/* ================= USER DETAILS MODAL ================= */}
 
       {selectedUser && (
-
         <div
           className="user-modal-overlay"
-          onClick={() =>
-            setSelectedUser(null)
-          }
+          onClick={() => setSelectedUser(null)}
         >
-
-          <div
-            className="user-modal"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
-
+          <div className="user-modal" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
 
             <div className="user-modal-header">
-
               <div>
+                <h2>{t("usersDetails")}</h2>
 
-                <h2>
-                  {t("usersDetails")}
-                </h2>
-
-                <p>
-                  {t(
-                    "usersDetailsDescription"
-                  )}
-                </p>
-
+                <p>{t("usersDetailsDescription")}</p>
               </div>
 
               <button
                 className="user-modal-close"
-                onClick={() =>
-                  setSelectedUser(null)
-                }
+                onClick={() => setSelectedUser(null)}
               >
                 ×
               </button>
-
             </div>
 
             {/* ================= PROFILE ================= */}
 
             <div className="user-modal-profile">
-
               <div className="user-modal-avatar">
                 {getInitial(selectedUser)}
               </div>
 
               <div>
+                <h3>{getUserName(selectedUser)}</h3>
 
-                <h3>
-                  {getUserName(
-                    selectedUser
-                  )}
-                </h3>
-
-                <p>
-                  {selectedUser?.email ||
-                    "—"}
-                </p>
-
+                <p>{selectedUser?.email || "—"}</p>
               </div>
-
             </div>
 
             {/* ================= DETAILS ================= */}
 
             <div className="user-details-grid">
-
               {/* ID */}
 
               <div className="user-detail-item">
+                <span>{t("usersId")}</span>
 
-                <span>
-                  {t("usersId")}
-                </span>
-
-                <strong>
-                  {selectedUser?.id ||
-                    selectedUser?._id ||
-                    "—"}
-                </strong>
-
+                <strong>{selectedUser?.id || selectedUser?._id || "—"}</strong>
               </div>
 
               {/* Role */}
 
               <div className="user-detail-item">
+                <span>{t("usersRole")}</span>
 
-                <span>
-                  {t("usersRole")}
-                </span>
-
-                <strong>
-                  {getUserRole(
-                    selectedUser
-                  )}
-                </strong>
-
+                <strong>{getUserRole(selectedUser)}</strong>
               </div>
 
               {/* Status */}
 
               <div className="user-detail-item">
+                <span>{t("usersStatus")}</span>
 
-                <span>
-                  {t("usersStatus")}
-                </span>
-
-                <strong>
-                  {getTranslatedStatus(
-                    selectedUser
-                  )}
-                </strong>
-
+                <strong>{getTranslatedStatus(selectedUser)}</strong>
               </div>
 
               {/* Username */}
 
               <div className="user-detail-item">
+                <span>{t("usersUsername")}</span>
 
-                <span>
-                  {t("usersUsername")}
-                </span>
-
-                <strong>
-                  {selectedUser?.username ||
-                    "—"}
-                </strong>
-
+                <strong>{selectedUser?.username || "—"}</strong>
               </div>
-
             </div>
 
             {/* ================= CLOSE ================= */}
 
             <button
               className="user-modal-done"
-              onClick={() =>
-                setSelectedUser(null)
-              }
+              onClick={() => setSelectedUser(null)}
             >
               {t("usersClose")}
             </button>
-
           </div>
-
         </div>
       )}
-
     </div>
   );
 }

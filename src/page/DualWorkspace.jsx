@@ -10,19 +10,15 @@ function DualWorkspace() {
 
   return (
     <div className="dual-workspace">
-
       {/* LEFT SIDE */}
       <section className="dual-workspace-left">
-                <NewBlueprint2 initialMessage={message} />
-
+        <NewBlueprint2 initialMessage={message} />
       </section>
 
       {/* RIGHT SIDE */}
       <section className="dual-workspace-right">
-                <NewBlueprint />
-
+        <NewBlueprint />
       </section>
-
     </div>
   );
 }

@@ -1,2188 +1,1626 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 const LanguageContext = createContext(null);
 
 const translations = {
- en: {
+  en: {
+    blueprints: "Blueprints",
 
-  blueprints: "Blueprints",
+    blueprintsDescription:
+      "Manage and monitor your generated software blueprints",
 
-blueprintsDescription:
-"Manage and monitor your generated software blueprints",
+    newBlueprint: "New Blueprint",
 
-newBlueprint: "New Blueprint",
+    totalBlueprints: "Total Blueprints",
 
-totalBlueprints: "Total Blueprints",
+    searchBlueprints: "Search blueprints...",
 
-searchBlueprints: "Search blueprints...",
+    all: "All",
 
+    active: "Active",
 
-all: "All",
+    building: "Building",
 
-active: "Active",
+    completed: "Completed",
 
-building: "Building",
+    failed: "Failed",
 
-completed: "Completed",
+    blueprint: "Blueprint",
 
-failed: "Failed",
+    owner: "Owner",
 
+    status: "Status",
 
-blueprint: "Blueprint",
+    updated: "Updated",
 
-owner: "Owner",
+    action: "Action",
 
-status: "Status",
+    // Navbar
+    navProduct: "Product",
+    navCouncil: "The Council",
+    navHow: "How it works",
+    navOutput: "Output",
+    navPricing: "Pricing",
+    languageToggle: "العربية",
 
-updated: "Updated",
+    // Hero
+    heroBadge: "A virtual software engineering company — not a chatbot",
+    heroTitle1: "From raw idea to complete",
+    heroTitle2: "software blueprint",
+    heroSubtitle:
+      "Describe your idea in a sentence. A council of eleven specialized AI agents turns it into requirements, architecture, database, API, UI/UX, security, tests and a deployment plan — exportable as PDF or Markdown.",
+    heroPrimary: "Start a Blueprint →",
+    heroSecondary: "See how the Council works",
 
-action: "Action",
+    // Council
+    councilTitle: "Engineering Council Room",
+    councilProgress: "7 / 11 agents complete",
+    agentAnalysingScope: "Analysing scope",
+    agentDraftingFR: "Drafting FR-001...",
+    agentLayeredArchitecture: "Layered architecture",
 
+    // Steps
+    step1Title: "Describe the idea",
+    step1Text:
+      "Write your idea in plain language, pick a project type, complexity, and output language.",
 
- 
+    step2Title: "The Council engineers it",
+    step2Text:
+      "Eleven agents run a structured pipeline in real time, debate, and resolve conflicts.",
 
-  // Navbar
-  navProduct: "Product",
-  navCouncil: "The Council",
-  navHow: "How it works",
-  navOutput: "Output",
-  navPricing: "Pricing",
-  languageToggle: "العربية",
+    step3Title: "Download the Blueprint",
+    step3Text:
+      "Read, refine, and export a complete engineering document as PDF or Markdown.",
 
-  // Hero
-  heroBadge: "A virtual software engineering company — not a chatbot",
-  heroTitle1: "From raw idea to complete",
-  heroTitle2: "software blueprint",
-  heroSubtitle:
-    "Describe your idea in a sentence. A council of eleven specialized AI agents turns it into requirements, architecture, database, API, UI/UX, security, tests and a deployment plan — exportable as PDF or Markdown.",
-  heroPrimary: "Start a Blueprint →",
-  heroSecondary: "See how the Council works",
+    // Blueprint Sections
+    requirementsTitle: "Requirements",
+    requirementsText:
+      "Numbered FR & NFR with acceptance criteria and use cases.",
 
-  // Council
-  councilTitle: "Engineering Council Room",
-  councilProgress: "7 / 11 agents complete",
-  agentAnalysingScope: "Analysing scope",
-  agentDraftingFR: "Drafting FR-001...",
-  agentLayeredArchitecture: "Layered architecture",
+    architectureTitle: "Architecture",
+    architectureText:
+      "Layered system architecture with clear module boundaries.",
 
-  // Steps
-  step1Title: "Describe the idea",
-  step1Text:
-    "Write your idea in plain language, pick a project type, complexity, and output language.",
+    databaseTitle: "Database",
+    databaseText: "Entities, ERD and a normalized SQL schema with indexes.",
 
-  step2Title: "The Council engineers it",
-  step2Text:
-    "Eleven agents run a structured pipeline in real time, debate, and resolve conflicts.",
+    apiTitle: "API",
+    apiText:
+      "REST endpoints with authentication, pagination, and error semantics.",
 
-  step3Title: "Download the Blueprint",
-  step3Text:
-    "Read, refine, and export a complete engineering document as PDF or Markdown.",
+    uxTitle: "UX/UI",
+    uxText: "User flows, wireframes and a full design system.",
 
+    securityTitle: "Security",
+    securityText: "Threat model, controls, and a security analysis.",
 
-  // Blueprint Sections
-  requirementsTitle: "Requirements",
-  requirementsText:
-    "Numbered FR & NFR with acceptance criteria and use cases.",
+    testingTitle: "Testing",
+    testingText: "A test plan with concrete, traceable test cases.",
 
-  architectureTitle: "Architecture",
-  architectureText:
-    "Layered system architecture with clear module boundaries.",
+    devopsTitle: "DevOps",
+    devopsText: "CI/CD pipeline and a deployment strategy.",
 
-  databaseTitle: "Database",
-  databaseText:
-    "Entities, ERD and a normalized SQL schema with indexes.",
+    // Login
+    loginButton: "Log in",
+    loginWelcome: "Welcome",
+    loginSubtitle: "Sign in to your account",
 
-  apiTitle: "API",
-  apiText:
-    "REST endpoints with authentication, pagination, and error semantics.",
+    emailLabel: "Email",
+    emailPlaceholder: "Enter your email",
 
-  uxTitle: "UX/UI",
-  uxText:
-    "User flows, wireframes and a full design system.",
+    passwordLabel: "Password",
+    passwordPlaceholder: "Enter your password",
 
-  securityTitle: "Security",
-  securityText:
-    "Threat model, controls, and a security analysis.",
+    rememberMe: "Remember me",
+    forgotPassword: "Forgot password?",
 
-  testingTitle: "Testing",
-  testingText:
-    "A test plan with concrete, traceable test cases.",
+    loginSubmit: "Log in",
 
-  devopsTitle: "DevOps",
-  devopsText:
-    "CI/CD pipeline and a deployment strategy.",
+    accountPrompt: "Don't have an account?",
+    registerLink: "Register",
 
+    enterEmail: "Please enter your email.",
+    enterPassword: "Please enter your password.",
+    passwordMin6: "Password must be at least 6 characters.",
 
-  // Login
-  loginButton: "Log in",
-  loginWelcome: "Welcome",
-  loginSubtitle: "Sign in to your account",
+    invalidCredentials: "Invalid email or password.",
+    loginSuccess: "✅ Login Successful!",
 
-  emailLabel: "Email",
-  emailPlaceholder: "Enter your email",
+    loading: "Loading...",
 
-  passwordLabel: "Password",
-  passwordPlaceholder: "Enter your password",
+    // Register
+    signupButton: "Start a Blueprint",
+    createYourAccount: "Create your account",
+    startTurningIdeas: "Start turning ideas into blueprints",
 
-  rememberMe: "Remember me",
-  forgotPassword: "Forgot password?",
+    fullNameLabel: "Full name",
+    enterYourName: "Enter your name",
 
-  loginSubmit: "Log in",
+    emailAddressLabel: "Email Address",
+    userNamePlaceholder: "user-name@example.com",
 
-  accountPrompt: "Don't have an account?",
-  registerLink: "Register",
+    passwordPlaceholderRegister: "••••••••",
 
-  enterEmail: "Please enter your email.",
-  enterPassword: "Please enter your password.",
-  passwordMin6: "Password must be at least 6 characters.",
+    confirmPasswordLabel: "Confirm password",
 
-  invalidCredentials: "Invalid email or password.",
-  loginSuccess: "✅ Login Successful!",
+    agreeTerms: "I agree to the Terms of Service and Privacy Policy",
 
-  loading: "Loading...",
+    createAccountButton: "Create account",
 
+    alreadyHaveAccount: "Already have an account?",
 
-  // Register
-  signupButton: "Start a Blueprint",
-  createYourAccount: "Create your account",
-  startTurningIdeas: "Start turning ideas into blueprints",
+    signIn: "Sign in",
 
-  fullNameLabel: "Full name",
-  enterYourName: "Enter your name",
+    registrationSuccessful: "Registration successful!",
 
-  emailAddressLabel: "Email Address",
-  userNamePlaceholder: "user-name@example.com",
+    registrationFailed: "Registration failed.",
 
-  passwordPlaceholderRegister: "••••••••",
+    passwordMustContain8: "Password must contain at least 8 characters",
 
-  confirmPasswordLabel: "Confirm password",
+    passwordValid: "✔ Password length is valid",
 
-  agreeTerms:
-    "I agree to the Terms of Service and Privacy Policy",
+    passwordTooShort: "✖ Password must contain at least 8 characters",
 
-  createAccountButton: "Create account",
+    passwordsDoNotMatch: "Passwords do not match",
 
-  alreadyHaveAccount:
-    "Already have an account?",
+    // Forgot Password
+    forgotPasswordTitle: "Forgot Password?",
 
-  signIn: "Sign in",
+    forgotPasswordSubtitle:
+      "Enter your email address and we'll send you a link to reset your password.",
 
-  registrationSuccessful:
-    "Registration successful!",
+    sendResetLink: "Send Reset Link",
 
-  registrationFailed:
-    "Registration failed.",
+    enterValidEmail: "Please enter a valid email",
 
-  passwordMustContain8:
-    "Password must contain at least 8 characters",
+    emailNotFound: "Email not found",
 
-  passwordValid:
-    "✔ Password length is valid",
+    serverErrorTryLater: "Server error. Try again later",
 
-  passwordTooShort:
-    "✖ Password must contain at least 8 characters",
+    sendingVerificationEmail: "Sending verification email...",
 
-  passwordsDoNotMatch:
-    "Passwords do not match",
+    // Email Verification
+    verifyEmailTitle: "Verify Your Email",
 
+    verifyEmailSubtitle:
+      "We sent a verification code to your email. Please enter the code below.",
 
-  // Forgot Password
-  forgotPasswordTitle:
-    "Forgot Password?",
+    enter6DigitCode: "Please enter the 6 digit code",
 
-  forgotPasswordSubtitle:
-    "Enter your email address and we'll send you a link to reset your password.",
+    emailVerifiedSuccessfully: "Email verified successfully",
 
-  sendResetLink:
-    "Send Reset Link",
+    verifyButton: "Verify",
 
-  enterValidEmail:
-    "Please enter a valid email",
+    didntReceiveCode: "Didn't receive the code?",
 
-  emailNotFound:
-    "Email not found",
+    resendCode: "Resend Code",
 
-  serverErrorTryLater:
-    "Server error. Try again later",
+    resendCodeTimer: "Resend Code ({timer})",
 
-  sendingVerificationEmail:
-    "Sending verification email...",
+    newCodeSent: "New code sent",
 
+    // Reset Password
+    resetPasswordTitle: "Reset Password",
 
-  // Email Verification
-  verifyEmailTitle:
-    "Verify Your Email",
+    resetPasswordSubtitle: "Create your new password",
 
-  verifyEmailSubtitle:
-    "We sent a verification code to your email. Please enter the code below.",
+    newPasswordLabel: "New Password",
 
-  enter6DigitCode:
-    "Please enter the 6 digit code",
+    enterNewPassword: "Enter new password",
 
-  emailVerifiedSuccessfully:
-    "Email verified successfully",
+    confirmPasswordPlaceholder: "Confirm password",
 
-  verifyButton:
-    "Verify",
+    weakPassword: "Weak Password",
 
-  didntReceiveCode:
-    "Didn't receive the code?",
+    mediumPassword: "Medium Password",
 
-  resendCode:
-    "Resend Code",
+    strongPassword: "Strong Password",
 
-  resendCodeTimer:
-    "Resend Code ({timer})",
+    resetPasswordButton: "Reset Password",
 
-  newCodeSent:
-    "New code sent",
+    resetPasswordFailed: "Reset password failed",
 
+    somethingWentWrong: "Something went wrong",
 
-  // Reset Password
-  resetPasswordTitle:
-    "Reset Password",
+    goToLogin: "Back to Login",
+    // Team / AI Council
+    teamTitle: "Meet the AI Engineering Council",
 
-  resetPasswordSubtitle:
-    "Create your new password",
+    teamSubtitle:
+      "Eleven specialists named after pioneers of computing. Each owns one discipline, works in order, and reviews the others.",
 
-  newPasswordLabel:
-    "New Password",
+    roleProjectDirector: "Project Director",
+    roleBusinessAnalyst: "Business Analyst",
+    roleRequirementsAnalyst: "Requirements Analyst",
+    roleSystemArchitect: "System Architect",
+    roleDatabaseEngineer: "Database Engineer",
+    roleApiEngineer: "API Engineer",
+    roleUiUxDesigner: "UI/UX Designer",
+    roleSecurityEngineer: "Security Engineer",
+    roleQaEngineer: "QA Engineer",
+    roleDevOpsEngineer: "DevOps Engineer",
+    roleDocumentationAgent: "Documentation Agent",
 
-  enterNewPassword:
-    "Enter new password",
+    descProjectDirector:
+      "Analyses the idea, plans the pipeline, resolves conflicts and approves.",
 
-  confirmPasswordPlaceholder:
-    "Confirm password",
+    descBusinessAnalyst: "Stakeholders, value proposition and business rules.",
 
-  weakPassword:
-    "Weak Password",
+    descRequirementsAnalyst:
+      "Functional and non-functional requirements and use cases.",
 
-  mediumPassword:
-    "Medium Password",
+    descSystemArchitect: "Layered architecture and clear module boundaries.",
 
-  strongPassword:
-    "Strong Password",
+    descDatabaseEngineer: "Entities, ERD and normalized SQL schema.",
 
-  resetPasswordButton:
-    "Reset Password",
+    descApiEngineer: "REST endpoints, authentication and error semantics.",
 
-  resetPasswordFailed:
-    "Reset password failed",
+    descUiUxDesigner: "User flows, wireframes and the design system.",
 
-  somethingWentWrong:
-    "Something went wrong",
+    descSecurityEngineer: "Threat model and concrete security controls.",
 
-  goToLogin:
-    "Back to Login",
-      // Team / AI Council
-  teamTitle: "Meet the AI Engineering Council",
+    descQaEngineer: "Test plan with concrete, traceable test cases.",
 
-  teamSubtitle:
-    "Eleven specialists named after pioneers of computing. Each owns one discipline, works in order, and reviews the others.",
+    descDevOpsEngineer: "CI/CD pipeline and deployment strategy.",
 
-  roleProjectDirector: "Project Director",
-  roleBusinessAnalyst: "Business Analyst",
-  roleRequirementsAnalyst: "Requirements Analyst",
-  roleSystemArchitect: "System Architect",
-  roleDatabaseEngineer: "Database Engineer",
-  roleApiEngineer: "API Engineer",
-  roleUiUxDesigner: "UI/UX Designer",
-  roleSecurityEngineer: "Security Engineer",
-  roleQaEngineer: "QA Engineer",
-  roleDevOpsEngineer: "DevOps Engineer",
-  roleDocumentationAgent: "Documentation Agent",
+    descDocumentationAgent: "Compiles everything into the final blueprint.",
 
-  descProjectDirector:
-    "Analyses the idea, plans the pipeline, resolves conflicts and approves.",
+    // Output
+    outputHeading: "One idea in. A complete blueprint out.",
 
-  descBusinessAnalyst:
-    "Stakeholders, value proposition and business rules.",
+    outputSubtitle:
+      "Every blueprint is an SRS/SDD-grade document covering the full analysis and design process.",
 
-  descRequirementsAnalyst:
-    "Functional and non-functional requirements and use cases.",
+    ctaTitle: "Turn your idea into an engineered system",
 
-  descSystemArchitect:
-    "Layered architecture and clear module boundaries.",
+    ctaText:
+      "Free while in beta · English & Arabic output · Export as PDF or Markdown",
 
-  descDatabaseEngineer:
-    "Entities, ERD and normalized SQL schema.",
+    ctaButton: "Start a Blueprint →",
 
-  descApiEngineer:
-    "REST endpoints, authentication and error semantics.",
+    footerBrandName: "Luma Architect",
 
-  descUiUxDesigner:
-    "User flows, wireframes and the design system.",
+    footerBrandText: "From raw idea to complete software blueprint.",
 
-  descSecurityEngineer:
-    "Threat model and concrete security controls.",
+    footerCopyright: "© 2026 Luma Architect · Graduation Project",
 
-  descQaEngineer:
-    "Test plan with concrete, traceable test cases.",
+    // Workspace
+    workspaceTitle: "Workspace",
 
-  descDevOpsEngineer:
-    "CI/CD pipeline and deployment strategy.",
+    workspaceSubtitle: "6 blueprints · your engineering company is ready",
 
-  descDocumentationAgent:
-    "Compiles everything into the final blueprint.",
+    workspaceSearchPlaceholder: "Search blueprints...",
 
+    workspaceNewBlueprint: "New Blueprint",
 
-  // Output
-  outputHeading:
-    "One idea in. A complete blueprint out.",
+    workspaceSortAZ: "A → Z",
 
-  outputSubtitle:
-    "Every blueprint is an SRS/SDD-grade document covering the full analysis and design process.",
+    workspaceSortZA: "Z → A",
 
-  ctaTitle:
-    "Turn your idea into an engineered system",
+    workspaceFilterAll: "All",
 
-  ctaText:
-    "Free while in beta · English & Arabic output · Export as PDF or Markdown",
+    workspaceFilterDraft: "Draft",
 
-  ctaButton:
-    "Start a Blueprint →",
+    workspaceFilterGenerating: "Generating",
 
-  footerBrandName:
-    "Luma Architect",
+    workspaceFilterInReview: "In review",
 
-  footerBrandText:
-    "From raw idea to complete software blueprint.",
+    workspaceFilterCompleted: "Completed",
 
-  footerCopyright:
-    "© 2026 Luma Architect · Graduation Project",
+    workspaceFilterFailed: "Failed",
 
+    workspaceShare: "Share",
 
-  // Workspace
-  workspaceTitle:
-    "Workspace",
+    workspaceUpgrade: "Upgrade",
 
-  workspaceSubtitle:
-    "6 blueprints · your engineering company is ready",
+    workspacePublish: "Publish",
 
-  workspaceSearchPlaceholder:
-    "Search blueprints...",
+    workspaceOpen: "Open →",
 
-  workspaceNewBlueprint:
-    "New Blueprint",
+    workspaceNotification1: "Blueprint generated successfully",
 
-  workspaceSortAZ:
-    "A → Z",
+    workspaceNotification2: "Campus Food Delivery updated",
 
-  workspaceSortZA:
-    "Z → A",
+    workspaceNotification3: "New AI suggestion available",
 
-  workspaceFilterAll:
-    "All",
+    workspaceHi: "Hi, I'm Luma! 👋",
 
-  workspaceFilterDraft:
-    "Draft",
+    workspaceHeroText:
+      "I can help you create software blueprints, design scalable systems, optimize workflows and generate complete project architecture within minutes.",
 
-  workspaceFilterGenerating:
-    "Generating",
+    // Projects
+    clinicAppointmentSystem: "Clinic Appointment System",
 
-  workspaceFilterInReview:
-    "In review",
+    campusFoodDelivery: "Campus Food Delivery",
 
-  workspaceFilterCompleted:
-    "Completed",
+    freelancerInvoicingTool: "Freelancer Invoicing Tool",
 
-  workspaceFilterFailed:
-    "Failed",
+    fitnessHabitTracker: "Fitness Habit Tracker",
 
-  workspaceShare:
-    "Share",
+    smartParkingPlatform: "Smart Parking Platform",
 
-  workspaceUpgrade:
-    "Upgrade",
+    onlineBookstore: "Online Bookstore",
 
-  workspacePublish:
-    "Publish",
+    clinicFooter: "7 / 11 agents",
 
-  workspaceOpen:
-    "Open →",
+    campusFooter: "11 sections · updated 2h ago",
 
-  workspaceNotification1:
-    "Blueprint generated successfully",
+    freelancerFooter: "3 open reviews · updated 6h ago",
 
-  workspaceNotification2:
-    "Campus Food Delivery updated",
+    fitnessFooter: "Draft · edited yesterday",
 
-  workspaceNotification3:
-    "New AI suggestion available",
+    parkingFooter: "Fetching failed · retry available",
 
-  workspaceHi:
-    "Hi, I'm Luma! 👋",
+    bookstoreFooter: "10 sections · updated 5 days ago",
 
-  workspaceHeroText:
-    "I can help you create software blueprints, design scalable systems, optimize workflows and generate complete project architecture within minutes.",
+    // Status
+    statusGenerating: "Generating",
 
+    statusCompleted: "Completed",
 
-  // Projects
-  clinicAppointmentSystem:
-    "Clinic Appointment System",
+    statusInReview: "In review",
 
-  campusFoodDelivery:
-    "Campus Food Delivery",
+    statusDraft: "Draft",
 
-  freelancerInvoicingTool:
-    "Freelancer Invoicing Tool",
+    statusFailed: "Failed",
 
-  fitnessHabitTracker:
-    "Fitness Habit Tracker",
+    typeWebApp: "Web App",
 
-  smartParkingPlatform:
-    "Smart Parking Platform",
+    typeMobileApp: "Mobile App",
 
-  onlineBookstore:
-    "Online Bookstore",
+    typeApiService: "API Service",
 
+    typePlatform: "Platform",
 
-  clinicFooter:
-    "7 / 11 agents",
+    levelComplex: "Complex",
 
-  campusFooter:
-    "11 sections · updated 2h ago",
+    levelMedium: "Medium",
 
-  freelancerFooter:
-    "3 open reviews · updated 6h ago",
+    levelSimple: "Simple",
 
-  fitnessFooter:
-    "Draft · edited yesterday",
+    // Home / Atoms
+    home: "Home",
 
-  parkingFooter:
-    "Fetching failed · retry available",
+    resources: "Resources",
 
-  bookstoreFooter:
-    "10 sections · updated 5 days ago",
+    newChat: "New Chat",
 
+    myProjects: "My Projects",
 
-  // Status
-  statusGenerating:
-    "Generating",
+    askPlaceholder: "Ask the team to bring your idea to life",
 
-  statusCompleted:
-    "Completed",
+    freePlan: "Free plan",
 
-  statusInReview:
-    "In review",
+    upgrade: "Upgrade",
 
-  statusDraft:
-    "Draft",
+    uploadFile: "Upload file",
 
-  statusFailed:
-    "Failed",
+    addImage: "Add image",
 
-  typeWebApp:
-    "Web App",
+    connectTools: "Connect tools",
 
-  typeMobileApp:
-    "Mobile App",
+    system: "System",
 
-  typeApiService:
-    "API Service",
+    light: "Light",
 
-  typePlatform:
-    "Platform",
+    dark: "Dark",
 
-  levelComplex:
-    "Complex",
+    build: "Build",
 
-  levelMedium:
-    "Medium",
+    connectAtoms: "Connect your tools to Atoms",
 
-  levelSimple:
-    "Simple",
+    recents: "Recents",
 
+    yourChats: "Your chats will appear here",
 
-  // Home / Atoms
-  home:
-    "Home",
+    joinCommunity: "Join our Community",
 
-  resources:
-    "Resources",
+    earnCredits: "Earn up to 25 credits",
 
-  newChat:
-    "New Chat",
+    getFreeCredits: "Get Free Credits",
 
-  myProjects:
-    "My Projects",
+    get10Credits: "Get 10 credits each",
 
-  askPlaceholder:
-    "Ask the team to bring your idea to life",
+    homeTitle: "Your next product starts here.",
 
-  freePlan:
-    "Free plan",
+    homeTeamAriaLabel: "Atoms team",
 
-  upgrade:
-    "Upgrade",
+    alexAgent: "Alex is a Product Manager",
 
-  uploadFile:
-    "Upload file",
+    emmaAgent: "Emma is a UI Designer",
 
-  addImage:
-    "Add image",
+    noahAgent: "Noah is a Backend Developer",
 
-  connectTools:
-    "Connect tools",
+    lunaAgent: "Luna is a QA Engineer",
 
-  system:
-    "System",
+    davidAgent: "David is a Data Analyst",
 
-  light:
-    "Light",
+    miaAgent: "Mia is an AI Engineer",
 
-  dark:
-    "Dark",
+    leoAgent: "Leo is a Marketing Expert",
 
-  build:
-    "Build",
+    speechNotSupported: "Speech Recognition is not supported.",
 
-  connectAtoms:
-    "Connect your tools to Atoms",
+    aiResponse:
+      "I received your idea. I will help you implement it step by step.",
 
-  recents:
-    "Recents",
+    // Settings
+    settings: "Settings",
 
-  yourChats:
-    "Your chats will appear here",
+    plans: "Plans",
 
-  joinCommunity:
-    "Join our Community",
+    profile: "Profile",
 
-  earnCredits:
-    "Earn up to 25 credits",
+    appearance: "Appearance",
 
-  getFreeCredits:
-    "Get Free Credits",
+    helpCenter: "Help Center",
 
-  get10Credits:
-    "Get 10 credits each",
+    homepage: "Homepage",
 
-  homeTitle:
-    "Your next product starts here.",
+    signOut: "Sign out",
 
+    domains: "Domains",
 
-  homeTeamAriaLabel:
-    "Atoms team",
+    people: "People",
 
-  alexAgent:
-    "Alex is a Product Manager",
+    general: "General",
 
-  emmaAgent:
-    "Emma is a UI Designer",
+    connectors: "Connectors",
 
-  noahAgent:
-    "Noah is a Backend Developer",
+    plansCredits: "Plans and credits",
 
-  lunaAgent:
-    "Luna is a QA Engineer",
+    cloudAI: "Cloud & AI",
 
-  davidAgent:
-    "David is a Data Analyst",
+    account: "Account",
 
-  miaAgent:
-    "Mia is an AI Engineer",
+    preference: "Preference",
 
-  leoAgent:
-    "Leo is a Marketing Expert",
+    project: "Project",
 
-  speechNotSupported:
-    "Speech Recognition is not supported.",
+    creditsRemaining: "Credits remaining",
 
-  aiResponse:
-    "I received your idea. I will help you implement it step by step.",
+    left: "left",
 
+    allWorkspaces: "All workspaces",
 
-  // Settings
-  settings:
-    "Settings",
+    editProfile: "Edit profile",
 
-  plans:
-    "Plans",
+    publicProjects: "Public Projects",
 
-  profile:
-    "Profile",
+    saved: "Saved",
 
-  appearance:
-    "Appearance",
+    otherProjects: "Other Projects",
 
-  helpCenter:
-    "Help Center",
+    accountSettings: "Account Settings",
 
-  homepage:
-    "Homepage",
+    manageAccount:
+      "Manage your account status and permanently delete your account.",
 
-  signOut:
-    "Sign out",
+    accountStatus: "Account status",
 
-  domains:
-    "Domains",
+    accountActive: "Your account is currently active.",
 
-  people:
-    "People",
+    accountDeactivated: "Your account is currently deactivated.",
 
-  general:
-    "General",
+    deactivateAccount: "Deactivate account",
 
-  connectors:
-    "Connectors",
+    activateAccount: "Activate account",
 
-  plansCredits:
-    "Plans and credits",
+    pleaseWait: "Please wait...",
 
-  cloudAI:
-    "Cloud & AI",
+    deleteAccount: "Delete account",
 
-  account:
-    "Account",
+    deleteAccountConfirm:
+      "Are you sure you want to permanently delete your account? This action cannot be undone.",
 
-  preference:
-    "Preference",
+    deleting: "Deleting...",
 
-  project:
-    "Project",
+    inviteMembers: "Invite workspace members",
 
-  creditsRemaining:
-    "Credits remaining",
+    upgradeInvite: "Upgrade to invite members and collaborate on all projects.",
 
-  left:
-    "left",
+    addEmails: "Add emails",
 
-  allWorkspaces:
-    "All workspaces",
+    connect: "Connect",
 
+    planPayment: "Plan Payment",
 
-  editProfile:
-    "Edit profile",
+    unlockFeatures: "Unlock more features",
 
-  publicProjects:
-    "Public Projects",
+    month: "month",
 
-  saved:
-    "Saved",
+    language: "Language",
 
-  otherProjects:
-    "Other Projects",
+    changeLanguage: "Change the language used in the user interface.",
 
+    theme: "Theme",
 
-  accountSettings:
-    "Account Settings",
+    customizeTheme: "Customize how Atoms looks on your device.",
 
-  manageAccount:
-    "Manage your account status and permanently delete your account.",
+    avatar: "Avatar",
 
-  accountStatus:
-    "Account status",
+    username: "Username",
 
-  accountActive:
-    "Your account is currently active.",
+    email: "Email",
 
-  accountDeactivated:
-    "Your account is currently deactivated.",
+    manageProfile: "Manage your profile and account information.",
 
-  deactivateAccount:
-    "Deactivate account",
+    cloudBalance:
+      "Your Cloud & AI Balance is crucial for keeping your published projects running.",
 
-  activateAccount:
-    "Activate account",
+    defaultModel: "Default Model",
 
-  pleaseWait:
-    "Please wait...",
+    permissions: "Permissions",
 
+    setDefaultAccess: "Set Default Access for Projects",
 
-  deleteAccount:
-    "Delete account",
+    public: "Public",
 
-  deleteAccountConfirm:
-    "Are you sure you want to permanently delete your account? This action cannot be undone.",
-
-  deleting:
-    "Deleting...",
-
-
-  inviteMembers:
-    "Invite workspace members",
-
-  upgradeInvite:
-    "Upgrade to invite members and collaborate on all projects.",
-
-  addEmails:
-    "Add emails",
-
-  connect:
-    "Connect",
-
-  planPayment:
-    "Plan Payment",
-
-  unlockFeatures:
-    "Unlock more features",
-
-  month:
-    "month",
-
-
-  language:
-    "Language",
-
-  changeLanguage:
-    "Change the language used in the user interface.",
-
-  theme:
-    "Theme",
-
-  customizeTheme:
-    "Customize how Atoms looks on your device.",
-
-
-  avatar:
-    "Avatar",
-
-  username:
-    "Username",
-
-  email:
-    "Email",
-
-  manageProfile:
-    "Manage your profile and account information.",
-
-
-  cloudBalance:
-    "Your Cloud & AI Balance is crucial for keeping your published projects running.",
-
-  defaultModel:
-    "Default Model",
-
-  permissions:
-    "Permissions",
-
-  setDefaultAccess:
-    "Set Default Access for Projects",
-
-  public:
-    "Public",
-
-  creditReminder:
-    "Credit Balance Reminder",
-  redemption: "Redemption",
-  showCredits:
-    "Show remaining credits",
+    creditReminder: "Credit Balance Reminder",
+    redemption: "Redemption",
+    showCredits: "Show remaining credits",
 
     logs: "Logs",
-logsDescription: "Review system activities and events",
-refresh: "Refresh",
-searchLogs: "Search logs...",
-info: "INFO",
-warning: "WARNING",
-error: "ERROR",
-level: "Level",
-user: "User",
-message: "Message",
-date: "Date",
-noLogs: "No logs found",
-systemState:"System State",
-systemStateDescription:"Monitor platform infrastructure and health",
-loadingSystemData:"Loading System Data...",
-totalServices:"Total Services",
-systemHealth:"System Health",
-cpuUsage:"CPU Usage",
-memoryUsage:"Memory Usage",
-systemResources:"System Resources",
-cpu:"CPU",
-memory:"Memory",
-storage:"Storage",
-servicesStatus:"Services Status",
-service:"Service",
-uptime:"Uptime",
-load:"Load",
-running:"Running",
-  // ================= Users =================
+    logsDescription: "Review system activities and events",
+    refresh: "Refresh",
+    searchLogs: "Search logs...",
+    info: "INFO",
+    warning: "WARNING",
+    error: "ERROR",
+    level: "Level",
+    user: "User",
+    message: "Message",
+    date: "Date",
+    noLogs: "No logs found",
+    systemState: "System State",
+    systemStateDescription: "Monitor platform infrastructure and health",
+    loadingSystemData: "Loading System Data...",
+    totalServices: "Total Services",
+    systemHealth: "System Health",
+    cpuUsage: "CPU Usage",
+    memoryUsage: "Memory Usage",
+    systemResources: "System Resources",
+    cpu: "CPU",
+    memory: "Memory",
+    storage: "Storage",
+    servicesStatus: "Services Status",
+    service: "Service",
+    uptime: "Uptime",
+    load: "Load",
+    running: "Running",
+    // ================= Users =================
 
-  usersTitle:
-    "Users",
+    usersTitle: "Users",
 
-  usersDescription:
-    "Manage and monitor LUMA users.",
+    usersDescription: "Manage and monitor LUMA users.",
 
-  usersRefresh:
-    "Refresh",
+    usersRefresh: "Refresh",
 
-  usersLoading:
-    "Loading...",
+    usersLoading: "Loading...",
 
-  usersLoadingUsers:
-    "Loading users...",
+    usersLoadingUsers: "Loading users...",
 
-  usersTotal:
-    "Total Users",
+    usersTotal: "Total Users",
 
-  usersActive:
-    "Active Users",
+    usersActive: "Active Users",
 
-  usersInactive:
-    "Inactive Users",
+    usersInactive: "Inactive Users",
 
-  usersSearchResults:
-    "Search Results",
+    usersSearchResults: "Search Results",
 
-  usersAll:
-    "All Users",
+    usersAll: "All Users",
 
-  usersAllDescription:
-    "View registered users and their information.",
+    usersAllDescription: "View registered users and their information.",
 
-  usersSearchPlaceholder:
-    "Search users...",
+    usersSearchPlaceholder: "Search users...",
 
-  usersUser:
-    "User",
+    usersUser: "User",
 
-  usersEmail:
-    "Email",
+    usersEmail: "Email",
 
-  usersRole:
-    "Role",
+    usersRole: "Role",
 
-  usersStatus:
-    "Status",
+    usersStatus: "Status",
 
-  usersAction:
-    "Action",
+    usersAction: "Action",
 
-  usersView:
-    "View",
+    usersView: "View",
 
-  usersActiveStatus:
-    "Active",
+    usersActiveStatus: "Active",
 
-  usersInactiveStatus:
-    "Inactive",
+    usersInactiveStatus: "Inactive",
 
-  usersNoUsers:
-    "No users found",
+    usersNoUsers: "No users found",
 
-  usersNoSearchResults:
-    "No users match your search.",
+    usersNoSearchResults: "No users match your search.",
 
-  usersNoUsersToDisplay:
-    "There are no users to display.",
+    usersNoUsersToDisplay: "There are no users to display.",
 
-  usersUnknownUser:
-    "Unknown User",
+    usersUnknownUser: "Unknown User",
 
-  usersLoadError:
-    "Failed to load users. Please try again.",
+    usersLoadError: "Failed to load users. Please try again.",
 
-  usersTryAgain:
-    "Try Again",
+    usersTryAgain: "Try Again",
 
-  usersDetails:
-    "User Details",
+    usersDetails: "User Details",
 
-  usersDetailsDescription:
-    "View user information.",
+    usersDetailsDescription: "View user information.",
 
-  usersId:
-    "ID",
+    usersId: "ID",
 
-  usersUsername:
-    "Username",
+    usersUsername: "Username",
 
-  usersClose:
-    "Close",
+    usersClose: "Close",
 
-  usersUserRole:
-    "User",
+    usersUserRole: "User",
 
-  usersAdminRole:
-    "Admin",
+    usersAdminRole: "Admin",
 
-  usersSuperAdminRole:
-    "Super Admin",
-// ================= Overview =================
+    usersSuperAdminRole: "Super Admin",
+    // ================= Overview =================
 
-overviewSuperAdminDashboard:
-  "SUPER ADMIN DASHBOARD",
+    overviewSuperAdminDashboard: "SUPER ADMIN DASHBOARD",
 
-overviewAdminDashboard:
-  "ADMIN DASHBOARD",
+    overviewAdminDashboard: "ADMIN DASHBOARD",
 
-overviewTitle:
-  "Overview",
+    overviewTitle: "Overview",
 
-overviewDescription:
-  "Monitor your Luma platform from one place.",
+    overviewDescription: "Monitor your Luma platform from one place.",
 
-overviewSuperAdmin:
-  "Super Admin",
+    overviewSuperAdmin: "Super Admin",
 
-overviewAdmin:
-  "Admin",
+    overviewAdmin: "Admin",
 
-overviewSuperAdministrator:
-  "Super Administrator",
+    overviewSuperAdministrator: "Super Administrator",
 
-overviewAdministrator:
-  "Administrator",
+    overviewAdministrator: "Administrator",
 
-overviewControlCenter:
-  "LUMA CONTROL CENTER",
+    overviewControlCenter: "LUMA CONTROL CENTER",
 
-overviewEverythingUnderControl:
-  "Everything is under control.",
+    overviewEverythingUnderControl: "Everything is under control.",
 
-overviewBannerDescription:
-  "Track users, blueprints and platform activity from your dashboard.",
+    overviewBannerDescription:
+      "Track users, blueprints and platform activity from your dashboard.",
 
-overviewLive:
-  "LIVE",
+    overviewLive: "LIVE",
 
-overviewActive:
-  "ACTIVE",
+    overviewActive: "ACTIVE",
 
-overviewRecent:
-  "RECENT",
+    overviewRecent: "RECENT",
 
-overviewSystem:
-  "SYSTEM",
+    overviewSystem: "SYSTEM",
 
-overviewTotalUsers:
-  "Total Users",
+    overviewTotalUsers: "Total Users",
 
-overviewRegisteredUsers:
-  "Registered platform users",
+    overviewRegisteredUsers: "Registered platform users",
 
-overviewBlueprints:
-  "Blueprints",
+    overviewBlueprints: "Blueprints",
 
-overviewGeneratedBlueprints:
-  "Generated project blueprints",
+    overviewGeneratedBlueprints: "Generated project blueprints",
 
-overviewActivities:
-  "Activities",
+    overviewActivities: "Activities",
 
-overviewRecordedActivities:
-  "Recorded platform activities",
+    overviewRecordedActivities: "Recorded platform activities",
 
-overviewSystemStatus:
-  "System Status",
+    overviewSystemStatus: "System Status",
 
-overviewSystemMonitoring:
-  "Platform system monitoring",
+    overviewSystemMonitoring: "Platform system monitoring",
 
-overviewOnline:
-  "Online",
+    overviewOnline: "Online",
 
-overviewPlatform:
-  "PLATFORM",
+    overviewPlatform: "PLATFORM",
 
-overviewSystemOverview:
-  "System Overview",
+    overviewSystemOverview: "System Overview",
 
-overviewCurrentPlatformInfo:
-  "Current platform information",
+    overviewCurrentPlatformInfo: "Current platform information",
 
-overviewSystemOperational:
-  "System Operational",
+    overviewSystemOperational: "System Operational",
 
-overviewNoSystemStats:
-  "No system statistics available.",
+    overviewNoSystemStats: "No system statistics available.",
 
-overviewTotalBlueprints:
-  "Total Blueprints",
+    overviewTotalBlueprints: "Total Blueprints",
 
-overviewMonitoring:
-  "MONITORING",
+    overviewMonitoring: "MONITORING",
 
-overviewRecentActivity:
-  "Recent Activity",
+    overviewRecentActivity: "Recent Activity",
 
-overviewLatestEvents:
-  "Latest platform events",
+    overviewLatestEvents: "Latest platform events",
 
-overviewNoActivity:
-  "No activity available.",
+    overviewNoActivity: "No activity available.",
 
-overviewPlatformActivity:
-  "Platform Activity",
+    overviewPlatformActivity: "Platform Activity",
 
-overviewSystemActivity:
-  "System activity",
+    overviewSystemActivity: "System activity",
 
-overviewAiCore:
-  "LUMA AI CORE",
+    overviewAiCore: "LUMA AI CORE",
 
-overviewAssistantReady:
-  "Your platform assistant is ready.",
+    overviewAssistantReady: "Your platform assistant is ready.",
 
-overviewAssistantDescription:
-  "Luma keeps your workspace organized, monitored and running smoothly.",
-  // System Settings
-systemSettings: "System Settings",
-systemSettingsDescription:
-  "Manage system configuration and platform behavior.",
+    overviewAssistantDescription:
+      "Luma keeps your workspace organized, monitored and running smoothly.",
+    // System Settings
+    systemSettings: "System Settings",
+    systemSettingsDescription:
+      "Manage system configuration and platform behavior.",
 
-generalSettings: "General Settings",
-generalSettingsDescription:
-  "Configure the main behavior of the LUMA platform.",
+    generalSettings: "General Settings",
+    generalSettingsDescription:
+      "Configure the main behavior of the LUMA platform.",
 
-maintenanceMode: "Maintenance Mode",
-maintenanceModeDescription:
-  "Temporarily disable access to the platform while maintenance is being performed.",
-toggleMaintenanceMode: "Toggle maintenance mode",
+    maintenanceMode: "Maintenance Mode",
+    maintenanceModeDescription:
+      "Temporarily disable access to the platform while maintenance is being performed.",
+    toggleMaintenanceMode: "Toggle maintenance mode",
 
-userRegistration: "User Registration",
-userRegistrationDescription:
-  "Allow new users to create accounts on the platform.",
-toggleUserRegistration: "Toggle user registration",
+    userRegistration: "User Registration",
+    userRegistrationDescription:
+      "Allow new users to create accounts on the platform.",
+    toggleUserRegistration: "Toggle user registration",
 
-emailVerification: "Email Verification",
-emailVerificationDescription:
-  "Require users to verify their email address before accessing the platform.",
-toggleEmailVerification: "Toggle email verification",
+    emailVerification: "Email Verification",
+    emailVerificationDescription:
+      "Require users to verify their email address before accessing the platform.",
+    toggleEmailVerification: "Toggle email verification",
 
-platformFeatures: "Platform Features",
-platformFeaturesDescription:
-  "Control which features are available to users.",
+    platformFeatures: "Platform Features",
+    platformFeaturesDescription:
+      "Control which features are available to users.",
 
-notifications: "Notifications",
-notificationsDescription:
-  "Enable system notifications for platform users.",
-toggleNotifications: "Toggle notifications",
+    notifications: "Notifications",
+    notificationsDescription: "Enable system notifications for platform users.",
+    toggleNotifications: "Toggle notifications",
 
-blueprintCreation: "Blueprint Creation",
-blueprintCreationDescription:
-  "Allow users to create new engineering blueprints.",
-toggleBlueprintCreation: "Toggle blueprint creation",
+    blueprintCreation: "Blueprint Creation",
+    blueprintCreationDescription:
+      "Allow users to create new engineering blueprints.",
+    toggleBlueprintCreation: "Toggle blueprint creation",
 
-aiChat: "AI Chat",
-aiChatDescription:
-  "Allow users to communicate with the LUMA AI assistant.",
-toggleAiChat: "Toggle AI chat",
+    aiChat: "AI Chat",
+    aiChatDescription: "Allow users to communicate with the LUMA AI assistant.",
+    toggleAiChat: "Toggle AI chat",
 
-systemInformation: "System Information",
-systemInformationDescription:
-  "Basic information about the current platform.",
+    systemInformation: "System Information",
+    systemInformationDescription:
+      "Basic information about the current platform.",
 
-platform: "Platform",
-environment: "Environment",
-production: "Production",
-systemStatus: "System Status",
-operational: "Operational",
-version: "Version",
-overview: "Overview",
-users: "Users",
-logout: "Logout",
-},
- ar: {
-  overview: "نظرة عامة",
-users: "المستخدمون",
-logout: "تسجيل الخروج",
-  // System Settings
-systemSettings: "إعدادات النظام",
-systemSettingsDescription:
-  "إدارة إعدادات النظام وسلوك المنصة.",
+    platform: "Platform",
+    environment: "Environment",
+    production: "Production",
+    systemStatus: "System Status",
+    operational: "Operational",
+    version: "Version",
+    overview: "Overview",
+    users: "Users",
+    logout: "Logout",
+  },
+  ar: {
+    overview: "نظرة عامة",
+    users: "المستخدمون",
+    logout: "تسجيل الخروج",
+    // System Settings
+    systemSettings: "إعدادات النظام",
+    systemSettingsDescription: "إدارة إعدادات النظام وسلوك المنصة.",
 
-generalSettings: "الإعدادات العامة",
-generalSettingsDescription:
-  "تكوين السلوك الرئيسي لمنصة LUMA.",
+    generalSettings: "الإعدادات العامة",
+    generalSettingsDescription: "تكوين السلوك الرئيسي لمنصة LUMA.",
 
-maintenanceMode: "وضع الصيانة",
-maintenanceModeDescription:
-  "تعطيل الوصول إلى المنصة مؤقتًا أثناء إجراء أعمال الصيانة.",
-toggleMaintenanceMode: "تفعيل أو تعطيل وضع الصيانة",
+    maintenanceMode: "وضع الصيانة",
+    maintenanceModeDescription:
+      "تعطيل الوصول إلى المنصة مؤقتًا أثناء إجراء أعمال الصيانة.",
+    toggleMaintenanceMode: "تفعيل أو تعطيل وضع الصيانة",
 
-userRegistration: "تسجيل المستخدمين",
-userRegistrationDescription:
-  "السماح للمستخدمين الجدد بإنشاء حسابات على المنصة.",
-toggleUserRegistration: "تفعيل أو تعطيل تسجيل المستخدمين",
+    userRegistration: "تسجيل المستخدمين",
+    userRegistrationDescription:
+      "السماح للمستخدمين الجدد بإنشاء حسابات على المنصة.",
+    toggleUserRegistration: "تفعيل أو تعطيل تسجيل المستخدمين",
 
-emailVerification: "التحقق من البريد الإلكتروني",
-emailVerificationDescription:
-  "مطالبة المستخدمين بالتحقق من بريدهم الإلكتروني قبل الوصول إلى المنصة.",
-toggleEmailVerification: "تفعيل أو تعطيل التحقق من البريد الإلكتروني",
+    emailVerification: "التحقق من البريد الإلكتروني",
+    emailVerificationDescription:
+      "مطالبة المستخدمين بالتحقق من بريدهم الإلكتروني قبل الوصول إلى المنصة.",
+    toggleEmailVerification: "تفعيل أو تعطيل التحقق من البريد الإلكتروني",
 
-platformFeatures: "ميزات المنصة",
-platformFeaturesDescription:
-  "التحكم في الميزات المتاحة للمستخدمين.",
+    platformFeatures: "ميزات المنصة",
+    platformFeaturesDescription: "التحكم في الميزات المتاحة للمستخدمين.",
 
-notifications: "الإشعارات",
-notificationsDescription:
-  "تفعيل إشعارات النظام لمستخدمي المنصة.",
-toggleNotifications: "تفعيل أو تعطيل الإشعارات",
+    notifications: "الإشعارات",
+    notificationsDescription: "تفعيل إشعارات النظام لمستخدمي المنصة.",
+    toggleNotifications: "تفعيل أو تعطيل الإشعارات",
 
-blueprintCreation: "إنشاء المخططات",
-blueprintCreationDescription:
-  "السماح للمستخدمين بإنشاء مخططات هندسية جديدة.",
-toggleBlueprintCreation: "تفعيل أو تعطيل إنشاء المخططات",
+    blueprintCreation: "إنشاء المخططات",
+    blueprintCreationDescription:
+      "السماح للمستخدمين بإنشاء مخططات هندسية جديدة.",
+    toggleBlueprintCreation: "تفعيل أو تعطيل إنشاء المخططات",
 
-aiChat: "محادثة الذكاء الاصطناعي",
-aiChatDescription:
-  "السماح للمستخدمين بالتواصل مع مساعد LUMA للذكاء الاصطناعي.",
-toggleAiChat: "تفعيل أو تعطيل محادثة الذكاء الاصطناعي",
+    aiChat: "محادثة الذكاء الاصطناعي",
+    aiChatDescription:
+      "السماح للمستخدمين بالتواصل مع مساعد LUMA للذكاء الاصطناعي.",
+    toggleAiChat: "تفعيل أو تعطيل محادثة الذكاء الاصطناعي",
 
-systemInformation: "معلومات النظام",
-systemInformationDescription:
-  "معلومات أساسية حول المنصة الحالية.",
+    systemInformation: "معلومات النظام",
+    systemInformationDescription: "معلومات أساسية حول المنصة الحالية.",
 
-platform: "المنصة",
-environment: "البيئة",
-production: "الإنتاج",
-systemStatus: "حالة النظام",
-operational: "يعمل بشكل طبيعي",
-version: "الإصدار",
-  // ================= Overview =================
+    platform: "المنصة",
+    environment: "البيئة",
+    production: "الإنتاج",
+    systemStatus: "حالة النظام",
+    operational: "يعمل بشكل طبيعي",
+    version: "الإصدار",
+    // ================= Overview =================
 
-overviewSuperAdminDashboard:
-  "لوحة تحكم المدير العام",
+    overviewSuperAdminDashboard: "لوحة تحكم المدير العام",
 
-overviewAdminDashboard:
-  "لوحة تحكم المدير",
+    overviewAdminDashboard: "لوحة تحكم المدير",
 
-overviewTitle:
-  "نظرة عامة",
+    overviewTitle: "نظرة عامة",
 
-overviewDescription:
-  "راقب منصة Luma الخاصة بك من مكان واحد.",
+    overviewDescription: "راقب منصة Luma الخاصة بك من مكان واحد.",
 
-overviewSuperAdmin:
-  "المدير العام",
+    overviewSuperAdmin: "المدير العام",
 
-overviewAdmin:
-  "المدير",
+    overviewAdmin: "المدير",
 
-overviewSuperAdministrator:
-  "المدير العام للنظام",
+    overviewSuperAdministrator: "المدير العام للنظام",
 
-overviewAdministrator:
-  "المدير",
+    overviewAdministrator: "المدير",
 
-overviewControlCenter:
-  "مركز تحكم LUMA",
+    overviewControlCenter: "مركز تحكم LUMA",
 
-overviewEverythingUnderControl:
-  "كل شيء تحت السيطرة.",
+    overviewEverythingUnderControl: "كل شيء تحت السيطرة.",
 
-overviewBannerDescription:
-  "تابع المستخدمين والمخططات ونشاط المنصة من لوحة التحكم الخاصة بك.",
+    overviewBannerDescription:
+      "تابع المستخدمين والمخططات ونشاط المنصة من لوحة التحكم الخاصة بك.",
 
-overviewLive:
-  "مباشر",
+    overviewLive: "مباشر",
 
-overviewActive:
-  "نشط",
+    overviewActive: "نشط",
 
-overviewRecent:
-  "حديث",
+    overviewRecent: "حديث",
 
-overviewSystem:
-  "النظام",
+    overviewSystem: "النظام",
 
-overviewTotalUsers:
-  "إجمالي المستخدمين",
+    overviewTotalUsers: "إجمالي المستخدمين",
 
-overviewRegisteredUsers:
-  "المستخدمون المسجلون في المنصة",
+    overviewRegisteredUsers: "المستخدمون المسجلون في المنصة",
 
-overviewBlueprints:
-  "المخططات",
+    overviewBlueprints: "المخططات",
 
-overviewGeneratedBlueprints:
-  "مخططات المشاريع التي تم إنشاؤها",
+    overviewGeneratedBlueprints: "مخططات المشاريع التي تم إنشاؤها",
 
-overviewActivities:
-  "الأنشطة",
+    overviewActivities: "الأنشطة",
 
-overviewRecordedActivities:
-  "الأنشطة المسجلة على المنصة",
+    overviewRecordedActivities: "الأنشطة المسجلة على المنصة",
 
-overviewSystemStatus:
-  "حالة النظام",
+    overviewSystemStatus: "حالة النظام",
 
-overviewSystemMonitoring:
-  "مراقبة نظام المنصة",
+    overviewSystemMonitoring: "مراقبة نظام المنصة",
 
-overviewOnline:
-  "متصل",
+    overviewOnline: "متصل",
 
-overviewPlatform:
-  "المنصة",
+    overviewPlatform: "المنصة",
 
-overviewSystemOverview:
-  "نظرة عامة على النظام",
+    overviewSystemOverview: "نظرة عامة على النظام",
 
-overviewCurrentPlatformInfo:
-  "معلومات المنصة الحالية",
+    overviewCurrentPlatformInfo: "معلومات المنصة الحالية",
 
-overviewSystemOperational:
-  "النظام يعمل بشكل طبيعي",
+    overviewSystemOperational: "النظام يعمل بشكل طبيعي",
 
-overviewNoSystemStats:
-  "لا تتوفر إحصائيات للنظام.",
+    overviewNoSystemStats: "لا تتوفر إحصائيات للنظام.",
 
-overviewTotalBlueprints:
-  "إجمالي المخططات",
+    overviewTotalBlueprints: "إجمالي المخططات",
 
-overviewMonitoring:
-  "المراقبة",
+    overviewMonitoring: "المراقبة",
 
-overviewRecentActivity:
-  "النشاط الأخير",
+    overviewRecentActivity: "النشاط الأخير",
 
-overviewLatestEvents:
-  "أحدث أحداث المنصة",
+    overviewLatestEvents: "أحدث أحداث المنصة",
 
-overviewNoActivity:
-  "لا يوجد نشاط متاح.",
+    overviewNoActivity: "لا يوجد نشاط متاح.",
 
-overviewPlatformActivity:
-  "نشاط المنصة",
+    overviewPlatformActivity: "نشاط المنصة",
 
-overviewSystemActivity:
-  "نشاط النظام",
+    overviewSystemActivity: "نشاط النظام",
 
-overviewAiCore:
-  "نواة LUMA للذكاء الاصطناعي",
+    overviewAiCore: "نواة LUMA للذكاء الاصطناعي",
 
-overviewAssistantReady:
-  "مساعد المنصة جاهز.",
+    overviewAssistantReady: "مساعد المنصة جاهز.",
 
-overviewAssistantDescription:
-  "تحافظ Luma على تنظيم مساحة العمل ومراقبتها وتشغيلها بسلاسة.",
-  // ================= المستخدمون =================
+    overviewAssistantDescription:
+      "تحافظ Luma على تنظيم مساحة العمل ومراقبتها وتشغيلها بسلاسة.",
+    // ================= المستخدمون =================
 
-  usersTitle:
-    "المستخدمون",
+    usersTitle: "المستخدمون",
 
-  usersDescription:
-    "إدارة ومتابعة مستخدمي LUMA.",
+    usersDescription: "إدارة ومتابعة مستخدمي LUMA.",
 
-  usersRefresh:
-    "تحديث",
+    usersRefresh: "تحديث",
 
-  usersLoading:
-    "جارٍ التحميل...",
+    usersLoading: "جارٍ التحميل...",
 
-  usersLoadingUsers:
-    "جارٍ تحميل المستخدمين...",
+    usersLoadingUsers: "جارٍ تحميل المستخدمين...",
 
-  usersTotal:
-    "إجمالي المستخدمين",
+    usersTotal: "إجمالي المستخدمين",
 
-  usersActive:
-    "المستخدمون النشطون",
+    usersActive: "المستخدمون النشطون",
 
-  usersInactive:
-    "المستخدمون غير النشطين",
+    usersInactive: "المستخدمون غير النشطين",
 
-  usersSearchResults:
-    "نتائج البحث",
+    usersSearchResults: "نتائج البحث",
 
-  usersAll:
-    "جميع المستخدمين",
+    usersAll: "جميع المستخدمين",
 
-  usersAllDescription:
-    "عرض المستخدمين المسجلين ومعلوماتهم.",
+    usersAllDescription: "عرض المستخدمين المسجلين ومعلوماتهم.",
 
-  usersSearchPlaceholder:
-    "البحث عن مستخدمين...",
+    usersSearchPlaceholder: "البحث عن مستخدمين...",
 
-  usersUser:
-    "المستخدم",
+    usersUser: "المستخدم",
 
-  usersEmail:
-    "البريد الإلكتروني",
+    usersEmail: "البريد الإلكتروني",
 
-  usersRole:
-    "الصلاحية",
+    usersRole: "الصلاحية",
 
-  usersStatus:
-    "الحالة",
+    usersStatus: "الحالة",
 
-  usersAction:
-    "الإجراء",
+    usersAction: "الإجراء",
 
-  usersView:
-    "عرض",
+    usersView: "عرض",
 
-  usersActiveStatus:
-    "نشط",
+    usersActiveStatus: "نشط",
 
-  usersInactiveStatus:
-    "غير نشط",
+    usersInactiveStatus: "غير نشط",
 
-  usersNoUsers:
-    "لم يتم العثور على مستخدمين",
+    usersNoUsers: "لم يتم العثور على مستخدمين",
 
-  usersNoSearchResults:
-    "لا يوجد مستخدمون يطابقون بحثك.",
+    usersNoSearchResults: "لا يوجد مستخدمون يطابقون بحثك.",
 
-  usersNoUsersToDisplay:
-    "لا يوجد مستخدمون لعرضهم.",
+    usersNoUsersToDisplay: "لا يوجد مستخدمون لعرضهم.",
 
-  usersUnknownUser:
-    "مستخدم غير معروف",
+    usersUnknownUser: "مستخدم غير معروف",
 
-  usersLoadError:
-    "فشل تحميل المستخدمين. يرجى المحاولة مرة أخرى.",
+    usersLoadError: "فشل تحميل المستخدمين. يرجى المحاولة مرة أخرى.",
 
-  usersTryAgain:
-    "حاول مرة أخرى",
+    usersTryAgain: "حاول مرة أخرى",
 
-  usersDetails:
-    "تفاصيل المستخدم",
+    usersDetails: "تفاصيل المستخدم",
 
-  usersDetailsDescription:
-    "عرض معلومات المستخدم.",
+    usersDetailsDescription: "عرض معلومات المستخدم.",
 
-  usersId:
-    "المعرّف",
+    usersId: "المعرّف",
 
-  usersUsername:
-    "اسم المستخدم",
+    usersUsername: "اسم المستخدم",
 
-  usersClose:
-    "إغلاق",
+    usersClose: "إغلاق",
 
-  usersUserRole:
-    "مستخدم",
+    usersUserRole: "مستخدم",
 
-  usersAdminRole:
-    "مدير",
+    usersAdminRole: "مدير",
 
-  usersSuperAdminRole:
-    "مدير النظام",
+    usersSuperAdminRole: "مدير النظام",
 
-systemState:"حالة النظام",
-systemStateDescription:"مراقبة البنية التحتية وصحة المنصة",
-loadingSystemData:"جاري تحميل بيانات النظام...",
-totalServices:"إجمالي الخدمات",
-systemHealth:"صحة النظام",
-cpuUsage:"استخدام المعالج",
-memoryUsage:"استخدام الذاكرة",
-systemResources:"موارد النظام",
-cpu:"المعالج",
-memory:"الذاكرة",
-storage:"التخزين",
-servicesStatus:"حالة الخدمات",
-service:"الخدمة",
-status:"الحالة",
-uptime:"مدة التشغيل",
-load:"الحمل",
-running:"يعمل",
-warning:"تحذير",
-logs: "السجلات",
-logsDescription: "مراجعة أنشطة وأحداث النظام",
-refresh: "تحديث",
-searchLogs: "ابحث في السجلات...",
-all: "الكل",
-info: "معلومات",
-error: "خطأ",
-level: "المستوى",
-action: "الإجراء",
-user: "المستخدم",
-message: "الرسالة",
-date: "التاريخ",
-noLogs: "لا توجد سجلات",
-  blueprints: "المخططات",
+    systemState: "حالة النظام",
+    systemStateDescription: "مراقبة البنية التحتية وصحة المنصة",
+    loadingSystemData: "جاري تحميل بيانات النظام...",
+    totalServices: "إجمالي الخدمات",
+    systemHealth: "صحة النظام",
+    cpuUsage: "استخدام المعالج",
+    memoryUsage: "استخدام الذاكرة",
+    systemResources: "موارد النظام",
+    cpu: "المعالج",
+    memory: "الذاكرة",
+    storage: "التخزين",
+    servicesStatus: "حالة الخدمات",
+    service: "الخدمة",
+    status: "الحالة",
+    uptime: "مدة التشغيل",
+    load: "الحمل",
+    running: "يعمل",
+    warning: "تحذير",
+    logs: "السجلات",
+    logsDescription: "مراجعة أنشطة وأحداث النظام",
+    refresh: "تحديث",
+    searchLogs: "ابحث في السجلات...",
+    all: "الكل",
+    info: "معلومات",
+    error: "خطأ",
+    level: "المستوى",
+    action: "الإجراء",
+    user: "المستخدم",
+    message: "الرسالة",
+    date: "التاريخ",
+    noLogs: "لا توجد سجلات",
+    blueprints: "المخططات",
 
-blueprintsDescription:
-"إدارة ومراقبة مخططات البرمجيات التي تم إنشاؤها",
+    blueprintsDescription: "إدارة ومراقبة مخططات البرمجيات التي تم إنشاؤها",
 
-newBlueprint: "مخطط جديد",
+    newBlueprint: "مخطط جديد",
 
-totalBlueprints: "إجمالي المخططات",
+    totalBlueprints: "إجمالي المخططات",
 
-searchBlueprints: "البحث عن المخططات...",
+    searchBlueprints: "البحث عن المخططات...",
 
+    active: "نشط",
 
+    building: "قيد الإنشاء",
 
-active: "نشط",
+    completed: "مكتمل",
 
-building: "قيد الإنشاء",
+    failed: "فشل",
 
-completed: "مكتمل",
+    blueprint: "المخطط",
 
-failed: "فشل",
+    owner: "المالك",
 
+    updated: "آخر تحديث",
 
-blueprint: "المخطط",
+    // General
+    you: "أنت",
+    credits: "رصيد",
+    plans: "الخطط",
+    redemption: "الاسترداد",
+    // Navigation
+    navProduct: "المنتج",
+    navCouncil: "المجلس",
+    navHow: "كيف يعمل",
+    navOutput: "الناتج",
+    navPricing: "الأسعار",
 
-owner: "المالك",
+    product: "المنتج",
+    council: "المجلس",
+    how: "كيف يعمل",
+    output: "الناتج",
+    pricing: "الأسعار",
 
+    languageToggle: "English",
 
-updated: "آخر تحديث",
+    // Authentication
+    loginButton: "تسجيل الدخول",
+    signupButton: "ابدأ مخططًا",
 
+    loginWelcome: "مرحبا",
+    loginSubtitle: "سجّل الدخول إلى حسابك",
+    emailLabel: "البريد الإلكتروني",
+    emailPlaceholder: "أدخل بريدك الإلكتروني",
+    passwordLabel: "كلمة المرور",
+    passwordPlaceholder: "أدخل كلمة المرور",
+    rememberMe: "تذكرني",
+    forgotPassword: "نسيت كلمة المرور؟",
+    loginSubmit: "تسجيل الدخول",
 
+    accountPrompt: "ليس لديك حساب؟",
+    registerLink: "إنشاء حساب",
+    signIn: "تسجيل الدخول",
 
+    enterEmail: "يرجى إدخال بريدك الإلكتروني.",
+    enterPassword: "يرجى إدخال كلمة المرور.",
+    passwordMin6: "يجب أن تكون كلمة المرور 6 أحرف على الأقل.",
+    invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+    loginSuccess: "✅ تم تسجيل الدخول بنجاح!",
+    loading: "جارٍ التحميل...",
 
-  // General
-  you: "أنت",
-  credits: "رصيد",
- plans: "الخطط",
-  redemption: "الاسترداد",
-  // Navigation
-  navProduct: "المنتج",
-  navCouncil: "المجلس",
-  navHow: "كيف يعمل",
-  navOutput: "الناتج",
-  navPricing: "الأسعار",
+    createYourAccount: "أنشئ حسابك",
+    startTurningIdeas: "ابدأ بتحويل الأفكار إلى مخططات",
+    fullNameLabel: "الاسم الكامل",
+    enterYourName: "أدخل اسمك",
+    emailAddressLabel: "البريد الإلكتروني",
+    userNamePlaceholder: "user-name@example.com",
+    passwordPlaceholderRegister: "••••••••",
+    confirmPasswordLabel: "تأكيد كلمة المرور",
+    agreeTerms: "أوافق على شروط الخدمة وسياسة الخصوصية",
+    createAccountButton: "إنشاء حساب",
+    alreadyHaveAccount: "هل لديك حساب بالفعل؟",
 
-  product: "المنتج",
-  council: "المجلس",
-  how: "كيف يعمل",
-  output: "الناتج",
-  pricing: "الأسعار",
+    termsAgreement: "أوافق على شروط الخدمة وسياسة الخصوصية",
 
-  languageToggle: "English",
+    registrationSuccessful: "تم التسجيل بنجاح!",
+    registrationFailed: "فشل التسجيل.",
 
-  // Authentication
-  loginButton: "تسجيل الدخول",
-  signupButton: "ابدأ مخططًا",
+    passwordMustContain8: "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+    passwordValid: "✔ طول كلمة المرور صحيح",
+    passwordTooShort: "✖ يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+    passwordsDoNotMatch: "كلمتا المرور غير متطابقتين",
 
-  loginWelcome: "مرحبا",
-  loginSubtitle: "سجّل الدخول إلى حسابك",
-  emailLabel: "البريد الإلكتروني",
-  emailPlaceholder: "أدخل بريدك الإلكتروني",
-  passwordLabel: "كلمة المرور",
-  passwordPlaceholder: "أدخل كلمة المرور",
-  rememberMe: "تذكرني",
-  forgotPassword: "نسيت كلمة المرور؟",
-  loginSubmit: "تسجيل الدخول",
+    forgotPasswordTitle: "نسيت كلمة المرور؟",
+    forgotPasswordSubtitle:
+      "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
+    sendResetLink: "إرسال رابط إعادة التعيين",
 
-  accountPrompt: "ليس لديك حساب؟",
-  registerLink: "إنشاء حساب",
-  signIn: "تسجيل الدخول",
+    enterValidEmail: "يرجى إدخال بريد إلكتروني صالح",
+    emailNotFound: "البريد الإلكتروني غير موجود",
+    serverErrorTryLater: "خطأ في الخادم. حاول مرة أخرى لاحقًا",
 
-  enterEmail: "يرجى إدخال بريدك الإلكتروني.",
-  enterPassword: "يرجى إدخال كلمة المرور.",
-  passwordMin6: "يجب أن تكون كلمة المرور 6 أحرف على الأقل.",
-  invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
-  loginSuccess: "✅ تم تسجيل الدخول بنجاح!",
-  loading: "جارٍ التحميل...",
+    sendingVerificationEmail: "جارٍ إرسال بريد التحقق...",
+    verifyEmailTitle: "تحقق من بريدك الإلكتروني",
+    verifyEmailSubtitle:
+      "أرسلنا رمز تحقق إلى بريدك الإلكتروني. يرجى إدخال الرمز أدناه.",
+    enter6DigitCode: "يرجى إدخال رمز مكون من 6 أرقام",
+    emailVerifiedSuccessfully: "تم التحقق من البريد الإلكتروني بنجاح",
 
-  createYourAccount: "أنشئ حسابك",
-  startTurningIdeas: "ابدأ بتحويل الأفكار إلى مخططات",
-  fullNameLabel: "الاسم الكامل",
-  enterYourName: "أدخل اسمك",
-  emailAddressLabel: "البريد الإلكتروني",
-  userNamePlaceholder: "user-name@example.com",
-  passwordPlaceholderRegister: "••••••••",
-  confirmPasswordLabel: "تأكيد كلمة المرور",
-  agreeTerms: "أوافق على شروط الخدمة وسياسة الخصوصية",
-  createAccountButton: "إنشاء حساب",
-  alreadyHaveAccount: "هل لديك حساب بالفعل؟",
+    verifyButton: "تحقق",
+    didntReceiveCode: "لم يصلك الرمز؟",
+    resendCode: "إعادة إرسال الرمز",
+    resendCodeTimer: "إعادة إرسال الرمز ({timer})",
+    newCodeSent: "تم إرسال رمز جديد",
 
-  termsAgreement: "أوافق على شروط الخدمة وسياسة الخصوصية",
+    resetPasswordTitle: "إعادة تعيين كلمة المرور",
+    resetPasswordSubtitle: "أنشئ كلمة مرور جديدة",
+    newPasswordLabel: "كلمة مرور جديدة",
+    enterNewPassword: "أدخل كلمة مرور جديدة",
+    confirmPasswordPlaceholder: "تأكيد كلمة المرور",
 
-  registrationSuccessful: "تم التسجيل بنجاح!",
-  registrationFailed: "فشل التسجيل.",
+    weakPassword: "كلمة مرور ضعيفة",
+    mediumPassword: "كلمة مرور متوسطة",
+    strongPassword: "كلمة مرور قوية",
 
-  passwordMustContain8: "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
-  passwordValid: "✔ طول كلمة المرور صحيح",
-  passwordTooShort: "✖ يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
-  passwordsDoNotMatch: "كلمتا المرور غير متطابقتين",
+    resetPasswordButton: "إعادة تعيين كلمة المرور",
+    resetPasswordFailed: "فشل إعادة تعيين كلمة المرور",
 
-  forgotPasswordTitle: "نسيت كلمة المرور؟",
-  forgotPasswordSubtitle:
-    "أدخل بريدك الإلكتروني وسنرسل لك رابطًا لإعادة تعيين كلمة المرور.",
-  sendResetLink: "إرسال رابط إعادة التعيين",
+    goToLogin: "العودة إلى تسجيل الدخول",
+    rememberPassword: "تذكرت كلمة المرور؟",
+    backToLogin: "العودة إلى تسجيل الدخول",
 
-  enterValidEmail: "يرجى إدخال بريد إلكتروني صالح",
-  emailNotFound: "البريد الإلكتروني غير موجود",
-  serverErrorTryLater: "خطأ في الخادم. حاول مرة أخرى لاحقًا",
+    // Hero Section
+    heroBadge: "شركة هندسة برمجيات افتراضية — ليست دردشة",
 
-  sendingVerificationEmail: "جارٍ إرسال بريد التحقق...",
-  verifyEmailTitle: "تحقق من بريدك الإلكتروني",
-  verifyEmailSubtitle:
-    "أرسلنا رمز تحقق إلى بريدك الإلكتروني. يرجى إدخال الرمز أدناه.",
-  enter6DigitCode: "يرجى إدخال رمز مكون من 6 أرقام",
-  emailVerifiedSuccessfully: "تم التحقق من البريد الإلكتروني بنجاح",
+    heroTitle1: "من الفكرة الأولية إلى",
+    heroTitle2: "مخطط برمجي كامل",
 
-  verifyButton: "تحقق",
-  didntReceiveCode: "لم يصلك الرمز؟",
-  resendCode: "إعادة إرسال الرمز",
-  resendCodeTimer: "إعادة إرسال الرمز ({timer})",
-  newCodeSent: "تم إرسال رمز جديد",
+    heroSubtitle:
+      "وصف فكرتك بجملة واحدة. مجلس مكون من أحد عشر وكيل ذكاء اصطناعي يحولها إلى متطلبات، هندسة، قاعدة بيانات، واجهة برمجة تطبيقات، واجهة مستخدم، أمان، اختبارات وخطة نشر — قابلة للتصدير كملف PDF أو Markdown.",
 
-  resetPasswordTitle: "إعادة تعيين كلمة المرور",
-  resetPasswordSubtitle: "أنشئ كلمة مرور جديدة",
-  newPasswordLabel: "كلمة مرور جديدة",
-  enterNewPassword: "أدخل كلمة مرور جديدة",
-  confirmPasswordPlaceholder: "تأكيد كلمة المرور",
+    heroPrimary: "ابدأ مخططًا →",
+    heroSecondary: "شاهد كيف يعمل المجلس",
 
-  weakPassword: "كلمة مرور ضعيفة",
-  mediumPassword: "كلمة مرور متوسطة",
-  strongPassword: "كلمة مرور قوية",
+    // Council
+    councilTitle: "غرفة مجلس الهندسة",
+    councilProgress: "7 / 11 وكلاء مكتملون",
 
-  resetPasswordButton: "إعادة تعيين كلمة المرور",
-  resetPasswordFailed: "فشل إعادة تعيين كلمة المرور",
+    agentAnalysingScope: "يحلل النطاق",
+    agentDraftingFR: "صياغة FR-001...",
+    agentLayeredArchitecture: "هندسة طبقية",
 
-  goToLogin: "العودة إلى تسجيل الدخول",
-  rememberPassword: "تذكرت كلمة المرور؟",
-  backToLogin: "العودة إلى تسجيل الدخول",
+    teamTitle: "تعرف على مجلس هندسة الذكاء الاصطناعي",
 
-  // Hero Section
-  heroBadge:
-    "شركة هندسة برمجيات افتراضية — ليست دردشة",
+    teamSubtitle:
+      "أحد عشر متخصصًا مسمىًّا على أسماء رواد الحوسبة. كل واحد يمتلك تخصصه، يعمل بالتتابع، ويُراجع الآخرين.",
 
-  heroTitle1: "من الفكرة الأولية إلى",
-  heroTitle2: "مخطط برمجي كامل",
-
-  heroSubtitle:
-    "وصف فكرتك بجملة واحدة. مجلس مكون من أحد عشر وكيل ذكاء اصطناعي يحولها إلى متطلبات، هندسة، قاعدة بيانات، واجهة برمجة تطبيقات، واجهة مستخدم، أمان، اختبارات وخطة نشر — قابلة للتصدير كملف PDF أو Markdown.",
-
-  heroPrimary: "ابدأ مخططًا →",
-  heroSecondary: "شاهد كيف يعمل المجلس",
-
-  // Council
-  councilTitle: "غرفة مجلس الهندسة",
-  councilProgress: "7 / 11 وكلاء مكتملون",
-
-  agentAnalysingScope: "يحلل النطاق",
-  agentDraftingFR: "صياغة FR-001...",
-  agentLayeredArchitecture: "هندسة طبقية",
-
-  teamTitle: "تعرف على مجلس هندسة الذكاء الاصطناعي",
-
-  teamSubtitle:
-    "أحد عشر متخصصًا مسمىًّا على أسماء رواد الحوسبة. كل واحد يمتلك تخصصه، يعمل بالتتابع، ويُراجع الآخرين.",
-
-  roleProjectDirector: "مدير المشروع",
-  roleBusinessAnalyst: "محلل أعمال",
-  roleRequirementsAnalyst: "محلل متطلبات",
-  roleSystemArchitect: "مهندس النظام",
-  roleDatabaseEngineer: "مهندس قاعدة البيانات",
-  roleApiEngineer: "مهندس واجهة برمجة التطبيقات",
-  roleUiUxDesigner: "مصمم واجهة المستخدم",
-  roleSecurityEngineer: "مهندس الأمان",
-  roleQaEngineer: "مهندس ضمان الجودة",
-  roleDevOpsEngineer: "مهندس DevOps",
-  roleDocumentationAgent: "وكيل التوثيق",
+    roleProjectDirector: "مدير المشروع",
+    roleBusinessAnalyst: "محلل أعمال",
+    roleRequirementsAnalyst: "محلل متطلبات",
+    roleSystemArchitect: "مهندس النظام",
+    roleDatabaseEngineer: "مهندس قاعدة البيانات",
+    roleApiEngineer: "مهندس واجهة برمجة التطبيقات",
+    roleUiUxDesigner: "مصمم واجهة المستخدم",
+    roleSecurityEngineer: "مهندس الأمان",
+    roleQaEngineer: "مهندس ضمان الجودة",
+    roleDevOpsEngineer: "مهندس DevOps",
+    roleDocumentationAgent: "وكيل التوثيق",
     // Council Descriptions
-  descProjectDirector:
-    "يحلل الفكرة، يخطط خط الأنابيب، يحل النزاعات ويوافق.",
+    descProjectDirector: "يحلل الفكرة، يخطط خط الأنابيب، يحل النزاعات ويوافق.",
 
-  descBusinessAnalyst:
-    "أصحاب المصلحة، عرض القيمة، وقواعد الأعمال.",
+    descBusinessAnalyst: "أصحاب المصلحة، عرض القيمة، وقواعد الأعمال.",
 
-  descRequirementsAnalyst:
-    "المتطلبات الوظيفية وغير الوظيفية وحالات الاستخدام.",
+    descRequirementsAnalyst:
+      "المتطلبات الوظيفية وغير الوظيفية وحالات الاستخدام.",
 
-  descSystemArchitect:
-    "هندسة طبقية وحدود وحدات واضحة.",
+    descSystemArchitect: "هندسة طبقية وحدود وحدات واضحة.",
 
-  descDatabaseEngineer:
-    "الكيانات، ERD ونموذج SQL مضبوط.",
+    descDatabaseEngineer: "الكيانات، ERD ونموذج SQL مضبوط.",
 
-  descApiEngineer:
-    "نقاط نهاية REST، المصادقة ومعاني الأخطاء.",
+    descApiEngineer: "نقاط نهاية REST، المصادقة ومعاني الأخطاء.",
 
-  descUiUxDesigner:
-    "تدفقات المستخدم، الرسومات السلكية ونظام التصميم.",
+    descUiUxDesigner: "تدفقات المستخدم، الرسومات السلكية ونظام التصميم.",
 
-  descSecurityEngineer:
-    "نموذج التهديد وضوابط الأمان الملموسة.",
+    descSecurityEngineer: "نموذج التهديد وضوابط الأمان الملموسة.",
 
-  descQaEngineer:
-    "خطة اختبار مع حالات اختبار ملموسة وقابلة للتتبع.",
+    descQaEngineer: "خطة اختبار مع حالات اختبار ملموسة وقابلة للتتبع.",
 
-  descDevOpsEngineer:
-    "خط أنابيب CI/CD واستراتيجية النشر.",
+    descDevOpsEngineer: "خط أنابيب CI/CD واستراتيجية النشر.",
 
-  descDocumentationAgent:
-    "يجمع كل شيء في المخطط النهائي.",
+    descDocumentationAgent: "يجمع كل شيء في المخطط النهائي.",
 
+    // Process Steps
+    step1Title: "وصف الفكرة",
+    step1Text:
+      "اكتب فكرتك بلغة بسيطة، اختر نوع المشروع، مستوى التعقيد، ولغة المخرجات.",
 
-  // Process Steps
-  step1Title: "وصف الفكرة",
-  step1Text:
-    "اكتب فكرتك بلغة بسيطة، اختر نوع المشروع، مستوى التعقيد، ولغة المخرجات.",
+    step2Title: "المجلس يصنعها",
+    step2Text:
+      "أحد عشر وكيلًا يديرون خط أنابيب منظمًا في الوقت الحقيقي، يناقشون ويحلّون التعارضات.",
 
-  step2Title: "المجلس يصنعها",
-  step2Text:
-    "أحد عشر وكيلًا يديرون خط أنابيب منظمًا في الوقت الحقيقي، يناقشون ويحلّون التعارضات.",
+    step3Title: "تحميل المخطط",
+    step3Text: "اقرأ، حسّن، وصدّر وثيقة هندسية كاملة كملف PDF أو Markdown.",
 
-  step3Title: "تحميل المخطط",
-  step3Text:
-    "اقرأ، حسّن، وصدّر وثيقة هندسية كاملة كملف PDF أو Markdown.",
+    // Blueprint Output
+    outputHeading: "فكرة واحدة داخلة. مخطط كامل خارج.",
 
+    outputSubtitle:
+      "كل مخطط هو وثيقة من درجة SRS/SDD تغطي كامل عملية التحليل والتصميم.",
 
-  // Blueprint Output
-  outputHeading:
-    "فكرة واحدة داخلة. مخطط كامل خارج.",
+    requirementsTitle: "المتطلبات",
+    requirementsText:
+      "متطلبات وظيفية وغير وظيفية مرقمة مع معايير قبول وحالات استخدام.",
 
-  outputSubtitle:
-    "كل مخطط هو وثيقة من درجة SRS/SDD تغطي كامل عملية التحليل والتصميم.",
+    architectureTitle: "الهندسة",
+    architectureText: "هندسة نظام طبقية مع حدود وحدات واضحة.",
 
+    databaseTitle: "قاعدة البيانات",
+    databaseText: "الكيانات، مخطط ERD ونموذج SQL مضبوط مع الفهارس.",
 
-  requirementsTitle: "المتطلبات",
-  requirementsText:
-    "متطلبات وظيفية وغير وظيفية مرقمة مع معايير قبول وحالات استخدام.",
+    apiTitle: "واجهة برمجة التطبيقات",
+    apiText: "نقاط نهاية REST مع المصادقة، التجزئة، ومعاني الأخطاء.",
 
-  architectureTitle: "الهندسة",
-  architectureText:
-    "هندسة نظام طبقية مع حدود وحدات واضحة.",
+    uxTitle: "واجهة المستخدم",
+    uxText: "تدفقات المستخدم، الرسومات السلكية ونظام تصميم كامل.",
 
-  databaseTitle: "قاعدة البيانات",
-  databaseText:
-    "الكيانات، مخطط ERD ونموذج SQL مضبوط مع الفهارس.",
+    securityTitle: "الأمان",
+    securityText: "نموذج التهديد، الضوابط، وتحليل الأمان.",
 
-  apiTitle: "واجهة برمجة التطبيقات",
-  apiText:
-    "نقاط نهاية REST مع المصادقة، التجزئة، ومعاني الأخطاء.",
+    testingTitle: "الاختبار",
+    testingText: "خطة اختبار مع حالات اختبار ملموسة وقابلة للتتبع.",
 
-  uxTitle: "واجهة المستخدم",
-  uxText:
-    "تدفقات المستخدم، الرسومات السلكية ونظام تصميم كامل.",
+    devopsTitle: "DevOps",
+    devopsText: "خط أنابيب CI/CD واستراتيجية نشر.",
 
-  securityTitle: "الأمان",
-  securityText:
-    "نموذج التهديد، الضوابط، وتحليل الأمان.",
+    // CTA + Footer
+    ctaTitle: "حوّل فكرتك إلى نظام هندسي",
 
-  testingTitle: "الاختبار",
-  testingText:
-    "خطة اختبار مع حالات اختبار ملموسة وقابلة للتتبع.",
+    ctaText:
+      "مجاني أثناء فترة البيتا · مخرجات بالإنجليزية والعربية · تصدير كـ PDF أو Markdown",
 
-  devopsTitle: "DevOps",
-  devopsText:
-    "خط أنابيب CI/CD واستراتيجية نشر.",
+    ctaButton: "ابدأ مخططًا →",
 
+    footerBrandName: "Luma Architect",
 
-  // CTA + Footer
-  ctaTitle:
-    "حوّل فكرتك إلى نظام هندسي",
+    footerBrandText: "من الفكرة الأولية إلى مخطط برمجي كامل.",
 
-  ctaText:
-    "مجاني أثناء فترة البيتا · مخرجات بالإنجليزية والعربية · تصدير كـ PDF أو Markdown",
+    footerCopyright: "© 2026 Luma Architect · مشروع التخرج",
 
-  ctaButton:
-    "ابدأ مخططًا →",
+    sampleOutputNav: "ناتج العينة",
 
-  footerBrandName:
-    "Luma Architect",
+    // Workspace
+    workspaceTitle: "مساحة العمل",
 
-  footerBrandText:
-    "من الفكرة الأولية إلى مخطط برمجي كامل.",
+    workspaceSubtitle: "6 مخططات · شركة هندستك جاهزة",
 
-  footerCopyright:
-    "© 2026 Luma Architect · مشروع التخرج",
+    workspaceSearchPlaceholder: "ابحث في المخططات...",
 
-  sampleOutputNav:
-    "ناتج العينة",
+    workspaceNewBlueprint: "مخطط جديد",
 
+    workspaceSortAZ: "A → Z",
 
-  // Workspace
-  workspaceTitle:
-    "مساحة العمل",
+    workspaceSortZA: "Z → A",
 
-  workspaceSubtitle:
-    "6 مخططات · شركة هندستك جاهزة",
+    workspaceFilterAll: "الكل",
 
-  workspaceSearchPlaceholder:
-    "ابحث في المخططات...",
+    workspaceFilterDraft: "مسودة",
 
-  workspaceNewBlueprint:
-    "مخطط جديد",
+    workspaceFilterGenerating: "جارٍ الإنشاء",
 
-  workspaceSortAZ:
-    "A → Z",
+    workspaceFilterInReview: "قيد المراجعة",
 
-  workspaceSortZA:
-    "Z → A",
+    workspaceFilterCompleted: "مكتمل",
 
-  workspaceFilterAll:
-    "الكل",
+    workspaceFilterFailed: "فشل",
 
-  workspaceFilterDraft:
-    "مسودة",
+    workspaceShare: "مشاركة",
 
-  workspaceFilterGenerating:
-    "جارٍ الإنشاء",
+    workspaceUpgrade: "ترقية",
 
-  workspaceFilterInReview:
-    "قيد المراجعة",
+    workspacePublish: "نشر",
 
-  workspaceFilterCompleted:
-    "مكتمل",
+    workspaceOpen: "افتح →",
 
-  workspaceFilterFailed:
-    "فشل",
+    workspaceNotification1: "تم إنشاء المخطط بنجاح",
 
-  workspaceShare:
-    "مشاركة",
+    workspaceNotification2: "تم تحديث Campus Food Delivery",
 
-  workspaceUpgrade:
-    "ترقية",
+    workspaceNotification3: "اقتراح AI جديد متاح",
 
-  workspacePublish:
-    "نشر",
+    workspaceHi: "مرحبًا، أنا لوما! 👋",
 
-  workspaceOpen:
-    "افتح →",
+    workspaceHeroText:
+      "أستطيع مساعدتك في إنشاء مخططات برمجية، تصميم أنظمة قابلة للتوسع، تحسين سير العمل وإنشاء بنية مشروع كاملة خلال دقائق.",
 
-  workspaceNotification1:
-    "تم إنشاء المخطط بنجاح",
+    // Blueprint Cards
+    clinicAppointmentSystem: "نظام مواعيد العيادة",
 
-  workspaceNotification2:
-    "تم تحديث Campus Food Delivery",
+    campusFoodDelivery: "توصيل الطعام الجامعي",
 
-  workspaceNotification3:
-    "اقتراح AI جديد متاح",
+    freelancerInvoicingTool: "أداة فواتير المستقلين",
 
-  workspaceHi:
-    "مرحبًا، أنا لوما! 👋",
+    fitnessHabitTracker: "متتبع العادات الرياضية",
 
-  workspaceHeroText:
-    "أستطيع مساعدتك في إنشاء مخططات برمجية، تصميم أنظمة قابلة للتوسع، تحسين سير العمل وإنشاء بنية مشروع كاملة خلال دقائق.",
+    smartParkingPlatform: "منصة المواقف الذكية",
 
+    onlineBookstore: "متجر الكتب الإلكتروني",
 
-  // Blueprint Cards
-  clinicAppointmentSystem:
-    "نظام مواعيد العيادة",
+    clinicFooter: "7 / 11 وكلاء",
 
-  campusFoodDelivery:
-    "توصيل الطعام الجامعي",
+    campusFooter: "11 قسم · تم التحديث منذ ساعتين",
 
-  freelancerInvoicingTool:
-    "أداة فواتير المستقلين",
+    freelancerFooter: "3 مراجعات مفتوحة · تم التحديث منذ 6 ساعات",
 
-  fitnessHabitTracker:
-    "متتبع العادات الرياضية",
+    fitnessFooter: "مسودة · تم التعديل أمس",
 
-  smartParkingPlatform:
-    "منصة المواقف الذكية",
+    parkingFooter: "فشل الجلب · إعادة المحاولة متاحة",
 
-  onlineBookstore:
-    "متجر الكتب الإلكتروني",
+    bookstoreFooter: "10 أقسام · تم التحديث منذ 5 أيام",
+    // Status & Types
+    statusGenerating: "جارٍ الإنشاء",
+    statusCompleted: "مكتمل",
+    statusInReview: "قيد المراجعة",
+    statusDraft: "مسودة",
+    statusFailed: "فشل",
 
-  clinicFooter:
-    "7 / 11 وكلاء",
+    typeWebApp: "تطبيق ويب",
+    typeMobileApp: "تطبيق جوال",
+    typeApiService: "خدمة API",
+    typePlatform: "منصة",
 
-  campusFooter:
-    "11 قسم · تم التحديث منذ ساعتين",
+    levelComplex: "معقد",
+    levelMedium: "متوسط",
+    levelSimple: "بسيط",
 
-  freelancerFooter:
-    "3 مراجعات مفتوحة · تم التحديث منذ 6 ساعات",
+    // Sidebar / Home
+    home: "الرئيسية",
+    homeButton: "الرئيسية",
 
-  fitnessFooter:
-    "مسودة · تم التعديل أمس",
+    resources: "الموارد",
+    myProjects: "مشاريعي",
 
-  parkingFooter:
-    "فشل الجلب · إعادة المحاولة متاحة",
+    newChat: "محادثة جديدة",
 
-  bookstoreFooter:
-    "10 أقسام · تم التحديث منذ 5 أيام",
-      // Status & Types
-  statusGenerating: "جارٍ الإنشاء",
-  statusCompleted: "مكتمل",
-  statusInReview: "قيد المراجعة",
-  statusDraft: "مسودة",
-  statusFailed: "فشل",
+    history: "السجل",
 
-  typeWebApp: "تطبيق ويب",
-  typeMobileApp: "تطبيق جوال",
-  typeApiService: "خدمة API",
-  typePlatform: "منصة",
+    askPlaceholder: "اطلب من الفريق تحويل فكرتك إلى مشروع",
 
-  levelComplex: "معقد",
-  levelMedium: "متوسط",
-  levelSimple: "بسيط",
+    homeTitle: "منتجك القادم يبدأ من هنا.",
 
+    homePromptPlaceholder: "اطلب من الفريق تحويل فكرتك إلى واقع",
 
-  // Sidebar / Home
-  home: "الرئيسية",
-  homeButton: "الرئيسية",
+    homeUploadFile: "رفع ملف",
 
-  resources: "الموارد",
-  myProjects: "مشاريعي",
+    homeAddImage: "إضافة صورة",
 
-  newChat: "محادثة جديدة",
+    homeConnectTools: "ربط الأدوات",
 
-  history: "السجل",
+    homeBuild: "إنشاء",
 
-  askPlaceholder:
-    "اطلب من الفريق تحويل فكرتك إلى مشروع",
+    build: "بناء",
 
-  homeTitle:
-    "منتجك القادم يبدأ من هنا.",
+    // Plans & Credits
+    freePlan: "الخطة المجانية",
 
-  homePromptPlaceholder:
-    "اطلب من الفريق تحويل فكرتك إلى واقع",
+    homeFreePlan: "الخطة المجانية",
 
-  homeUploadFile:
-    "رفع ملف",
+    creditsRemaining: "الرصيد المتبقي",
 
-  homeAddImage:
-    "إضافة صورة",
+    left: "متبقي",
 
-  homeConnectTools:
-    "ربط الأدوات",
+    upgrade: "ترقية",
 
-  homeBuild:
-    "إنشاء",
+    earnCredits: "اكسب حتى 25 رصيدًا",
 
-  build:
-    "بناء",
+    freeCredits: "احصل على رصيد مجاني",
 
+    getCredits: "احصل على 10 أرصدة لكل دعوة",
 
-  // Plans & Credits
-  freePlan:
-    "الخطة المجانية",
+    // Agents
+    homeTeamAriaLabel: "فريق Atoms",
 
-  homeFreePlan:
-    "الخطة المجانية",
+    homeAgentAlex: "Alex هو مدير منتج",
 
-  creditsRemaining:
-    "الرصيد المتبقي",
+    homeAgentEmma: "Emma هي مصممة واجهات مستخدم",
 
-  left:
-    "متبقي",
+    homeAgentNoah: "Noah هو مطور Backend",
 
-  upgrade:
-    "ترقية",
+    homeAgentLuna: "Luna هي مهندسة ضمان جودة",
 
-  earnCredits:
-    "اكسب حتى 25 رصيدًا",
+    homeAgentDavid: "David هو محلل بيانات",
 
-  freeCredits:
-    "احصل على رصيد مجاني",
+    homeAgentMia: "Mia هي مهندسة ذكاء اصطناعي",
 
-  getCredits:
-    "احصل على 10 أرصدة لكل دعوة",
+    homeAgentLeo: "Leo هو خبير تسويق",
 
+    alexAgent: "أليكس مدير منتجات",
 
-  // Agents
-  homeTeamAriaLabel:
-    "فريق Atoms",
+    emmaAgent: "إيما مصممة واجهات",
 
-  homeAgentAlex:
-    "Alex هو مدير منتج",
+    noahAgent: "نوح مطور Backend",
 
-  homeAgentEmma:
-    "Emma هي مصممة واجهات مستخدم",
+    lunaAgent: "لونا مهندسة اختبار",
 
-  homeAgentNoah:
-    "Noah هو مطور Backend",
+    davidAgent: "ديفيد محلل بيانات",
 
-  homeAgentLuna:
-    "Luna هي مهندسة ضمان جودة",
+    miaAgent: "ميا مهندسة ذكاء اصطناعي",
 
-  homeAgentDavid:
-    "David هو محلل بيانات",
+    leoAgent: "ليو خبير تسويق",
 
-  homeAgentMia:
-    "Mia هي مهندسة ذكاء اصطناعي",
+    // Files / Viewer
+    filesTitle: "الملفات",
 
-  homeAgentLeo:
-    "Leo هو خبير تسويق",
+    siteAnalyticsTitle: "تحليلات الموقع",
 
+    siteAnalyticsText: "ابدأ ببناء موقعك لتمكين تتبع التحليلات.",
 
-  alexAgent:
-    "أليكس مدير منتجات",
+    emptyStateMessage: "لا يوجد محتوى بعد",
 
-  emmaAgent:
-    "إيما مصممة واجهات",
+    emptyStateDetail: "سيولد وكيل الذكاء الاصطناعي الخاص بك هذا المحتوى هنا",
 
-  noahAgent:
-    "نوح مطور Backend",
+    tabAppViewer: "عارض التطبيق",
 
-  lunaAgent:
-    "لونا مهندسة اختبار",
+    tabEdit: "تعديل",
 
-  davidAgent:
-    "ديفيد محلل بيانات",
+    tabFiles: "الملفات",
 
-  miaAgent:
-    "ميا مهندسة ذكاء اصطناعي",
+    tabAnalysis: "التحليل",
 
-  leoAgent:
-    "ليو خبير تسويق",
+    tabTerminal: "المحطة الطرفية",
 
+    tabPlanner: "المخطط",
 
-  // Files / Viewer
-  filesTitle:
-    "الملفات",
+    tabBrowser: "المتصفح",
 
-  siteAnalyticsTitle:
-    "تحليلات الموقع",
+    tabNotebook: "دفتر الملاحظات",
 
-  siteAnalyticsText:
-    "ابدأ ببناء موقعك لتمكين تتبع التحليلات.",
+    more: "المزيد",
 
-  emptyStateMessage:
-    "لا يوجد محتوى بعد",
+    console: "وحدة التحكم",
 
-  emptyStateDetail:
-    "سيولد وكيل الذكاء الاصطناعي الخاص بك هذا المحتوى هنا",
+    terminalNotActivated: "المحطة الطرفية غير مفعلة بعد.",
 
-  tabAppViewer:
-    "عارض التطبيق",
+    plannerNotActivated: "المخطط غير مفعل بعد.",
 
-  tabEdit:
-    "تعديل",
+    browserNotActivated: "المتصفح غير مفعل بعد.",
 
-  tabFiles:
-    "الملفات",
+    notebookNotActivated: "دفتر الملاحظات غير مفعل بعد.",
 
-  tabAnalysis:
-    "التحليل",
+    // Settings
+    settings: "الإعدادات",
 
-  tabTerminal:
-    "المحطة الطرفية",
+    profile: "الملف الشخصي",
 
-  tabPlanner:
-    "المخطط",
+    editProfile: "تعديل الملف الشخصي",
 
-  tabBrowser:
-    "المتصفح",
+    appearance: "المظهر",
 
-  tabNotebook:
-    "دفتر الملاحظات",
+    helpCenter: "مركز المساعدة",
 
-  more:
-    "المزيد",
+    homepage: "الصفحة الرئيسية",
 
-  console:
-    "وحدة التحكم",
+    signOut: "تسجيل الخروج",
 
+    domains: "النطاقات",
 
-  terminalNotActivated:
-    "المحطة الطرفية غير مفعلة بعد.",
+    people: "الأشخاص",
 
-  plannerNotActivated:
-    "المخطط غير مفعل بعد.",
+    general: "عام",
 
-  browserNotActivated:
-    "المتصفح غير مفعل بعد.",
+    connectors: "الاتصالات",
 
-  notebookNotActivated:
-    "دفتر الملاحظات غير مفعل بعد.",
+    plansCredits: "الخطط والرصيد",
 
+    cloudAI: "السحابة والذكاء الاصطناعي",
 
-  // Settings
-  settings:
-    "الإعدادات",
+    account: "الحساب",
 
-  profile:
-    "الملف الشخصي",
+    preference: "التفضيلات",
 
-  editProfile:
-    "تعديل الملف الشخصي",
+    // Account Settings
+    accountSettings: "إعدادات الحساب",
 
-  appearance:
-    "المظهر",
+    manageAccount: "إدارة حالة حسابك وحذف الحساب نهائيًا.",
 
-  helpCenter:
-    "مركز المساعدة",
+    accountStatus: "حالة الحساب",
 
-  homepage:
-    "الصفحة الرئيسية",
+    accountActive: "حسابك نشط حاليًا.",
 
-  signOut:
-    "تسجيل الخروج",
+    accountDeactivated: "حسابك غير مفعل حاليًا.",
 
+    deactivateAccount: "تعطيل الحساب",
 
-  domains:
-    "النطاقات",
+    activateAccount: "تفعيل الحساب",
 
-  people:
-    "الأشخاص",
+    accountActivated: "تم تفعيل حسابك.",
 
-  general:
-    "عام",
+    accountDeactivatedSuccess: "تم تعطيل حسابك.",
 
-  connectors:
-    "الاتصالات",
+    deleteAccount: "حذف الحساب",
 
-  plansCredits:
-    "الخطط والرصيد",
+    deleteAccountConfirm:
+      "هل أنت متأكد من حذف حسابك نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.",
 
-  cloudAI:
-    "السحابة والذكاء الاصطناعي",
+    deleting: "جارٍ الحذف...",
 
-  account:
-    "الحساب",
+    // Workspace Members
+    inviteMembers: "دعوة أعضاء مساحة العمل",
 
-  preference:
-    "التفضيلات",
+    inviteWorkspaceMembers: "دعوة أعضاء مساحة العمل",
 
+    upgradeInvite: "قم بالترقية لدعوة أعضاء والتعاون على جميع المشاريع.",
 
-  // Account Settings
-  accountSettings:
-    "إعدادات الحساب",
+    upgradeToInviteMembers: "قم بالترقية لدعوة أعضاء",
 
-  manageAccount:
-    "إدارة حالة حسابك وحذف الحساب نهائيًا.",
+    addEmails: "إضافة بريد إلكتروني",
 
-  accountStatus:
-    "حالة الحساب",
+    // Cloud & AI
+    connect: "ربط",
 
-  accountActive:
-    "حسابك نشط حاليًا.",
+    connectServiceData: "اربط {{name}} لإدارة خدماتك وبيانات مشروعك.",
 
-  accountDeactivated:
-    "حسابك غير مفعل حاليًا.",
+    cloudBalance: "السحابة $25.00 / $25.00",
 
-  deactivateAccount:
-    "تعطيل الحساب",
+    aiBalance: "الذكاء الاصطناعي $1.00 / $1.00",
 
-  activateAccount:
-    "تفعيل الحساب",
+    cloudWarning: "رصيد Cloud & AI مهم للحفاظ على تشغيل مشاريعك المنشورة.",
 
-  accountActivated:
-    "تم تفعيل حسابك.",
+    defaultModel: "النموذج الافتراضي",
 
-  accountDeactivatedSuccess:
-    "تم تعطيل حسابك.",
+    permissions: "الصلاحيات",
 
+    public: "عام",
 
-  deleteAccount:
-    "حذف الحساب",
+    setDefaultAccess: "تحديد الوصول الافتراضي للمشاريع",
 
-  deleteAccountConfirm:
-    "هل أنت متأكد من حذف حسابك نهائيًا؟ لا يمكن التراجع عن هذا الإجراء.",
+    creditReminder: "تذكير الرصيد",
 
-  deleting:
-    "جارٍ الحذف...",
+    showCredits: "إظهار الرصيد المتبقي",
 
+    // Theme
+    theme: "المظهر",
 
-  // Workspace Members
-  inviteMembers:
-    "دعوة أعضاء مساحة العمل",
+    customizeTheme: "تخصيص شكل Atoms على جهازك.",
 
-  inviteWorkspaceMembers:
-    "دعوة أعضاء مساحة العمل",
+    customizeAppearance: "خصص شكل Atoms على جهازك.",
 
-  upgradeInvite:
-    "قم بالترقية لدعوة أعضاء والتعاون على جميع المشاريع.",
+    system: "النظام",
 
-  upgradeToInviteMembers:
-    "قم بالترقية لدعوة أعضاء",
+    light: "فاتح",
 
-  addEmails:
-    "إضافة بريد إلكتروني",
+    dark: "داكن",
 
+    // Other
+    language: "اللغة",
 
-  // Cloud & AI
-  connect:
-    "ربط",
+    changeLanguage: "تغيير اللغة المستخدمة في واجهة المستخدم.",
 
-  connectServiceData:
-    "اربط {{name}} لإدارة خدماتك وبيانات مشروعك.",
+    avatar: "الصورة الشخصية",
 
-  cloudBalance:
-    "السحابة $25.00 / $25.00",
+    username: "اسم المستخدم",
 
-  aiBalance:
-    "الذكاء الاصطناعي $1.00 / $1.00",
+    email: "البريد الإلكتروني",
 
-  cloudWarning:
-    "رصيد Cloud & AI مهم للحفاظ على تشغيل مشاريعك المنشورة.",
+    publicProjects: "المشاريع العامة",
 
-  defaultModel:
-    "النموذج الافتراضي",
+    saved: "المحفوظات",
 
-  permissions:
-    "الصلاحيات",
+    otherProjects: "مشاريع أخرى",
 
-  public:
-    "عام",
+    notPublished: "لم يتم نشر المشروع بعد",
 
-  setDefaultAccess:
-    "تحديد الوصول الافتراضي للمشاريع",
+    upgradeSubscription: "قم بترقية اشتراكك",
 
-  creditReminder:
-    "تذكير الرصيد",
+    planPayment: "الخطة والدفع",
 
-  showCredits:
-    "إظهار الرصيد المتبقي",
+    unlockFeatures: "فتح المزيد من الميزات",
 
+    month: "شهر",
 
-  // Theme
-  theme:
-    "المظهر",
+    free: "مجاني",
 
-  customizeTheme:
-    "تخصيص شكل Atoms على جهازك.",
+    pro: "احترافي",
 
-  customizeAppearance:
-    "خصص شكل Atoms على جهازك.",
+    max: "ماكس",
 
-  system:
-    "النظام",
+    speechNotSupported: "التعرف على الصوت غير مدعوم.",
 
-  light:
-    "فاتح",
+    aiResponse: "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
 
-  dark:
-    "داكن",
+    pleaseWait: "يرجى الانتظار...",
 
-
-  // Other
-  language:
-    "اللغة",
-
-  changeLanguage:
-    "تغيير اللغة المستخدمة في واجهة المستخدم.",
-
-  avatar:
-    "الصورة الشخصية",
-
-  username:
-    "اسم المستخدم",
-
-  email:
-    "البريد الإلكتروني",
-
-  publicProjects:
-    "المشاريع العامة",
-
-  saved:
-    "المحفوظات",
-
-  otherProjects:
-    "مشاريع أخرى",
-
-  notPublished:
-    "لم يتم نشر المشروع بعد",
-
-  upgradeSubscription:
-    "قم بترقية اشتراكك",
-
-  planPayment:
-    "الخطة والدفع",
-
-  unlockFeatures:
-    "فتح المزيد من الميزات",
-
-  month:
-    "شهر",
-
-  free:
-    "مجاني",
-
-  pro:
-    "احترافي",
-
-  max:
-    "ماكس",
-
-
-  speechNotSupported:
-    "التعرف على الصوت غير مدعوم.",
-
-  aiResponse:
-    "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
-
-  pleaseWait:
-    "يرجى الانتظار...",
-
-  somethingWrong:
-    "حدث خطأ ما. حاول مرة أخرى."
- }
-} 
+    somethingWrong: "حدث خطأ ما. حاول مرة أخرى.",
+  },
+};
 
 export function LanguageProvider({ children }) {
   const [language, setLanguage] = useState("en");

@@ -4,253 +4,173 @@ import { useTranslation } from "../i18n";
 
 import "../css/VerifyEmail.css";
 
-
 function VerifyEmail() {
-    const { t } = useTranslation();
-    const navigate = useNavigate();
-    const [otp, setOtp] = useState(
-        ["","","","","",""]
-    );
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [timer, setTimer] = useState(30);
-const inputRefs = useRef([]);
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [timer, setTimer] = useState(30);
+  const inputRefs = useRef([]);
 
+  // ==========================
+  // Dark Mode is handled by the app root
+  // ==========================
 
-    // ==========================
-    // Dark Mode is handled by the app root
-    // ==========================
+  // ==========================
+  // OTP
+  // ==========================
+  const handleChange = (value, index) => {
+    if (!/^[0-9]?$/.test(value)) return;
 
-    // ==========================
-    // OTP
-    // ==========================
-const handleChange = (value,index)=>{
+    const newOtp = [...otp];
 
-    if(!/^[0-9]?$/.test(value))
-        return;
-
-    const newOtp=[...otp];
-
-    newOtp[index]=value;
+    newOtp[index] = value;
 
     setOtp(newOtp);
 
     // move to next box
 
-    if(value && index < otp.length - 1){
+    if (value && index < otp.length - 1) {
+      inputRefs.current[index + 1].focus();
+    }
+  };
 
-        inputRefs.current[index + 1].focus();
+  // ==========================
+  // VERIFY
+  // ==========================
 
-    }};
+  const handleVerify = () => {
+    setError("");
 
-    // ==========================
-    // VERIFY
-    // ==========================
+    setSuccess("");
 
-    const handleVerify = ()=>{
+    const code = otp.join("");
 
-        setError("");
+    if (code.length !== 6) {
+      setError(t("enter6DigitCode"));
 
-        setSuccess("");
+      return;
+    }
 
-        const code = otp.join("");
+    setLoading(true);
 
-        if(code.length !== 6){
+    setTimeout(() => {
+      setLoading(false);
 
-            setError(
-                t("enter6DigitCode")
-            );
+      setSuccess(t("emailVerifiedSuccessfully"));
 
-            return;
-        }
+      setTimeout(() => {
+        navigate("/ResetPassword");
+      }, 1500);
+    }, 1500);
+  };
 
-        setLoading(true);
+  // ==========================
+  // TIMER
+  // ==========================
 
-        setTimeout(()=>{
+  useEffect(() => {
+    if (timer === 0) return;
 
-            setLoading(false);
+    const interval = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
 
-            setSuccess(
-                t("emailVerifiedSuccessfully")
-            );
+    return () => clearInterval(interval);
+  }, [timer]);
 
-            setTimeout(()=>{
+  const resendCode = () => {
+    if (timer !== 0) return;
 
-                navigate("/ResetPassword");
+    setTimer(30);
 
-            },1500);
+    setSuccess("New code sent");
+  };
 
-        },1500);};
+  return (
+    <div className="verify-page-wrapper">
+      <div className="verify-page-container">
+        {/* Theme Button */}
 
-    // ==========================
-    // TIMER
-    // ==========================
+        <div className="verify-page-card">
+          {/* MAIL ANIMATION */}
 
-    useEffect(()=>{
-
-        if(timer===0)
-            return;
-
-        const interval=setInterval(()=>{
-
-            setTimer(prev=>prev-1);
-
-        },1000);
-
-        return ()=>clearInterval(interval);
-
-    },[timer]);
-
-    const resendCode = ()=>{
-
-        if(timer!==0)
-            return;
-
-        setTimer(30);
-
-        setSuccess(
-            "New code sent"
-        );};
-
-    return (
-
-        <div className="verify-page-wrapper">
-
-            <div className="verify-page-container">
-
-{/* Theme Button */}
-            
-
-                <div className="verify-page-card">
-
-                    {/* MAIL ANIMATION */}
-
-                    <div className="verify-page-mail-animation">
-
-                        <div className="verify-page-plane">
-
-                            <i className="fa-solid fa-paper-plane"></i>
-
-                        </div>
-                        <div className="verify-page-envelope">
-
-                            <div className="verify-page-envelope-back"></div>
-
-                            <div className="verify-page-envelope-left"></div>
-
-                            <div className="verify-page-envelope-right"></div>
-
-                            <div className="verify-page-envelope-bottom"></div>
-
-                            <div className="verify-page-envelope-flap"></div>
-
-                            <div className="verify-page-check">
-
-                                <i className="fa-solid fa-circle-check"></i>
-
-                            </div>
-                        </div>
-                    </div>
-                    <h1 className="verify-page-title">
-                        {t("verifyEmailTitle")}
-                    </h1>
-
-                    <p className="verify-page-subtitle">
-                        {t("verifyEmailSubtitle")}
-                    </p>
-
-                    <div className="verify-page-otp-container">
-                        {
-                            otp.map((digit,index)=>(
-                               <input
-key={index}
-
-ref={(el)=>
-    inputRefs.current[index]=el
-}
-
-type="text"
-
-maxLength="1"
-
-value={digit}
-
-
-onChange={(e)=>
-
-    handleChange(
-        e.target.value,
-        index
-    )}/>
- ))
-
- }
-
-
-                    </div>
-
-                    {
-                        error &&
-                        <p className="verify-page-error-message">
-                            {error}
-                        </p>
-                    }
-                    {
-                        success &&
-                        <p className="verify-page-success-message">
-                            {success}
-                        </p>
-                    }
-                    <button
-                        type="button"
-
-                        className="verify-page-btn"
-
-                        onClick={handleVerify}
-
-                        disabled={loading}>
-                        {
-
-                            loading ?
-                            <span className="spinner"></span>
-                            :
-                            t("verifyButton")
-                        }
-                    </button>
-                    <p className="verify-page-bottom-text">
-
-                        {t("didntReceiveCode")}
-
-                        <button
-
-                            type="button"
-
-                            className="verify-page-resend-btn"
-
-                            disabled={timer !==0}
-
-                            onClick={resendCode}
-                        >
-                            {
-                                timer !==0
-                                ?
-
-                                `Resend Code (${timer})`
-
-                                :
-
-                                "Resend Code"
-
-                            }
-                        </button>
-                    </p>
-                </div>
+          <div className="verify-page-mail-animation">
+            <div className="verify-page-plane">
+              <i className="fa-solid fa-paper-plane"></i>
             </div>
+            <div className="verify-page-envelope">
+              <div className="verify-page-envelope-back"></div>
+
+              <div className="verify-page-envelope-left"></div>
+
+              <div className="verify-page-envelope-right"></div>
+
+              <div className="verify-page-envelope-bottom"></div>
+
+              <div className="verify-page-envelope-flap"></div>
+
+              <div className="verify-page-check">
+                <i className="fa-solid fa-circle-check"></i>
+              </div>
+            </div>
+          </div>
+          <h1 className="verify-page-title">{t("verifyEmailTitle")}</h1>
+
+          <p className="verify-page-subtitle">{t("verifyEmailSubtitle")}</p>
+
+          <div className="verify-page-otp-container">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+
+                ref={(el) => (inputRefs.current[index] = el)}
+
+                type="text"
+
+                maxLength="1"
+
+                value={digit}
+
+                onChange={(e) => handleChange(e.target.value, index)}
+              />
+            ))}
+          </div>
+
+          {error && <p className="verify-page-error-message">{error}</p>}
+          {success && <p className="verify-page-success-message">{success}</p>}
+          <button
+            type="button"
+
+            className="verify-page-btn"
+
+            onClick={handleVerify}
+
+            disabled={loading}
+          >
+            {loading ? <span className="spinner"></span> : t("verifyButton")}
+          </button>
+          <p className="verify-page-bottom-text">
+            {t("didntReceiveCode")}
+
+            <button
+              type="button"
+
+              className="verify-page-resend-btn"
+
+              disabled={timer !== 0}
+
+              onClick={resendCode}
+            >
+              {timer !== 0 ? `Resend Code (${timer})` : "Resend Code"}
+            </button>
+          </p>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
-
-
 
 export default VerifyEmail;

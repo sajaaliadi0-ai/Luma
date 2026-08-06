@@ -32,20 +32,14 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/"
-          element={<Landpage dark={dark} setDark={setDark} />}
-        />
+        <Route path="/" element={<Landpage dark={dark} setDark={setDark} />} />
 
         <Route
           path="/login"
           element={<Login dark={dark} setDark={setDark} />}
         />
 
-        <Route
-          path="/Work"
-          element={<Work dark={dark} setDark={setDark} />}
-        />
+        <Route path="/Work" element={<Work dark={dark} setDark={setDark} />} />
 
         <Route
           path="/Register"
@@ -56,8 +50,8 @@ function App() {
           path="/new-blueprint"
           element={<NewBlueprint dark={dark} setDark={setDark} />}
         />
-        
-         <Route
+
+        <Route
           path="/newblueprint2"
           element={<NewBlueprint2 dark={dark} setDark={setDark} />}
         />
@@ -77,36 +71,27 @@ function App() {
           element={<ResetPassword dark={dark} setDark={setDark} />}
         />
 
-  <Route
+        <Route
           path="/Resources"
           element={<Resources dark={dark} setDark={setDark} />}
         />
 
-<Route
-          path="/Home"
-          element={<Home dark={dark} setDark={setDark} />}
-        />
+        <Route path="/Home" element={<Home dark={dark} setDark={setDark} />} />
 
-<Route
-        path="/DualWorkspace"
-        element={<DualWorkspace />}
-      />
+        <Route path="/DualWorkspace" element={<DualWorkspace />} />
 
-<Route
+        <Route
           path="/BlueprintsAdmen"
           element={<BlueprintsAdmen dark={dark} setDark={setDark} />}
         />
-<Route
-          path="/Logs"
-          element={<Logs dark={dark} setDark={setDark} />}
-        />
+        <Route path="/Logs" element={<Logs dark={dark} setDark={setDark} />} />
 
-<Route
+        <Route
           path="/SystemState"
           element={<SystemState dark={dark} setDark={setDark} />}
         />
 
-<Route
+        <Route
           path="/Overview"
           element={<Overview dark={dark} setDark={setDark} />}
         />
@@ -120,12 +105,7 @@ function App() {
           path="/Settings"
           element={<Settings dark={dark} setDark={setDark} />}
         />
-
-
-
-            </Routes>
-
-            
+      </Routes>
     </BrowserRouter>
   );
 }

@@ -1,11 +1,6 @@
-import {
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
-import {
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import {
   FiBell,
@@ -48,27 +43,15 @@ import { useTranslation } from "../i18n";
    AVATARS
 ===================================================== */
 
-const avatars = [
-  alex,
-  emma,
-  noah,
-  luna,
-  david,
-  mia,
-  leo,
-];
-
+const avatars = [alex, emma, noah, luna, david, mia, leo];
 
 /* =====================================================
    STORAGE KEYS
 ===================================================== */
 
-const CONVERSATIONS_KEY =
-  "atomsConversations";
+const CONVERSATIONS_KEY = "atomsConversations";
 
-const ACTIVE_CONVERSATION_KEY =
-  "atomsActiveConversation";
-
+const ACTIVE_CONVERSATION_KEY = "atomsActiveConversation";
 
 /* =====================================================
    LOAD CONVERSATIONS
@@ -76,10 +59,7 @@ const ACTIVE_CONVERSATION_KEY =
 
 function getSavedConversations() {
   try {
-    const saved =
-      sessionStorage.getItem(
-        CONVERSATIONS_KEY
-      );
+    const saved = sessionStorage.getItem(CONVERSATIONS_KEY);
 
     if (!saved) {
       return [];
@@ -87,320 +67,154 @@ function getSavedConversations() {
 
     const parsed = JSON.parse(saved);
 
-    return Array.isArray(parsed)
-      ? parsed
-      : [];
-
+    return Array.isArray(parsed) ? parsed : [];
   } catch (error) {
-    console.error(
-      "Failed to load conversations:",
-      error
-    );
+    console.error("Failed to load conversations:", error);
 
     return [];
   }
 }
-
 
 /* =====================================================
    LOAD ACTIVE CONVERSATION
 ===================================================== */
 
 function getSavedActiveConversation() {
-  return (
-    sessionStorage.getItem(
-      ACTIVE_CONVERSATION_KEY
-    ) || null
-  );
+  return sessionStorage.getItem(ACTIVE_CONVERSATION_KEY) || null;
 }
-
 
 /* =====================================================
    ATOMS APP
 ===================================================== */
 
-function AtomsApp({ dark, setDark, themeMode, setThemeMode }) {
-
-  const theme = themeMode || "light";
-
+function AtomsApp({ themeMode, setThemeMode }) {
   const navigate = useNavigate();
 
-const { language, setLanguage, t } = useTranslation();
+  const { language } = useTranslation();
   /* ===================================================
      LOGOUT
   =================================================== */
 
   const handleLogout = async () => {
-
     try {
+      const refreshToken = localStorage.getItem("refreshToken");
 
-      const refreshToken =
-        localStorage.getItem(
-          "refreshToken"
-        );
-
-      await api.post(
-        "/api/auth/logout",
-        {
-          refreshToken,
-        }
-      );
-
+      await api.post("/api/auth/logout", {
+        refreshToken,
+      });
     } catch (error) {
-
-      console.error(
-        "Logout error:",
-        error
-      );
-
+      console.error("Logout error:", error);
     } finally {
+      localStorage.removeItem("accessToken");
 
-      localStorage.removeItem(
-        "accessToken"
-      );
+      localStorage.removeItem("refreshToken");
 
-      localStorage.removeItem(
-        "refreshToken"
-      );
-
-      localStorage.removeItem(
-        "user"
-      );
+      localStorage.removeItem("user");
 
       sessionStorage.clear();
 
-navigate("/landing-page");    }
+      navigate("/landing-page");
+    }
   };
-
 
   /* ===================================================
      STATES
   =================================================== */
 
-  const [notifications] =
-    useState([]);
+  const [notifications] = useState([]);
 
-  const [showProfile, setShowProfile] =
-    useState(false);
+  const [showProfile, setShowProfile] = useState(false);
 
-  const [page, setPage] =
-    useState("Home");
+  const [page, setPage] = useState("Home");
 
-  const [collapsed, setCollapsed] =
-    useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
-  const [workspaceOpen, setWorkspaceOpen] =
-    useState(false);
+  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  const [profileOpen, setProfileOpen] =
-    useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
 
-  const [settings, setSettings] =
-    useState(null);
+  const [settings, setSettings] = useState(null);
 
+  const [prompt, setPrompt] = useState("");
 
-
-  const [prompt, setPrompt] =
-    useState("");
-
-  const [conversations, setConversations] =
-    useState(() =>
-      getSavedConversations()
-    );
-
+  const [conversations, setConversations] = useState(() =>
+    getSavedConversations()
+  );
 
   /* ===================================================
      ACTIVE CONVERSATION
   =================================================== */
 
-  const [
-    activeConversationId,
-    setActiveConversationId,
-  ] = useState(() =>
+  const [activeConversationId, setActiveConversationId] = useState(() =>
     getSavedActiveConversation()
   );
-
 
   /* ===================================================
      TYPING
   =================================================== */
 
-  const [typing, setTyping] =
-    useState(false);
-
+  const [typing, setTyping] = useState(false);
 
   useEffect(() => {
-
     try {
-
-      sessionStorage.setItem(
-        CONVERSATIONS_KEY,
-        JSON.stringify(
-          conversations
-        )
-      );
-
+      sessionStorage.setItem(CONVERSATIONS_KEY, JSON.stringify(conversations));
     } catch (error) {
-
-      console.error(
-        "Failed to save conversations:",
-        error
-      );
-
+      console.error("Failed to save conversations:", error);
     }
-
   }, [conversations]);
-
 
   /* ===================================================
      SAVE ACTIVE CONVERSATION
   =================================================== */
 
   useEffect(() => {
-
-    if (
-      activeConversationId
-    ) {
-
-      sessionStorage.setItem(
-        ACTIVE_CONVERSATION_KEY,
-        activeConversationId
-      );
-
+    if (activeConversationId) {
+      sessionStorage.setItem(ACTIVE_CONVERSATION_KEY, activeConversationId);
     } else {
-
-      sessionStorage.removeItem(
-        ACTIVE_CONVERSATION_KEY
-      );
-
+      sessionStorage.removeItem(ACTIVE_CONVERSATION_KEY);
     }
-
-  }, [
-    activeConversationId,
-  ]);
-
+  }, [activeConversationId]);
 
   useEffect(() => {
+    const savedPrompt = sessionStorage.getItem("blueprintPrompt");
+    if (!savedPrompt) return;
 
-    const savedPrompt =
-      sessionStorage.getItem(
-        "blueprintPrompt"
-      );
-
-    if (!savedPrompt) {
-      return;
-    }
-
-
-    const text =
-      savedPrompt.trim();
-
+    const text = savedPrompt.trim();
     if (!text) {
-
-      sessionStorage.removeItem(
-        "blueprintPrompt"
-      );
-
+      sessionStorage.removeItem("blueprintPrompt");
       return;
     }
 
+    const conversationId = `chat-${Date.now()}`;
 
-    /* =================================================
-       منع التكرار
-    ================================================= */
-
-    const alreadyExists =
-      conversations.some(
-        (conversation) =>
-          conversation.messages?.some(
-            (message) =>
-              message.type === "user" &&
-              message.text === text
-          )
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setConversations((current) => {
+      const alreadyExists = current.some((conv) =>
+        conv.messages?.some((m) => m.type === "user" && m.text === text)
       );
+      if (alreadyExists) {
+        sessionStorage.removeItem("blueprintPrompt");
+        return current;
+      }
+      const newConversation = {
+        id: conversationId,
+        title: text.length > 30 ? `${text.slice(0, 30)}…` : text,
+        messages: [{ id: `user-${Date.now()}`, type: "user", text }],
+        createdAt: new Date().toLocaleDateString("en-CA"),
+      };
+      sessionStorage.removeItem("blueprintPrompt");
+      return [newConversation, ...current];
+    });
+    /* eslint-enable react-hooks/set-state-in-effect */
 
-
-    if (alreadyExists) {
-
-      sessionStorage.removeItem(
-        "blueprintPrompt"
-      );
-
-      return;
-    }
-
-
-    /* =================================================
-       CREATE CONVERSATION
-    ================================================= */
-
-    const conversationId =
-      `chat-${Date.now()}`;
-
-
-    const newConversation = {
-
-      id: conversationId,
-
-      title:
-        text.length > 30
-          ? `${text.slice(0, 30)}…`
-          : text,
-
-      messages: [
-
-        {
-          id:
-            `user-${Date.now()}`,
-
-          type: "user",
-
-          text,
-        },
-
-      ],
-
-      createdAt:
-        new Date()
-          .toLocaleDateString(
-            "en-CA"
-          ),
-    };
-
-
-    setConversations(
-      (current) => [
-        newConversation,
-        ...current,
-      ]
-    );
-
-
-    setActiveConversationId(
-      conversationId
-    );
-
-
-    /* =================================================
-       تنظيف prompt بعد استلامه
-    ================================================= */
-
-    sessionStorage.removeItem(
-      "blueprintPrompt"
-    );
-
-
-  }, []);
-
+    setActiveConversationId(conversationId);
+  }, []); // intentionally empty — runs once on mount to pick up sessionStorage prompt
 
   /* ===================================================
      PAGE
   =================================================== */
 
-  const choosePage = (
-    next
-  ) => {
-
+  const choosePage = (next) => {
     setPage(next);
 
     setWorkspaceOpen(false);
@@ -410,29 +224,21 @@ navigate("/landing-page");    }
     setShowProfile(false);
   };
 
-
   /* ===================================================
      SETTINGS
   =================================================== */
 
-  const openSettings = (
-    tab = "General"
-  ) => {
-
+  const openSettings = (tab = "General") => {
     setSettings(tab);
 
     setProfileOpen(false);
   };
 
-
   /* ===================================================
      OPEN CONVERSATION
   =================================================== */
 
-  const openConversation = (
-    id
-  ) => {
-
+  const openConversation = (id) => {
     setActiveConversationId(id);
 
     setPage("Home");
@@ -444,61 +250,38 @@ navigate("/landing-page");    }
     setShowProfile(false);
   };
 
-
   /* ===================================================
      SIDEBAR COLLAPSE
   =================================================== */
 
   const toggleSidebar = () => {
-
-    setCollapsed(
-      (current) => !current
-    );
+    setCollapsed((current) => !current);
 
     setWorkspaceOpen(false);
 
     setProfileOpen(false);
   };
 
-
   /* ===================================================
      NEW CHAT
   =================================================== */
 
   const newChat = () => {
-
-    const id =
-      `chat-${Date.now()}`;
-
+    const id = `chat-${Date.now()}`;
 
     const newConversation = {
-
       id,
 
       title: "New chat",
 
       messages: [],
 
-      createdAt:
-        new Date()
-          .toLocaleDateString(
-            "en-CA"
-          ),
+      createdAt: new Date().toLocaleDateString("en-CA"),
     };
 
+    setConversations((current) => [newConversation, ...current]);
 
-    setConversations(
-      (current) => [
-        newConversation,
-        ...current,
-      ]
-    );
-
-
-    setActiveConversationId(
-      id
-    );
-
+    setActiveConversationId(id);
 
     setPage("Home");
 
@@ -513,133 +296,77 @@ navigate("/landing-page");    }
     setShowProfile(false);
   };
 
-
   /* ===================================================
      SEND MESSAGE
   =================================================== */
 
   const sendMessage = () => {
-
-    const text =
-      prompt.trim();
-
+    const text = prompt.trim();
 
     if (!text) {
       return;
     }
 
-
-    const conversationId =
-      activeConversationId ||
-      `chat-${Date.now()}`;
-
+    const conversationId = activeConversationId || `chat-${Date.now()}`;
 
     const userMessage = {
-
-      id:
-        `user-${Date.now()}`,
+      id: `user-${Date.now()}`,
 
       type: "user",
 
       text,
     };
 
+    setConversations((current) => {
+      const existing = current.find(
+        (conversation) => conversation.id === conversationId
+      );
 
-    setConversations(
-      (current) => {
-
-        const existing =
-          current.find(
-            (conversation) =>
-              conversation.id ===
-              conversationId
-          );
-
-
-        /* =============================================
+      /* =============================================
            EXISTING CHAT
         ============================================= */
 
-        if (existing) {
+      if (existing) {
+        return current.map((conversation) => {
+          if (conversation.id !== conversationId) {
+            return conversation;
+          }
 
-          return current.map(
-            (conversation) => {
+          return {
+            ...conversation,
 
-              if (
-                conversation.id !==
-                conversationId
-              ) {
+            title:
+              conversation.title === "New chat"
+                ? text.length > 30
+                  ? `${text.slice(0, 30)}…`
+                  : text
+                : conversation.title,
 
-                return conversation;
-              }
+            messages: [...conversation.messages, userMessage],
+          };
+        });
+      }
 
-
-              return {
-
-                ...conversation,
-
-                title:
-                  conversation.title ===
-                  "New chat"
-
-                    ? text.length > 30
-                      ? `${text.slice(0, 30)}…`
-                      : text
-
-                    : conversation.title,
-
-                messages: [
-
-                  ...conversation.messages,
-
-                  userMessage,
-
-                ],
-              };
-
-            }
-          );
-        }
-
-
-        /* =============================================
+      /* =============================================
            NEW CHAT
         ============================================= */
 
-        return [
+      return [
+        {
+          id: conversationId,
 
-          {
+          title: text.length > 30 ? `${text.slice(0, 30)}…` : text,
 
-            id:
-              conversationId,
+          messages: [userMessage],
 
-            title:
-              text.length > 30
-                ? `${text.slice(0, 30)}…`
-                : text,
+          createdAt: new Date().toLocaleDateString("en-CA"),
+        },
 
-            messages: [
-              userMessage,
-            ],
+        ...current,
+      ];
+    });
 
-            createdAt:
-              new Date()
-                .toLocaleDateString(
-                  "en-CA"
-                ),
-          },
-
-          ...current,
-
-        ];
-      }
-    );
-
-
-    setActiveConversationId(
-      conversationId
-    );
-
+    setActiveConversationId(conversationId);
 
     setPrompt("");
 
@@ -647,184 +374,112 @@ navigate("/landing-page");    }
 
     setPage("Home");
 
-
     /* =================================================
        TEMPORARY AI RESPONSE
     ================================================= */
 
     window.setTimeout(() => {
+      setConversations((current) =>
+        current.map((conversation) => {
+          if (conversation.id !== conversationId) {
+            return conversation;
+          }
 
-      setConversations(
-        (current) =>
-          current.map(
-            (conversation) => {
+          return {
+            ...conversation,
 
-              if (
-                conversation.id !==
-                conversationId
-              ) {
+            messages: [
+              ...conversation.messages,
 
-                return conversation;
-              }
+              {
+                id: `alex-${Date.now()}`,
 
+                type: "assistant",
 
-              return {
-
-                ...conversation,
-
-                messages: [
-
-                  ...conversation.messages,
-
-                  {
-
-                    id:
-                      `alex-${Date.now()}`,
-
-                    type:
-                      "assistant",
-
-                    text:
-                      "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
-
-                  },
-
-                ],
-              };
-
-            }
-          )
+                text: "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
+              },
+            ],
+          };
+        })
       );
 
       setTyping(false);
-
     }, 800);
-
   };
-
 
   /* ===================================================
      RENDER
   =================================================== */
 
   return (
-
-   <div
-  dir={language === "ar" ? "rtl" : "ltr"}
-  className={`blueprint-app ${
-    collapsed
-      ? "blueprint-is-collapsed"
-      : ""
-  }`}
->
-
+    <div
+      dir={language === "ar" ? "rtl" : "ltr"}
+      className={`blueprint-app ${collapsed ? "blueprint-is-collapsed" : ""}`}
+    >
       {/* =================================================
           SIDEBAR
       ================================================= */}
 
       <Sidebar
+        notifications={notifications}
 
-        notifications={
-          notifications
-        }
+        navigate={navigate}
 
-        navigate={
-          navigate
-        }
+        onLogout={handleLogout}
 
-        onLogout={
-          handleLogout
-        }
+        page={page}
 
-        page={
-          page
-        }
+        onPage={choosePage}
 
-        onPage={
-          choosePage
-        }
+        onNewChat={newChat}
 
-        onNewChat={
-          newChat
-        }
+        onCollapse={toggleSidebar}
 
-        onCollapse={
-          toggleSidebar
-        }
-
-        workspaceOpen={
-          workspaceOpen
-        }
+        workspaceOpen={workspaceOpen}
 
         onWorkspace={() => {
-
-          setWorkspaceOpen(
-            (current) =>
-              !current
-          );
+          setWorkspaceOpen((current) => !current);
 
           setProfileOpen(false);
         }}
 
-        profileOpen={
-          profileOpen
-        }
+        profileOpen={profileOpen}
 
         onProfile={() => {
-
-          setProfileOpen(
-            (current) =>
-              !current
-          );
+          setProfileOpen((current) => !current);
 
           setWorkspaceOpen(false);
         }}
 
-        onSettings={
-          openSettings
-        }
+        onSettings={openSettings}
 
-        conversations={
-          conversations
-        }
+        conversations={conversations}
 
-        activeConversationId={
-          activeConversationId
-        }
+        activeConversationId={activeConversationId}
 
-        onConversation={
-          openConversation
-        }
+        onConversation={openConversation}
       />
-
 
       {/* =================================================
           MAIN
       ================================================= */}
 
       <main
-        className={
-          `blueprint-app-main ${
-            page === "Home"
-              ? "home-active"
-              : "full-page-view"
-          }`
-        }
+        className={`blueprint-app-main ${
+          page === "Home" ? "home-active" : "full-page-view"
+        }`}
       >
-
         {/* =================================================
             HOME
         ================================================= */}
 
         {page === "Home" && (
-
           <Home
             prompt={prompt}
             setPrompt={setPrompt}
             messages={
               conversations.find(
-                (conversation) =>
-                  conversation.id === activeConversationId
+                (conversation) => conversation.id === activeConversationId
               )?.messages || []
             }
             typing={typing}
@@ -832,118 +487,78 @@ navigate("/landing-page");    }
             themeMode={themeMode}
             setThemeMode={setThemeMode}
           />
-
         )}
 
-
-       {/* =================================================
+        {/* =================================================
     MY PROJECTS
 ================================================= */}
 
-{page === "My Projects" && !showProfile && (
+        {page === "My Projects" && !showProfile && (
+          <section className="blueprint-projects-page">
+            <h1>My Projects</h1>
 
-  <section className="blueprint-projects-page">
+            {conversations.length === 0 ? (
+              <div className="blueprint-empty-projects">
+                <FiFolder size={48} />
 
-    <h1>My Projects</h1>
+                <h3>No projects yet</h3>
 
-    {conversations.length === 0 ? (
+                <p>Create a new chat to start your first project.</p>
+              </div>
+            ) : (
+              <div className="blueprint-projects-grid">
+                {conversations.map((conversation) => (
+                  <div
+                    key={conversation.id}
+                    className="blueprint-project-card"
+                    onClick={() => openConversation(conversation.id)}
+                  >
+                    <div className="blueprint-project-card-header">
+                      <FiFolder />
 
-      <div className="blueprint-empty-projects">
+                      <button type="button">
+                        <FiMoreHorizontal />
+                      </button>
+                    </div>
 
-        <FiFolder size={48} />
+                    <h3>{conversation.title}</h3>
 
-        <h3>No projects yet</h3>
+                    <p>
+                      {conversation.messages.length} message
+                      {conversation.messages.length !== 1 ? "s" : ""}
+                    </p>
 
-        <p>Create a new chat to start your first project.</p>
-
-      </div>
-
-    ) : (
-
-      <div className="blueprint-projects-grid">
-
-        {conversations.map((conversation) => (
-
-          <div
-            key={conversation.id}
-            className="blueprint-project-card"
-            onClick={() => openConversation(conversation.id)}
-          >
-
-            <div className="blueprint-project-card-header">
-
-              <FiFolder />
-
-              <button type="button">
-                <FiMoreHorizontal />
-              </button>
-
-            </div>
-
-            <h3>{conversation.title}</h3>
-
-            <p>
-              {conversation.messages.length} message
-              {conversation.messages.length !== 1 ? "s" : ""}
-            </p>
-
-            <small>{conversation.createdAt}</small>
-
-          </div>
-
-        ))}
-
-      </div>
-
-    )}
-
-  </section>
-
-)}
-
+                    <small>{conversation.createdAt}</small>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
         {/* =================================================
             PROFILE
         ================================================= */}
 
-        {page === "My Projects" &&
-          showProfile && (
-
-            <ProfilePage />
-
-          )}
-
+        {page === "My Projects" && showProfile && <ProfilePage />}
       </main>
-
 
       {/* =================================================
           SETTINGS
       ================================================= */}
 
       {settings && (
-
         <SettingsModal
+          tab={settings}
 
-          tab={
-            settings
-          }
+          onTab={setSettings}
 
-          onTab={
-            setSettings
-          }
-
-          onClose={() =>
-            setSettings(null)
-          }
-
+          onClose={() => setSettings(null)}
         />
-
       )}
-
     </div>
   );
 }
-
 
 /* =====================================================
    SIDEBAR
@@ -966,495 +581,266 @@ function Sidebar({
   onLogout,
   navigate,
 }) {
-    const { t } = useTranslation()
-const nav = [
-  [t("home"), FiHome],
-  [t("resources"), FiCompass],
-  [t("newChat"), FiPlus],
-  [t("myProjects"), FiFolder],
-];
-
+  const { t } = useTranslation();
+  const nav = [
+    [t("home"), FiHome],
+    [t("resources"), FiCompass],
+    [t("newChat"), FiPlus],
+    [t("myProjects"), FiFolder],
+  ];
 
   return (
-
-    <aside
-      className="blueprint-app-sidebar"
-    >
-
+    <aside className="blueprint-app-sidebar">
       {/* =================================================
           BRAND
       ================================================= */}
 
       <div className="blueprint-brand">
-
         <button
           className="new-chat-brand"
           onClick={onNewChat}
-title={t("newChat")}        >
-
-          <span className="blueprint-atoms-symbol">
-
-           
-          </span>
-
-          <b>
-            Luma
-          </b>
-
-        </button>
-
-
-        <button
-          onClick={onCollapse}
-          aria-label="Collapse sidebar"
+          title={t("newChat")}
         >
+          <span className="blueprint-atoms-symbol"></span>
 
-          <FiMenu />
-
+          <b>Luma</b>
         </button>
 
+        <button onClick={onCollapse} aria-label="Collapse sidebar">
+          <FiMenu />
+        </button>
       </div>
-
 
       {/* =================================================
           WORKSPACE
       ================================================= */}
 
-      <button
-        className="blueprint-workspace-switch"
-        onClick={onWorkspace}
-      >
+      <button className="blueprint-workspace-switch" onClick={onWorkspace}>
+        <b>S</b>
 
-        <b>
-          S
-        </b>
-
-        <span>
-           eng 
-        </span>
+        <span>eng</span>
 
         <FiChevronDown />
-
       </button>
-
 
       {/* =================================================
           WORKSPACE POPOVER
       ================================================= */}
 
       {workspaceOpen && (
-
         <div className="blueprint-workspace-popover">
-
           <div className="blueprint-workspace-head">
-
-            <b>
-              S
-            </b>
+            <b>S</b>
 
             <span>
+              <strong>eng</strong>
 
-              <strong>
-               eng
-              </strong>
-
-              <small>
-                Free plan
-              </small>
-
+              <small>Free plan</small>
             </span>
-
           </div>
-
 
           <div className="blueprint-credit-line">
-
             Credits remaining
-
-            <a>
-              Upgrade
-            </a>
-
+            <a>Upgrade</a>
           </div>
-
 
           <div className="blueprint-credit-bar">
-
             <i />
-
           </div>
 
+          <small className="blueprint-credit-left">15 left</small>
 
-          <small className="blueprint-credit-left">
-            15 left
-          </small>
-
-
-          <small>
-            All workspaces
-          </small>
-
+          <small>All workspaces</small>
 
           <div className="blueprint-workspace-row">
-
-            <b>
-              S
-            </b>
-
-          eng
-
+            <b>S</b>
+            eng
             <FiChevronRight />
-
           </div>
-
         </div>
-
       )}
-
 
       {/* =================================================
           NAVIGATION
       ================================================= */}
 
       <nav>
-
-        {nav.map(
-          ([name, Icon]) => (
-
-            <button
-              key={name}
-              className={
-                page === name
-                  ? "selected"
-                  : ""
+        {nav.map(([name, Icon]) => (
+          <button
+            key={name}
+            className={page === name ? "selected" : ""}
+            onClick={() => {
+              if (name === t("resources")) {
+                navigate("/resources");
+                return;
               }
-           onClick={() => {
 
-  if (name === t("resources")) {
-  navigate("/resources");
-  return;
-}
+              if (name === t("newChat")) {
+                onNewChat();
+                return;
+              }
 
-if (name === t("newChat")) {
-  onNewChat();
-  return;
-}
+              onPage(name);
 
-onPage(name);
+              onPage(name);
+            }}
+          >
+            <Icon />
 
-  onPage(name);
-
-}}
-            >
-
-              <Icon />
-
-              <span>
-                {name}
-              </span>
-
-            </button>
-
-          )
-        )}
-
+            <span>{name}</span>
+          </button>
+        ))}
       </nav>
-
 
       {/* =================================================
           RECENTS
       ================================================= */}
 
-      <small className="blueprint-recents-label">
-        Recents
-      </small>
-
+      <small className="blueprint-recents-label">Recents</small>
 
       <div className="blueprint-recents">
-
         {conversations.length === 0 ? (
-
-          <small className="empty-recents">
-            Your chats will appear here
-          </small>
-
+          <small className="empty-recents">Your chats will appear here</small>
         ) : (
-
-          conversations.map(
-            (conversation) => (
-
-              <button
-                key={
-                  conversation.id
-                }
-                className={
-                  conversation.id ===
-                  activeConversationId
-                    ? "active-chat"
-                    : ""
-                }
-                onClick={() =>
-                  onConversation(
-                    conversation.id
-                  )
-                }
-              >
-
-                {conversation.title}
-
-              </button>
-
-            )
-          )
-
+          conversations.map((conversation) => (
+            <button
+              key={conversation.id}
+              className={
+                conversation.id === activeConversationId ? "active-chat" : ""
+              }
+              onClick={() => onConversation(conversation.id)}
+            >
+              {conversation.title}
+            </button>
+          ))
         )}
-
       </div>
-
 
       {/* =================================================
           SIDEBAR BOTTOM
       ================================================= */}
 
       <div className="blueprint-sidebar-bottom">
-
         <aside>
-
           <FiUsers />
 
           <span>
+            <b>Join our Community</b>
 
-            <b>
-              Join our Community
-            </b>
-
-            <small>
-              Earn up to 25 credits
-            </small>
-
+            <small>Earn up to 25 credits</small>
           </span>
 
           <FiChevronRight />
-
         </aside>
 
-
         <aside>
-
           <FiGift />
 
           <span>
+            <b>Get Free Credits</b>
 
-            <b>
-              Get Free Credits
-            </b>
-
-            <small>
-              Get 10 credits each
-            </small>
-
+            <small>Get 10 credits each</small>
           </span>
 
           <FiChevronRight />
-
         </aside>
-
       </div>
-
 
       {/* =================================================
           FOOTER
       ================================================= */}
 
       <footer>
-
-        <button
-          className="blueprint-avatar"
-          onClick={onProfile}
-        >
+        <button className="blueprint-avatar" onClick={onProfile}>
           S
         </button>
 
-
         <span>
-
           <button
             className="blueprint-sidebar-icon-btn"
             onClick={() => {
-
-              alert(
-                `You have ${notifications.length} notifications`
-              );
-
+              alert(`You have ${notifications.length} notifications`);
             }}
           >
-
             <FiBell />
-
           </button>
-
         </span>
-
       </footer>
-
 
       {/* =================================================
           PROFILE POPOVER
       ================================================= */}
 
       {profileOpen && (
-
         <div className="blueprint-profile-popover">
-
           <header>
-
-            <b>
-              S
-            </b>
+            <b>S</b>
 
             <span>
+              <strong>saswe eng</strong>
 
-              <strong>
-                saswe eng
-              </strong>
-
-              <small>
-                engsaswe@gmail.com
-              </small>
-
+              <small>engsaswe@gmail.com</small>
             </span>
-
           </header>
 
-
-          <button
-            onClick={() =>
-              onSettings("General")
-            }
-          >
-
+          <button onClick={() => onSettings("General")}>
             <FiSettings />
 
-            <span>
-  {t("settings")}
-            </span>
+            <span>{t("settings")}</span>
 
             <FiChevronRight />
-
           </button>
 
-
-          <button
-            onClick={() =>
-              onSettings(
-                "Plans and credits"
-              )
-            }
-          >
-
+          <button onClick={() => onSettings("Plans and credits")}>
             <FiPackage />
 
-            <span>
-  {t("plans")}
-            </span>
+            <span>{t("plans")}</span>
 
             <FiChevronRight />
-
           </button>
 
-
-          <button
-            onClick={() =>
-              onSettings("Account")
-            }
-          >
-
+          <button onClick={() => onSettings("Account")}>
             <FiUser />
 
-            <span>
-                {t("profile")}
-
-            </span>
+            <span>{t("profile")}</span>
 
             <FiChevronRight />
-
           </button>
 
-
           <button>
-
             <FiGift />
 
-            <span>
-                {t("redemption")}
-
-            </span>
+            <span>{t("redemption")}</span>
 
             <FiChevronRight />
-
           </button>
 
-
-          <button
-            onClick={() =>
-              onSettings(
-                "Preference"
-              )
-            }
-          >
-
+          <button onClick={() => onSettings("Preference")}>
             <FiSliders />
 
-            <span>
-  {t("appearance")}
-            </span>
+            <span>{t("appearance")}</span>
 
             <FiChevronRight />
-
           </button>
 
+          <button>ⓘ {t("helpCenter")}</button>
 
-          <button>
-  ⓘ {t("helpCenter")}
-          </button>
-
-
-          <button
-            onClick={() =>
-              onPage("Home")
-            }
-          >
-
+          <button onClick={() => onPage("Home")}>
             <FiHome />
 
-            <span>
- {t("homepage")}
-            </span>
-
+            <span>{t("homepage")}</span>
           </button>
 
-
-          <button
-            className="signout"
-            onClick={onLogout}
-          >
-
+          <button className="signout" onClick={onLogout}>
             <FiLogOut />
 
-            <span>
- {t("signOut")}
-            </span>
-
+            <span>{t("signOut")}</span>
           </button>
-
         </div>
-
       )}
-
     </aside>
   );
 }
-
 
 /* =====================================================
    HOME
@@ -1471,22 +857,15 @@ function Home({
 }) {
   const theme = themeMode || "light";
   const { t } = useTranslation();
-  const [listening, setListening] =
-    useState(false);
+  const [listening, setListening] = useState(false);
 
-  const [showThemeMenu, setShowThemeMenu] =
-    useState(false);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
 
-  const [showPlusMenu, setShowPlusMenu] =
-    useState(false);
+  const [showPlusMenu, setShowPlusMenu] = useState(false);
 
-
-  const [hoveredAgent, setHoveredAgent] =
-    useState(null);
-
+  const [hoveredAgent, setHoveredAgent] = useState(null);
 
   const agents = [
-
     "Alex is a Product Manager",
 
     "Emma is a UI Designer",
@@ -1500,376 +879,220 @@ function Home({
     "Mia is an AI Engineer",
 
     "Leo is a Marketing Expert",
-
   ];
-  
 
   /* ===================================================
      VOICE
   =================================================== */
 
   const startVoice = () => {
-
     const SpeechRecognition =
-      window.SpeechRecognition ||
-      window.webkitSpeechRecognition;
-
+      window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-
-      alert(
-        "Speech Recognition is not supported."
-      );
+      alert("Speech Recognition is not supported.");
 
       return;
     }
 
+    const recognition = new SpeechRecognition();
 
-    const recognition =
-      new SpeechRecognition();
+    recognition.lang = "en-US";
 
-
-    recognition.lang =
-      "en-US";
-
-    recognition.interimResults =
-      false;
-
+    recognition.interimResults = false;
 
     recognition.start();
 
     setListening(true);
 
-
-    recognition.onresult = (
-      event
-    ) => {
-
-      setPrompt(
-        event.results[0][0]
-          .transcript
-      );
-
+    recognition.onresult = (event) => {
+      setPrompt(event.results[0][0].transcript);
     };
-
 
     recognition.onend = () => {
-
       setListening(false);
-
     };
-
   };
-
 
   /* ===================================================
      RENDER
   =================================================== */
 
   return (
-
     <div className="blueprint-home-page">
-
       {/* =================================================
           CREDIT
       ================================================= */}
 
       <div className="blueprint-top-credit">
-
-{t("freePlan")} ·
-        <a>
-{t("upgrade")}        </a>
-
+        {t("freePlan")} ·<a>{t("upgrade")} </a>
       </div>
-
 
       {/* =================================================
           TEAM AVATARS
       ================================================= */}
 
-      <div
-        className="blueprint-team-orbs"
-        aria-label="Atoms team"
-      >
+      <div className="blueprint-team-orbs" aria-label="Atoms team">
+        {avatars.map((avatar, index) => (
+          <div
+            key={index}
+            className="avatar-wrapper"
+            onMouseEnter={() => setHoveredAgent(index)}
+            onMouseLeave={() => setHoveredAgent(null)}
+          >
+            {hoveredAgent === index && (
+              <div className="blueprint-agent-tooltip">{agents[index]}</div>
+            )}
 
-        {avatars.map(
-          (avatar, index) => (
-
-            <div
-              key={index}
-              className="avatar-wrapper"
-              onMouseEnter={() =>
-                setHoveredAgent(index)
-              }
-              onMouseLeave={() =>
-                setHoveredAgent(null)
-              }
-            >
-
-              {hoveredAgent ===
-                index && (
-
-                <div className="blueprint-agent-tooltip">
-
-                  {
-                    agents[index]
-                  }
-
-                </div>
-
-              )}
-
-
-              <i
-                className={
-                  `blueprint-team-avatar avatar-${
-                    index + 1
-                  }`
-                }
-                style={{
-                  backgroundImage:
-                    `url(${avatar})`,
-                }}
-              />
-
-            </div>
-
-          )
-        )}
-
+            <i
+              className={`blueprint-team-avatar avatar-${index + 1}`}
+              style={{
+                backgroundImage: `url(${avatar})`,
+              }}
+            />
+          </div>
+        ))}
       </div>
-
 
       {/* =================================================
           TITLE
       ================================================= */}
 
-      <h1>
-  {t("homeTitle")}
-</h1>
+      <h1>{t("homeTitle")}</h1>
 
       {/* =================================================
           MESSAGES
       ================================================= */}
 
       {messages.length > 0 && (
-
         <div className="blueprint-sent-messages">
+          {messages.map((message) => (
+            <p key={message.id} className={message.type}>
+              {message.type === "assistant" && <b>Alex</b>}
 
-          {messages.map(
-            (message) => (
-
-              <p
-                key={
-                  message.id
-                }
-                className={
-                  message.type
-                }
-              >
-
-                {message.type ===
-                  "assistant" && (
-
-                  <b>
-                    Alex
-                  </b>
-
-                )}
-
-                {
-                  message.text
-                }
-
-              </p>
-
-            )
-          )}
-
+              {message.text}
+            </p>
+          ))}
 
           {typing && (
-
             <p className="assistant typing-message">
-
-              <b>
-                Alex
-              </b>
+              <b>Alex</b>
 
               <i />
               <i />
               <i />
-
             </p>
-
           )}
-
         </div>
-
       )}
-
 
       {/* =================================================
           PROMPT
       ================================================= */}
 
       <div className="blueprint-home-prompt">
-
         <input
           value={prompt}
-          onChange={(event) =>
-            setPrompt(
-              event.target.value
-            )
-          }
+          onChange={(event) => setPrompt(event.target.value)}
           onKeyDown={(event) => {
-
-            if (
-              event.key ===
-              "Enter"
-            ) {
-
+            if (event.key === "Enter") {
               onSend();
-
             }
-
           }}
-         placeholder={t("askPlaceholder")}
+          placeholder={t("askPlaceholder")}
         />
 
-
         <footer>
-
           {/* =============================================
               PLUS
           ============================================= */}
 
           <div className="prompt-action">
-
             <button
               type="button"
               onClick={() => {
+                setShowPlusMenu((current) => !current);
 
-                setShowPlusMenu(
-                  (current) =>
-                    !current
-                );
-
-                setShowThemeMenu(
-                  false
-                );
-
+                setShowThemeMenu(false);
               }}
             >
-
               <FiPlus />
-
             </button>
 
-
             {showPlusMenu && (
-
               <div className="blueprint-plus-menu">
+                <button type="button">{t("uploadFile")}</button>
 
-                <button type="button">
-{t("uploadFile")}
-                </button>
+                <button type="button">{t("addImage")} </button>
 
-                <button type="button">
-{t("addImage")}                </button>
-
-                <button type="button">
-{t("connectTools")}                </button>
-
+                <button type="button">{t("connectTools")} </button>
               </div>
-
             )}
-
           </div>
-
 
           {/* =============================================
               THEME
           ============================================= */}
 
           <div className="prompt-action">
-
             <button
               type="button"
               onClick={() => {
+                setShowThemeMenu((current) => !current);
 
-                setShowThemeMenu(
-                  (current) =>
-                    !current
-                );
-
-                setShowPlusMenu(
-                  false
-                );
-
+                setShowPlusMenu(false);
               }}
             >
-
               {theme}
 
               <FiChevronDown />
-
             </button>
 
+            {showThemeMenu && (
+              <div className="blueprint-theme-menu">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setThemeMode("system");
+                    setShowThemeMenu(false);
+                  }}
+                >
+                  {t("system")}{" "}
+                </button>
 
-           {showThemeMenu && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setThemeMode("light");
+                    setShowThemeMenu(false);
+                  }}
+                >
+                  {t("light")}{" "}
+                </button>
 
-  <div className="blueprint-theme-menu">
-
-    <button
-      type="button"
-      onClick={() => {
-        setThemeMode("system");
-        setShowThemeMenu(false);
-      }}
-    >
-{t("system")}    </button>
-
-    <button
-      type="button"
-      onClick={() => {
-setThemeMode("light");
-        setShowThemeMenu(false);
-      }}
-    >
-{t("light")}    </button>
-
-    <button
-      type="button"
-      onClick={() => {
-setThemeMode("dark");
-        setShowThemeMenu(false);
-      }}
-    >
-{t("dark")}    </button>
-
-  </div>
-
-)}
-
+                <button
+                  type="button"
+                  onClick={() => {
+                    setThemeMode("dark");
+                    setShowThemeMenu(false);
+                  }}
+                >
+                  {t("dark")}{" "}
+                </button>
+              </div>
+            )}
           </div>
 
-
           <span />
-
 
           {/* =============================================
               BUILD
           ============================================= */}
 
-          <button
-            type="button"
-          >
-
-{t("build")}
+          <button type="button">
+            {t("build")}
             <FiChevronDown />
-
           </button>
-
 
           {/* =============================================
               MIC
@@ -1878,60 +1101,38 @@ setThemeMode("dark");
           <button
             type="button"
             onClick={startVoice}
-            className={
-              listening
-                ? "recording"
-                : ""
-            }
+            className={listening ? "recording" : ""}
           >
-
             <FiMic />
-
           </button>
-
 
           {/* =============================================
               SEND
           ============================================= */}
 
-          <button
-            type="button"
-            className="go"
-            onClick={onSend}
-          >
-
+          <button type="button" className="go" onClick={onSend}>
             ↑
-
           </button>
-
         </footer>
-
 
         {/* =================================================
             TOOLS
         ================================================= */}
 
         <aside>
-
           <FiZap />
 
-{t("connectAtoms")}
+          {t("connectAtoms")}
           <span />
 
-          <b>
-            ● ● ● ●
-          </b>
+          <b>● ● ● ●</b>
 
           <FiX />
-
         </aside>
-
       </div>
-
     </div>
   );
 }
-
 
 /* =====================================================
    PROFILE PAGE
@@ -1972,7 +1173,7 @@ function ProfilePage() {
 
       setError(
         error.response?.data?.message ||
-        "Something went wrong. Please try again."
+          "Something went wrong. Please try again."
       );
     } finally {
       setLoading(false);
@@ -2012,7 +1213,7 @@ function ProfilePage() {
 
       setError(
         error.response?.data?.message ||
-        "Unable to delete your account. Please try again."
+          "Unable to delete your account. Please try again."
       );
     } finally {
       setDeleteLoading(false);
@@ -2021,42 +1222,27 @@ function ProfilePage() {
 
   return (
     <section className="blueprint-profile-page">
-
       {/* =========================
           OLD PROFILE DESIGN
       ========================= */}
 
       <div className="blueprint-profile-cover" />
 
-      <div className="blueprint-profile-avatar">
-        S
-      </div>
+      <div className="blueprint-profile-avatar">S</div>
 
-      <button className="blueprint-edit-profile">
-        Edit profile
-      </button>
+      <button className="blueprint-edit-profile">Edit profile</button>
 
-      <h1>
-        saswe eng
-      </h1>
+      <h1>saswe eng</h1>
 
-      <p>
-        0 saves | 0 views
-      </p>
+      <p>0 saves | 0 views</p>
 
       <div className="blueprint-profile-tabs">
-        <b>
-          Public Projects
-        </b>
+        <b>Public Projects</b>
 
-        <span>
-          Saved
-        </span>
+        <span>Saved</span>
       </div>
 
-      <h3>
-        Other Projects
-      </h3>
+      <h3>Other Projects</h3>
 
       <div className="blueprint-profile-projects" />
 
@@ -2065,45 +1251,30 @@ function ProfilePage() {
       ========================= */}
 
       <div className="blueprint-account-management">
-
-        <h3>
-          Account Settings
-        </h3>
+        <h3>Account Settings</h3>
 
         <p className="account-management-description">
           Manage your account status and permanently delete your account.
         </p>
 
         {/* SUCCESS MESSAGE */}
-        {message && (
-          <div className="account-success-message">
-            {message}
-          </div>
-        )}
+        {message && <div className="account-success-message">{message}</div>}
 
         {/* ERROR MESSAGE */}
-        {error && (
-          <div className="account-error-message">
-            {error}
-          </div>
-        )}
+        {error && <div className="account-error-message">{error}</div>}
 
         {/* =========================
             ACTIVATE / DEACTIVATE
         ========================= */}
 
         <div className="account-management-row">
-
           <div className="account-management-info">
-            <strong>
-              Account status
-            </strong>
+            <strong>Account status</strong>
 
             <span>
               {accountActive
                 ? "Your account is currently active."
-                : "Your account is currently deactivated."
-              }
+                : "Your account is currently deactivated."}
             </span>
           </div>
 
@@ -2120,10 +1291,8 @@ function ProfilePage() {
               ? "Please wait..."
               : accountActive
                 ? "Deactivate account"
-                : "Activate account"
-            }
+                : "Activate account"}
           </button>
-
         </div>
 
         {/* =========================
@@ -2131,11 +1300,8 @@ function ProfilePage() {
         ========================= */}
 
         <div className="account-danger-zone">
-
           <div className="account-management-info">
-            <strong>
-              Delete account
-            </strong>
+            <strong>Delete account</strong>
 
             <span>
               Permanently delete your account and all associated data.
@@ -2147,16 +1313,10 @@ function ProfilePage() {
             onClick={handleDeleteAccount}
             disabled={deleteLoading}
           >
-            {deleteLoading
-              ? "Deleting..."
-              : "Delete account"
-            }
+            {deleteLoading ? "Deleting..." : "Delete account"}
           </button>
-
         </div>
-
       </div>
-
     </section>
   );
 }
@@ -2164,193 +1324,85 @@ function ProfilePage() {
    SETTINGS MODAL
 ===================================================== */
 
-function SettingsModal({
-  
-  tab,
-  onTab,
-  onClose,
-}) {const { t } = useTranslation();
+function SettingsModal({ tab, onTab, onClose }) {
+  const { t } = useTranslation();
 
   const tabs = [
+    [t("domains"), FiGlobe],
 
-  [t("domains"), FiGlobe],
+    [t("people"), FiUsers],
 
-  [t("people"), FiUsers],
+    [t("general"), FiSliders],
 
-  [t("general"), FiSliders],
+    [t("connectors"), FiZap],
 
-  [t("connectors"), FiZap],
+    [t("plansCredits"), FiPackage],
 
-  [t("plansCredits"), FiPackage],
+    [t("cloudAI"), FiGrid],
 
-  [t("cloudAI"), FiGrid],
+    [t("account"), FiUser],
 
-  [t("account"), FiUser],
-
-  [t("preference"), FiSliders],
-
-];
-
+    [t("preference"), FiSliders],
+  ];
 
   return (
-
     <div className="blueprint-modal-backdrop">
-
       <section className="blueprint-settings-modal">
-
         <aside>
+          <b>{t("settings")}</b>
 
-          <b>
-             {t("settings")}
+          <small>{t("project")}</small>
 
-          </b>
+          {tabs.slice(0, 1).map(([n, I]) => (
+            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
+          ))}
 
+          <small>{t("workspace")}</small>
 
-          <small>
-             {t("project")}
+          {tabs.slice(1, 6).map(([n, I]) => (
+            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
+          ))}
 
-          </small>
+          <small>{t("account")}</small>
 
-
-          {tabs
-            .slice(0, 1)
-            .map(
-              ([n, I]) => (
-
-                <Tab
-                  key={n}
-                  n={n}
-                  I={I}
-                  tab={tab}
-                  onTab={onTab}
-                />
-
-              )
-            )}
-
-
-          <small>
-             {t("workspace")}
-
-          </small>
-
-
-          {tabs
-            .slice(1, 6)
-            .map(
-              ([n, I]) => (
-
-                <Tab
-                  key={n}
-                  n={n}
-                  I={I}
-                  tab={tab}
-                  onTab={onTab}
-                />
-
-              )
-            )}
-
-
-          <small>
-             {t("account")}
-
-          </small>
-
-
-          {tabs
-            .slice(6)
-            .map(
-              ([n, I]) => (
-
-                <Tab
-                  key={n}
-                  n={n}
-                  I={I}
-                  tab={tab}
-                  onTab={onTab}
-                />
-
-              )
-            )}
-
+          {tabs.slice(6).map(([n, I]) => (
+            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
+          ))}
         </aside>
 
-
         <main>
-
-          <button
-            className="blueprint-modal-close"
-            onClick={onClose}
-          >
-
+          <button className="blueprint-modal-close" onClick={onClose}>
             <FiX />
-
           </button>
 
-
-          <SettingsContent
-            tab={tab}
-          />
-
+          <SettingsContent tab={tab} />
         </main>
-
       </section>
-
     </div>
   );
 }
-
 
 /* =====================================================
    TAB
 ===================================================== */
 
-function Tab({
-  n,
-  I,
-  tab,
-  onTab,
-}) {
-
+function Tab({ n, I, tab, onTab }) {
   return (
-
-    <button
-      className={
-        tab === n
-          ? "active"
-          : ""
-      }
-      onClick={() =>
-        onTab(n)
-      }
-    >
-
+    <button className={tab === n ? "active" : ""} onClick={() => onTab(n)}>
       <I />
 
       {n}
 
-      {n ===
-        "Cloud & AI" && (
-
-        <em>
-          ✦ Free
-        </em>
-
-      )}
-
+      {n === "Cloud & AI" && <em>✦ Free</em>}
     </button>
   );
 }
 
-
 /* =====================================================
    SETTINGS CONTENT
 ===================================================== */
-function SettingsContent({
-  tab,
-}) {
-    const { t } = useTranslation();
+function SettingsContent({ tab }) {
+  const { t } = useTranslation();
 
   const [accountActive, setAccountActive] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -2379,20 +1431,17 @@ function SettingsContent({
           ? "Your account has been deactivated."
           : "Your account has been activated."
       );
-
     } catch (error) {
       console.error("Account status error:", error);
 
       setError(
         error.response?.data?.message ||
-        "Something went wrong. Please try again."
+          "Something went wrong. Please try again."
       );
-
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
@@ -2417,15 +1466,13 @@ function SettingsContent({
       sessionStorage.clear();
 
       navigate("/login");
-
     } catch (error) {
       console.error("Delete account error:", error);
 
       setError(
         error.response?.data?.message ||
-        "Unable to delete your account. Please try again."
+          "Unable to delete your account. Please try again."
       );
-
     } finally {
       setDeleteLoading(false);
     }
@@ -2436,922 +1483,353 @@ function SettingsContent({
   =================================================== */
 
   if (tab === "people") {
+    return (
+      <>
+        <h2>
+          {t("people")} <em>{t("free")}</em>
+        </h2>
 
-  return (
+        <div className="blueprint-settings-card">
+          <h3>{t("inviteWorkspaceMembers")}</h3>
 
-    <>
+          <p>
+            {t("upgradeToInviteMembers")} {t("collaborateProjects")}
+          </p>
 
-      <h2>
-        {t("people")} <em>{t("free")}</em>
-      </h2>
+          <div className="blueprint-invite">
+            <input placeholder={t("addEmails")} />
 
-
-      <div className="blueprint-settings-card">
-
-        <h3>
-          {t("inviteWorkspaceMembers")}
-        </h3>
-
-
-        <p>
-          {t("upgradeToInviteMembers")}
-          {" "}
-          {t("collaborateProjects")}
-        </p>
-
-
-        <div className="blueprint-invite">
-
-          <input
-            placeholder={t("addEmails")}
-          />
-
-
-          <button>
-            {t("upgradeToInviteMembers")}
-          </button>
-
+            <button>{t("upgradeToInviteMembers")}</button>
+          </div>
         </div>
 
-      </div>
+        <div className="blueprint-members">
+          <header>
+            {t("user")}
 
+            <span>{t("role")}</span>
 
+            <span>{t("status")}</span>
 
-      <div className="blueprint-members">
+            <span>{t("totalUsage")}</span>
 
+            <span>{t("dateJoined")}</span>
+          </header>
 
-        <header>
-
-          {t("user")}
-
-
-          <span>
-            {t("role")}
-          </span>
-
-
-          <span>
-            {t("status")}
-          </span>
-
-
-          <span>
-            {t("totalUsage")}
-          </span>
-
-
-          <span>
-            {t("dateJoined")}
-          </span>
-
-
-        </header>
-
-
-
-        <p>
-
-          <b>
-            S
-          </b>
-
-
-          saswe eng ({t("you")})
-
-
-          <span>
-            {t("owner")}
-          </span>
-
-
-          <span className="blueprint-active-badge">
-            {t("active")}
-          </span>
-
-
-          <span>
-            6.51 {t("credits")}
-          </span>
-
-
-          <span>
-            Jul 26, 2026
-          </span>
-
-
-        </p>
-
-
-      </div>
-
-
-    </>
-  );
-}
+          <p>
+            <b>S</b>
+            saswe eng ({t("you")})<span>{t("owner")}</span>
+            <span className="blueprint-active-badge">{t("active")}</span>
+            <span>6.51 {t("credits")}</span>
+            <span>Jul 26, 2026</span>
+          </p>
+        </div>
+      </>
+    );
+  }
 
   /* ===================================================
      CONNECTORS
   =================================================== */
 
- if (tab === "connectors") {
+  if (tab === "connectors") {
+    return (
+      <>
+        <h2>{t("connectors")}</h2>
 
-  return (
-
-    <>
-
-      <h2>
-        {t("connectors")}
-      </h2>
-
-
-
-      <div className="blueprint-connector-list">
-
-
-        {[
-          "GitHub",
-          "Supabase",
-          "Stripe",
-          "Google Analytics 4",
-          "Google Search Console",
-          "Google Ads",
-        ].map(
-          (name) => (
-
-
+        <div className="blueprint-connector-list">
+          {[
+            "GitHub",
+            "Supabase",
+            "Stripe",
+            "Google Analytics 4",
+            "Google Search Console",
+            "Google Ads",
+          ].map((name) => (
             <div key={name}>
-
-
               <b>
-
-
                 <FiCode />
-
 
                 {name}
 
-
                 <small>
-
                   {t("connectServiceData", {
-                    name
+                    name,
                   })}
-
-
                 </small>
-
-
               </b>
 
-
-
-              <button>
-
-                {t("connect")}
-
-              </button>
-
-
+              <button>{t("connect")}</button>
             </div>
-
-
-          )
-        )}
-
-
-      </div>
-
-
-    </>
-  );
-}
+          ))}
+        </div>
+      </>
+    );
+  }
 
   /* ===================================================
      PLANS
   =================================================== */
 
   if (tab === "plansCredits") {
+    return (
+      <>
+        <h2>
+          {t("plansCredits")} <em>{t("free")}</em>
+        </h2>
 
-  return (
+        <div className="blueprint-credits-card">
+          <b>{t("creditsRemaining")}</b>
 
-    <>
+          <strong>15 / 15</strong>
 
-      <h2>
+          <i>
+            <span />
+          </i>
 
-        {t("plansCredits")}{" "}
-
-        <em>
-          {t("free")}
-        </em>
-
-      </h2>
-
-
-
-      <div className="blueprint-credits-card">
-
-
-        <b>
-          {t("creditsRemaining")}
-        </b>
-
-
-
-        <strong>
-          15 / 15
-        </strong>
-
-
-
-        <i>
-          <span />
-        </i>
-
-
-
-        <small>
-
-          • {t("dailyCreditsReset", {
+          <small>
+            •{" "}
+            {t("dailyCreditsReset", {
               count: 15,
-              date: "Jul 28"
-          })}
+              date: "Jul 28",
+            })}
+          </small>
+        </div>
 
-        </small>
-
-
-
-      </div>
-
-
-
-      <div className="blueprint-plan-tabs">
-
-        {t("planPayment")}
-
-      </div>
-            <div className="blueprint-plans">
-
-        {[
-          ["free", "$0"],
-          ["pro", "$15.8"],
-          ["max", "$79"],
-        ].map(
-          ([name, price]) => (
-
+        <div className="blueprint-plan-tabs">{t("planPayment")}</div>
+        <div className="blueprint-plans">
+          {[
+            ["free", "$0"],
+            ["pro", "$15.8"],
+            ["max", "$79"],
+          ].map(([name, price]) => (
             <article key={name}>
-
-              <h2>
-                {t(name)}
-              </h2>
-
+              <h2>{t(name)}</h2>
 
               <strong>
-
                 {price}
 
-                <small>
-                  {t("month")}
-                </small>
-
+                <small>{t("month")}</small>
               </strong>
 
-
-              <p>
-                {t("unlockFeatures")}
-              </p>
-
-
+              <p>{t("unlockFeatures")}</p>
             </article>
-
-          )
-        )}
-
-      </div>
-
-
-    </>
-  );
-}
+          ))}
+        </div>
+      </>
+    );
+  }
 
   /* ===================================================
      PREFERENCE
   =================================================== */
 
   if (tab === "preference") {
+    return (
+      <>
+        <h2>{t("preference")}</h2>
 
-  return (
+        <h3>{t("language")}</h3>
 
-    <>
+        <p>{t("changeLanguage")}</p>
 
-      <h2>
-        {t("preference")}
-      </h2>
+        <hr />
 
+        <h3>{t("theme")}</h3>
 
+        <p>{t("customizeAppearance")}</p>
 
-      <h3>
-        {t("language")}
-      </h3>
+        <div className="blueprint-themes">
+          <b>{t("system")}</b>
 
+          <b className="chosen">{t("light")}</b>
 
-
-      <p>
-        {t("changeLanguage")}
-      </p>
-
-
-
-      <hr />
-
-
-
-      <h3>
-        {t("theme")}
-      </h3>
-
-
-
-      <p>
-        {t("customizeAppearance")}
-      </p>
-
-
-
-      <div className="blueprint-themes">
-
-
-        <b>
-          {t("system")}
-        </b>
-
-
-
-        <b className="chosen">
-          {t("light")}
-        </b>
-
-
-
-        <b>
-          {t("dark")}
-        </b>
-
-
-      </div>
-
-
-    </>
-  );
-}
+          <b>{t("dark")}</b>
+        </div>
+      </>
+    );
+  }
 
   /* ===================================================
      DOMAINS
   =================================================== */
 
   if (tab === "domains") {
+    return (
+      <>
+        <h2>{t("domains")} ⓘ</h2>
 
-  return (
+        <h3>{t("connectedDomains")}</h3>
 
-    <>
+        <p>{t("manageConnectedDomains")}</p>
 
-      <h2>
-        {t("domains")} ⓘ
-      </h2>
+        <div className="blueprint-notice">
+          {t("notPublished")}
 
+          <button>{t("publish")}</button>
+        </div>
 
+        <div className="blueprint-domain-row">
+          <FiGlobe />
 
-      <h3>
-        {t("connectedDomains")}
-      </h3>
+          <span>
+            <b>{t("connectExistingDomain")}</b>
 
+            <small>{t("upgradeSubscription")}</small>
+          </span>
 
-
-      <p>
-        {t("manageConnectedDomains")}
-      </p>
-
-
-
-      <div className="blueprint-notice">
-
-
-        {t("notPublished")}
-
-
-
-        <button>
-
-          {t("publish")}
-
-        </button>
-
-
-      </div>
-
-
-
-
-
-      <div className="blueprint-domain-row">
-
-
-        <FiGlobe />
-
-
-
-        <span>
-
-
-          <b>
-
-            {t("connectExistingDomain")}
-
-          </b>
-
-
-
-          <small>
-
-            {t("upgradeSubscription")}
-
-          </small>
-
-
-        </span>
-
-
-
-
-        <button>
-
-          {t("connectDomain")}
-
-        </button>
-
-
-
-      </div>
-
-
-
-    </>
-  );
-}
-
+          <button>{t("connectDomain")}</button>
+        </div>
+      </>
+    );
+  }
 
   /* ===================================================
      ACCOUNT
   =================================================== */
-if (tab === "account") {
-
-  return (
-
-    <>
-
-      <h2>
-        {t("accountSettings")}
-      </h2>
-
-
-
-      <div className="blueprint-account-row">
-
-        {t("avatar")}
-
-        <b>
-          S
-        </b>
-
-      </div>
-
-
-
-
-      <div className="blueprint-account-row">
-
-        {t("username")}
-
-
-        <span>
-          saswe eng ✎
-        </span>
-
-
-      </div>
-
-
-
-
-      <div className="blueprint-account-row">
-
-        {t("email")}
-
-
-        <span>
-          engsaswe@gmail.com
-        </span>
-
-
-      </div>
-
-
-
-
-      <div className="blueprint-account-profile">
-
-
-        <h3>
-          {t("profile")}
-        </h3>
-
-
-
-        <p>
-          {t("manageProfile")}
-        </p>
-
-
-
-
-        {message && (
-
-          <div className="account-success-message">
-
-            {message}
-
-          </div>
-
-        )}
-
-
-
-
-        {error && (
-
-          <div className="account-error-message">
-
-            {error}
-
-          </div>
-
-        )}
-
-
-
-
-
-        <div className="account-management-row">
-
-
-          <div className="account-management-info">
-
-
-            <strong>
-
-              {t("accountStatus")}
-
-            </strong>
-
-
-
-            <span>
-
-              {accountActive
-
-                ? t("accountActive")
-
-                : t("accountDeactivated")
-
-              }
-
-            </span>
-
-
-          </div>
-
-
-
-
-
-          <button
-
-            type="button"
-
-            className={`account-toggle ${
-              accountActive ? "active" : ""
-            }`}
-
-            onClick={handleAccountStatus}
-
-            disabled={loading}
-
-            aria-label={t("toggleAccountStatus")}
-
-          >
-
-
-            <span />
-
-
-          </button>
-
-
-
+  if (tab === "account") {
+    return (
+      <>
+        <h2>{t("accountSettings")}</h2>
+
+        <div className="blueprint-account-row">
+          {t("avatar")}
+
+          <b>S</b>
         </div>
 
+        <div className="blueprint-account-row">
+          {t("username")}
 
-
-
-
-
-
-        <div className="account-danger-zone">
-
-
-          <div className="account-management-info">
-
-
-            <strong>
-
-              {t("deleteAccount")}
-
-            </strong>
-
-
-
-            <span>
-
-              {t("deleteAccountWarning")}
-
-            </span>
-
-
-          </div>
-
-
-
-
-
-          <button
-
-            type="button"
-
-            className="account-delete-button"
-
-            onClick={handleDeleteAccount}
-
-            disabled={deleteLoading}
-
-
-          >
-
-
-            {deleteLoading
-
-              ? t("deleting")
-
-              : t("deleteAccount")
-
-            }
-
-
-          </button>
-
-
-
+          <span>saswe eng ✎</span>
         </div>
 
+        <div className="blueprint-account-row">
+          {t("email")}
 
+          <span>engsaswe@gmail.com</span>
+        </div>
 
-      </div>
+        <div className="blueprint-account-profile">
+          <h3>{t("profile")}</h3>
 
+          <p>{t("manageProfile")}</p>
 
+          {message && <div className="account-success-message">{message}</div>}
 
-    </>
+          {error && <div className="account-error-message">{error}</div>}
 
-  );
+          <div className="account-management-row">
+            <div className="account-management-info">
+              <strong>{t("accountStatus")}</strong>
 
-}
+              <span>
+                {accountActive ? t("accountActive") : t("accountDeactivated")}
+              </span>
+            </div>
+
+            <button
+              type="button"
+
+              className={`account-toggle ${accountActive ? "active" : ""}`}
+
+              onClick={handleAccountStatus}
+
+              disabled={loading}
+
+              aria-label={t("toggleAccountStatus")}
+            >
+              <span />
+            </button>
+          </div>
+
+          <div className="account-danger-zone">
+            <div className="account-management-info">
+              <strong>{t("deleteAccount")}</strong>
+
+              <span>{t("deleteAccountWarning")}</span>
+            </div>
+
+            <button
+              type="button"
+
+              className="account-delete-button"
+
+              onClick={handleDeleteAccount}
+
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? t("deleting") : t("deleteAccount")}
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
   /* ===================================================
      CLOUD & AI
   =================================================== */
-if (tab === "cloudAI") {
+  if (tab === "cloudAI") {
+    return (
+      <>
+        <h2>{t("cloudAI")}</h2>
 
-  return (
+        <div className="blueprint-warning">ⓘ {t("cloudWarning")}</div>
 
-    <>
+        <div className="blueprint-cloud-cards">
+          <article>
+            <h3>◕ {t("cloudAI")}</h3>
 
+            <strong>$0.00</strong>
 
-      <h2>
+            <button>{t("upgrade")}</button>
+          </article>
 
-        {t("cloudAI")}
+          <article>
+            <h3>{t("cloudBalance")}</h3>
 
-      </h2>
+            <hr />
 
-
-
-
-      <div className="blueprint-warning">
-
-
-        ⓘ {t("cloudWarning")}
-
-
-
-      </div>
-
-
-
-
-
-
-      <div className="blueprint-cloud-cards">
-
-
-        <article>
-
-
-          <h3>
-
-            ◕ {t("cloudAI")}
-
-          </h3>
-
-
-
-          <strong>
-
-            $0.00
-
-          </strong>
-
-
-
-          <button>
-
-            {t("upgrade")}
-
-          </button>
-
-
-
-        </article>
-
-
-
-
-
-        <article>
-
-
-          <h3>
-
-            {t("cloudBalance")}
-
-          </h3>
-
-
-
-          <hr />
-
-
-
-          <h3>
-
-            {t("aiBalance")}
-
-          </h3>
-
-
-
-        </article>
-
-
-
-      </div>
-
-
-
-    </>
-
-  );
-
-}
+            <h3>{t("aiBalance")}</h3>
+          </article>
+        </div>
+      </>
+    );
+  }
   /* ===================================================
      GENERAL
   =================================================== */
 
   return (
+    <>
+      <h2>{t("general")}</h2>
 
-  <>
+      <h3>{t("defaultModel")}</h3>
 
+      <div className="blueprint-setting-line">
+        {t("model")}
 
-    <h2>
+        <span>Claude Opus 4.7⌄</span>
+      </div>
 
-      {t("general")}
+      <h3>{t("permissions")}</h3>
 
-    </h2>
+      <div className="blueprint-setting-line">
+        {t("defaultAccess")}
 
+        <span>◎ {t("public")}⌄</span>
+      </div>
 
+      <h3>{t("creditReminder")}</h3>
 
+      <div className="blueprint-setting-line">
+        {t("showCredits")}
 
-
-    <h3>
-
-      {t("defaultModel")}
-
-    </h3>
-
-
-
-
-
-    <div className="blueprint-setting-line">
-
-
-      {t("model")}
-
-
-
-      <span>
-
-        Claude Opus 4.7⌄
-
-      </span>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <h3>
-
-      {t("permissions")}
-
-    </h3>
-
-
-
-
-
-    <div className="blueprint-setting-line">
-
-
-      {t("defaultAccess")}
-
-
-
-      <span>
-
-        ◎ {t("public")}⌄
-
-      </span>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <h3>
-
-      {t("creditReminder")}
-
-    </h3>
-
-
-
-
-
-
-    <div className="blueprint-setting-line">
-
-
-      {t("showCredits")}
-
-
-
-      <i className="blueprint-toggle" />
-
-
-
-    </div>
-
-
-
-
-  </>
-
-);}
+        <i className="blueprint-toggle" />
+      </div>
+    </>
+  );
+}
 
 /* =====================================================
    EXPORT

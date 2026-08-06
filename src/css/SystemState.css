@@ -2,355 +2,351 @@
    SYSTEM PAGE
 ========================= */
 
-.system-page{
-    padding:30px;
-    background:var(--bg);
-    min-height:100vh;
-    color:var(--text);
-    font-family:"Inter",sans-serif;
+.system-page {
+  padding: 30px;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--text);
+  font-family: "Inter", sans-serif;
 }
 
 /* ================= HEADER ================= */
 
-.system-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:30px;
+.system-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
 }
 
-.system-header h1{
-    margin:0;
-    font-size:32px;
-    color:var(--text);
+.system-header h1 {
+  margin: 0;
+  font-size: 32px;
+  color: var(--text);
 }
 
-.system-header p{
-    color:var(--text2);
+.system-header p {
+  color: var(--text2);
 }
 
 /* ================= REFRESH BUTTON ================= */
 
-.refresh-btn{
-    display:flex;
-    align-items:center;
-    gap:8px;
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    padding:12px 20px;
+  padding: 12px 20px;
 
-    background:var(--card);
-    color:var(--text);
+  background: var(--card);
+  color: var(--text);
 
-    border:1px solid var(--border);
-    border-radius:12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
 
-    cursor:pointer;
+  cursor: pointer;
 
-    box-shadow:var(--shadow);
+  box-shadow: var(--shadow);
 
-    transition:.3s;
+  transition: 0.3s;
 }
 
-.refresh-btn:hover{
-    background:var(--primary);
-    color:#fff;
+.refresh-btn:hover {
+  background: var(--primary);
+  color: #fff;
 }
 
 /* ================= CARDS ================= */
 
-.system-cards{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:20px;
+.system-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
-.system-card{
-    background:var(--card);
-    padding:22px;
-    border-radius:18px;
-    display:flex;
-    gap:15px;
-    align-items:center;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
+.system-card {
+  background: var(--card);
+  padding: 22px;
+  border-radius: 18px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
-.system-card span{
-    color:var(--text2);
+.system-card span {
+  color: var(--text2);
 }
 
-.system-card h2{
-    margin:8px 0;
-    color:var(--text);
+.system-card h2 {
+  margin: 8px 0;
+  color: var(--text);
 }
 
 /* ================= ICONS ================= */
 
-.card-icon{
-    width:50px;
-    height:50px;
-    border-radius:15px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:22px;
+.card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 22px;
 }
 
-.purple{
-    background:#ede9fe;
-    color:#7c3aed;
+.purple {
+  background: #ede9fe;
+  color: #7c3aed;
 }
 
-.green{
-    background:#dcfce7;
-    color:#16a34a;
+.green {
+  background: #dcfce7;
+  color: #16a34a;
 }
 
-.orange{
-    background:#ffedd5;
-    color:#ea580c;
+.orange {
+  background: #ffedd5;
+  color: #ea580c;
 }
 
-.blue{
-    background:#dbeafe;
-    color:#2563eb;
+.blue {
+  background: #dbeafe;
+  color: #2563eb;
 }
 
 /* ================= BOXES ================= */
 
 .resources-card,
-.services-table{
-    margin-top:25px;
-    padding:25px;
-    background:var(--card);
-    border-radius:18px;
-    border:1px solid var(--border);
-    box-shadow:var(--shadow);
+.services-table {
+  margin-top: 25px;
+  padding: 25px;
+  background: var(--card);
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
 }
 
 .resources-card h2,
-.services-table h2{
-    margin-top:0;
-    color:var(--text);
+.services-table h2 {
+  margin-top: 0;
+  color: var(--text);
 }
 
 /* ================= PROGRESS ================= */
 
-.progress-item{
-    margin-top:20px;
+.progress-item {
+  margin-top: 20px;
 }
 
-.progress-item div:first-child{
-    display:flex;
-    justify-content:space-between;
-    margin-bottom:8px;
-    color:var(--text);
+.progress-item div:first-child {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: var(--text);
 }
 
-.progress{
-    height:10px;
-    background:var(--border);
-    border-radius:20px;
-    overflow:hidden;
+.progress {
+  height: 10px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
 }
 
-.progress div{
-    height:100%;
-    background:var(--primary);
+.progress div {
+  height: 100%;
+  background: var(--primary);
 }
 
 /* ================= TABLE ================= */
 
-.services-table table{
-    width:100%;
-    border-collapse:collapse;
+.services-table table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.services-table th{
-    text-align:left;
-    padding:15px;
-    color:var(--text2);
-    background:var(--bg);
+.services-table th {
+  text-align: left;
+  padding: 15px;
+  color: var(--text2);
+  background: var(--bg);
 }
 
-.services-table td{
-    padding:15px;
-    color:var(--text);
-    border-top:1px solid var(--border);
+.services-table td {
+  padding: 15px;
+  color: var(--text);
+  border-top: 1px solid var(--border);
 }
 
 /* ================= STATUS ================= */
 
-.service-status{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    font-weight:600;
+.service-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
 }
 
-.service-status.running{
-    color:#16a34a;
+.service-status.running {
+  color: #16a34a;
 }
 
-.service-status.warning{
-    color:#d97706;
+.service-status.warning {
+  color: #d97706;
 }
 
-.service-status.down{
-    color:#dc2626;
+.service-status.down {
+  color: #dc2626;
 }
 
 /* ================= TOOLBAR ================= */
 
-.system-toolbar{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.system-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
-    background:var(--card);
+  background: var(--card);
 
-    padding:20px;
+  padding: 20px;
 
-    border-radius:18px;
+  border-radius: 18px;
 
-    margin:25px 0;
+  margin: 25px 0;
 
-    border:1px solid var(--border);
+  border: 1px solid var(--border);
 
-    box-shadow:var(--shadow);
+  box-shadow: var(--shadow);
 }
 
 /* ================= SEARCH ================= */
 
-.system-search{
-    display:flex;
-    align-items:center;
-    gap:10px;
+.system-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 
-    background:var(--card);
+  background: var(--card);
 
-    padding:12px 15px;
+  padding: 12px 15px;
 
-    border-radius:12px;
+  border-radius: 12px;
 
-    border:1px solid var(--border);
+  border: 1px solid var(--border);
 }
 
-.system-search input{
-    border:none;
-    outline:none;
-    background:transparent;
-    color:var(--text);
+.system-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
 }
 
-.system-search input::placeholder{
-    color:var(--text2);
+.system-search input::placeholder {
+  color: var(--text2);
 }
 
 /* ================= FILTERS ================= */
 
-.system-filters{
-    display:flex;
-    gap:10px;
+.system-filters {
+  display: flex;
+  gap: 10px;
 }
 
-.system-filters button{
-    border:1px solid var(--border);
+.system-filters button {
+  border: 1px solid var(--border);
 
-    background:var(--card);
+  background: var(--card);
 
-    color:var(--text);
+  color: var(--text);
 
-    padding:10px 18px;
+  padding: 10px 18px;
 
-    border-radius:10px;
+  border-radius: 10px;
 
-    cursor:pointer;
+  cursor: pointer;
 
-    transition:.3s;
+  transition: 0.3s;
 }
 
-.system-filters button:hover{
-    background:var(--primary);
-    color:#fff;
+.system-filters button:hover {
+  background: var(--primary);
+  color: #fff;
 }
 
-.active-filter{
-    background:var(--primary) !important;
-    color:#fff !important;
-    border-color:var(--primary) !important;
+.active-filter {
+  background: var(--primary) !important;
+  color: #fff !important;
+  border-color: var(--primary) !important;
 }
 
 /* ================= RESTART ================= */
 
-.restart-btn{
-    display:flex;
-    align-items:center;
-    gap:5px;
+.restart-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 
-    padding:8px 12px;
+  padding: 8px 12px;
 
-    background:var(--card);
+  background: var(--card);
 
-    color:var(--primary);
+  color: var(--primary);
 
-    border:1px solid var(--border);
+  border: 1px solid var(--border);
 
-    border-radius:10px;
+  border-radius: 10px;
 
-    cursor:pointer;
+  cursor: pointer;
 
-    transition:.3s;
+  transition: 0.3s;
 }
 
-.restart-btn:hover{
-    background:var(--primary);
-    color:#fff;
+.restart-btn:hover {
+  background: var(--primary);
+  color: #fff;
 }
 
 /* ================= RESPONSIVE ================= */
 
-@media(max-width:1000px){
+@media (max-width: 1000px) {
+  .system-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-.system-cards{
-    grid-template-columns:repeat(2,1fr);
+  .system-toolbar {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
 }
 
-.system-toolbar{
-    flex-direction:column;
-    gap:15px;
-    align-items:stretch;
-}
+@media (max-width: 700px) {
+  .system-page {
+    padding: 15px;
+  }
 
-}
+  .system-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 
-@media(max-width:700px){
+  .system-cards {
+    grid-template-columns: 1fr;
+  }
 
-.system-page{
-    padding:15px;
-}
+  .system-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-.system-header{
-    flex-direction:column;
-    align-items:flex-start;
-    gap:15px;
-}
+  .system-search {
+    width: 100%;
+  }
 
-.system-cards{
-    grid-template-columns:1fr;
-}
-
-.system-toolbar{
-    flex-direction:column;
-    align-items:stretch;
-}
-
-.system-search{
-    width:100%;
-}
-
-.system-filters{
-    flex-wrap:wrap;
-}
-
+  .system-filters {
+    flex-wrap: wrap;
+  }
 }

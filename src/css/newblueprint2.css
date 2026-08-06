@@ -11,57 +11,50 @@
 ===================================================== */
 
 :root {
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --surface-2: #f5f5f5;
 
-  --bg:#fafafa;
-  --surface:#ffffff;
-  --surface-2:#f5f5f5;
+  --text: #222222;
+  --text-secondary: #68768e;
 
-  --text:#222222;
-  --text-secondary:#68768e;
+  --border: #e5e5e5;
 
-  --border:#e5e5e5;
+  --hover: #ececec;
 
-  --hover:#ececec;
+  --primary: #4f6ef7;
 
-  --primary:#4f6ef7;
+  --primary-hover: #3d5ceb;
 
-  --primary-hover:#3d5ceb;
+  --danger: #ef4444;
 
-  --danger:#ef4444;
-
-  --shadow:
-  0 8px 24px rgba(0,0,0,.08);
-
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
-
 
 /* ================= DARK ================= */
 
 [data-theme="dark"] {
+  --bg: #0f1115;
 
-  --bg:#0f1115;
+  --surface: #181b22;
 
-  --surface:#181b22;
+  --surface-2: #20242d;
 
-  --surface-2:#20242d;
+  --text: #f5f5f5;
 
-  --text:#f5f5f5;
+  --text-secondary: #b8beca;
 
-  --text-secondary:#b8beca;
+  --border: #2b313c;
 
-  --border:#2b313c;
+  --hover: #2a303b;
 
-  --hover:#2a303b;
+  --primary: #7b6bff;
 
-  --primary:#7b6bff;
+  --primary-hover: #927cff;
 
-  --primary-hover:#927cff;
+  --danger: #ff6b6b;
 
-  --danger:#ff6b6b;
-
-  --shadow:
-  0 12px 35px rgba(0,0,0,.45);
-
+  --shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
 }
 /* =========================
    GLOBAL
@@ -78,7 +71,6 @@ body {
   font-family: Inter, Arial, sans-serif;
 }
 
-
 /* =========================
    APP
 ========================= */
@@ -87,7 +79,6 @@ body {
   min-height: 100vh;
   background: var(--bg);
 }
-
 
 /* =========================
    SIDEBAR
@@ -106,7 +97,6 @@ body {
   z-index: 5;
 }
 
-
 /* =========================
    BRAND
 ========================= */
@@ -123,7 +113,6 @@ body {
   margin-left: auto;
   color: white;
 }
-
 
 /* =========================
    ATOMS / PROJECT SYMBOL
@@ -167,7 +156,6 @@ body {
   bottom: 2px;
 }
 
-
 /* =========================
    SIDEBAR BUTTON RESET
 ========================= */
@@ -177,9 +165,8 @@ body {
   border: 0;
   background: transparent;
   cursor: pointer;
-  color:rgb(102, 102, 102);
+  color: rgb(102, 102, 102);
 }
-
 
 /* =========================
    WORKSPACE SWITCHER
@@ -209,7 +196,6 @@ body {
   font-size: 13px;
 }
 
-
 /* =========================
    WORKSPACE BADGES
 ========================= */
@@ -226,7 +212,6 @@ body {
 
   font-size: 12px;
 }
-
 
 /* =========================
    SIDEBAR NAVIGATION
@@ -252,7 +237,6 @@ body {
   background: var(--bp-color-dcdcdc);
 }
 
-
 /* =========================
    RECENTS
 ========================= */
@@ -276,7 +260,6 @@ body {
   text-align: left;
   color: var(--bp-color-444);
 }
-
 
 /* =========================
    SIDEBAR BOTTOM
@@ -326,7 +309,6 @@ body {
   font-size: 12px;
 }
 
-
 /* =========================
    SIDEBAR FOOTER
 ========================= */
@@ -348,65 +330,48 @@ body {
   gap: 20px;
 }
 
-
 /* =========================
    AVATAR THEME FIX
 ========================= */
 
-.blueprint-avatar{
+.blueprint-avatar {
+  width: 34px;
+  height: 34px;
 
-    width:34px;
-    height:34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    display:flex;
-    align-items:center;
-    justify-content:center;
+  border-radius: 50%;
 
-    border-radius:50%;
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--primary) 25%, var(--surface)),
+    var(--surface)
+  );
 
+  border: 1px solid var(--border);
 
-    background:
-      linear-gradient(
-        145deg,
-        color-mix(in srgb,var(--primary) 25%,var(--surface)),
-        var(--surface)
-      );
+  color: var(--text);
 
+  font-size: 14px;
+  font-weight: 700;
 
-    border:1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
 
-
-    color:var(--text);
-
-
-    font-size:14px;
-    font-weight:700;
-
-
-    box-shadow:
-      0 4px 12px rgba(0,0,0,.18);
-
-
-    transition:.25s ease;
+  transition: 0.25s ease;
 }
 
+.blueprint-avatar:hover {
+  background: var(--primary);
 
+  border-color: var(--primary);
 
-.blueprint-avatar:hover{
+  color: white;
 
-    background:var(--primary);
+  transform: translateY(-2px);
 
-    border-color:var(--primary);
-
-    color:white;
-
-
-    transform:translateY(-2px);
-
-
-    box-shadow:
-      0 8px 20px rgba(0,0,0,.3);
-
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* =========================
@@ -424,7 +389,6 @@ body {
 
   box-shadow: 0 8px 18px var(--bp-color-0002);
 }
-
 
 /* =========================
    WORKSPACE POPOVER
@@ -452,7 +416,6 @@ body {
   color: var(--bp-color-888);
   font-size: 12px;
 }
-
 
 /* =========================
    CREDIT
@@ -492,7 +455,6 @@ body {
   text-align: right;
 }
 
-
 /* =========================
    WORKSPACE ROW
 ========================= */
@@ -508,7 +470,6 @@ body {
 .blueprint-workspace-row svg {
   margin-left: auto;
 }
-
 
 /* =========================
    PROFILE POPOVER
@@ -593,7 +554,6 @@ body {
     width 0.4s ease;
 }
 
-
 /* =========================
    COLLAPSED SIDEBAR
 ========================= */
@@ -635,7 +595,6 @@ body {
   color: var(--bp-color-5061ec);
 }
 
-
 /* =========================
    TEAM ORBS
 ========================= */
@@ -662,15 +621,15 @@ body {
   font-size: 23px;
 }
 
-
 /* =========================
    HOME TITLE
 ========================= */
 
 .blueprint-home-page h1 {
-  font: 36px Georgia, serif;
+  font:
+    36px Georgia,
+    serif;
 }
-
 
 /* =========================
    HOME PROMPT
@@ -716,7 +675,7 @@ body {
   border: 1px solid var(--bp-color-eee);
   border-radius: 20px;
 
-  background:var(--bp-color-bbb);
+  background: var(--bp-color-bbb);
 }
 
 .blueprint-home-prompt .go {
@@ -741,7 +700,6 @@ body {
 .blueprint-home-prompt aside span {
   flex: 1;
 }
-
 
 /* =========================
    CATALOG
@@ -769,7 +727,6 @@ body {
   font-size: 13px;
 }
 
-
 /* =========================
    TABS
 ========================= */
@@ -786,9 +743,9 @@ body {
 
   border-radius: 30px;
 
-   background:var(--hover);
+  background: var(--hover);
 
-    border:1px solid var(--border);
+  border: 1px solid var(--border);
 }
 
 .blueprint-tabs > * {
@@ -806,7 +763,7 @@ body {
   border-radius: 25px;
   background: var(--bp-color-bbb);
   background: transparent;
- color:var(--text-secondary);
+  color: var(--text-secondary);
 
   cursor: pointer;
 
@@ -814,20 +771,18 @@ body {
 }
 
 .blueprint-tabs button.active {
-  
-    background:var(--surface);
+  background: var(--surface);
 
-    color:var(--text);
+  color: var(--text);
 
-    box-shadow:none;
+  box-shadow: none;
 
   font-weight: 600;
 }
 
 .blueprint-tabs button:hover {
-    background:rgba(255,255,255,.05);
+  background: rgba(255, 255, 255, 0.05);
 }
-
 
 /* =========================
    FILTERS
@@ -842,7 +797,7 @@ body {
 
   overflow: hidden;
 
-white-space: nowrap;
+  white-space: nowrap;
   color: var(--text-secondary);
   font-size: 14px;
 }
@@ -855,7 +810,6 @@ white-space: nowrap;
   background: var(--bp-color-eee);
   color: var(--text);
 }
-
 
 /* =========================================================
    RESOURCES
@@ -883,16 +837,16 @@ white-space: nowrap;
   background: var(--surface);
   box-shadow: var(--shadow);
   transition:
-    transform .28s ease,
-    box-shadow .28s ease,
-    border-color .28s ease;
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    border-color 0.28s ease;
   cursor: pointer;
 }
 
 .blueprint-resource-grid article:hover {
   transform: translateY(-6px);
   border-color: var(--primary);
-  box-shadow: 0 18px 40px rgba(0,0,0,.28);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
 }
 
 /* =========================
@@ -916,316 +870,279 @@ white-space: nowrap;
   font-weight: 700;
 }
 
-.blueprint-resource-image::before{
-  content:"";
-  position:absolute;
-  inset:0;
+.blueprint-resource-image::before {
+  content: "";
+  position: absolute;
+  inset: 0;
 
-  background:
-    radial-gradient(circle at top right,
-rgba(255,255,255,.10),
-transparent 55%);
-  pointer-events:none;
+  background: radial-gradient(
+    circle at top right,
+    rgba(255, 255, 255, 0.1),
+    transparent 55%
+  );
+  pointer-events: none;
 }
 
-.blueprint-resource-image::after{
-  content:"";
-  position:absolute;
+.blueprint-resource-image::after {
+  content: "";
+  position: absolute;
 
-  width:240px;
-  height:240px;
+  width: 240px;
+  height: 240px;
 
-  border-radius:50%;
+  border-radius: 50%;
 
-    background:rgba(255,255,255,.05);
+  background: rgba(255, 255, 255, 0.05);
 
-  bottom:-120px;
-  right:-60px;
+  bottom: -120px;
+  right: -60px;
 }
 
 /* =========================
    HEADER
 ========================= */
 
-.blueprint-resources-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:30px;
+.blueprint-resources-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
 /* =========================
    BACK BUTTON
 ========================= */
 
-.blueprint-back-button{
+.blueprint-back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-    display:flex;
-    align-items:center;
-    gap:8px;
+  padding: 10px 18px;
 
-    padding:10px 18px;
+  border-radius: 14px;
 
-    border-radius:14px;
+  border: 1px solid var(--border);
 
-    border:1px solid var(--border);
+  background: var(--surface);
 
-    background:var(--surface);
+  color: var(--text);
 
-    color:var(--text);
+  font-size: 14px;
+  font-weight: 600;
 
-    font-size:14px;
-    font-weight:600;
+  cursor: pointer;
 
-    cursor:pointer;
-
-    transition:.25s;
+  transition: 0.25s;
 }
 
-.blueprint-back-button:hover{
+.blueprint-back-button:hover {
+  background: var(--hover);
 
-    background:var(--hover);
+  border-color: var(--primary);
 
-    border-color:var(--primary);
-
-    color:var(--primary);
-
+  color: var(--primary);
 }
-
 
 /* =========================
    DISCOVER / TEMPLATE
 ========================= */
 
-.blueprint-tabs{
+.blueprint-tabs {
+  display: inline-flex;
 
-    display:inline-flex;
+  padding: 5px;
 
-    padding:5px;
+  margin-bottom: 28px;
 
-    margin-bottom:28px;
+  background: var(--hover);
 
-    background:var(--hover);
+  border: 1px solid var(--border);
 
-    border:1px solid var(--border);
+  border-radius: 18px;
 
-    border-radius:18px;
-
-    gap:4px;
+  gap: 4px;
 }
 
-.blueprint-tabs button{
+.blueprint-tabs button {
+  padding: 11px 26px;
 
-    padding:11px 26px;
+  border: none;
 
-    border:none;
+  border-radius: 14px;
 
-    border-radius:14px;
+  background: transparent;
 
-    background:transparent;
+  color: var(--text-secondary);
 
-    color:var(--text-secondary);
+  font-size: 15px;
 
-    font-size:15px;
+  font-weight: 600;
 
-    font-weight:600;
+  cursor: pointer;
 
-    cursor:pointer;
-
-    transition:.25s;
+  transition: 0.25s;
 }
 
-.blueprint-tabs button:hover{
+.blueprint-tabs button:hover {
+  color: var(--text);
 
-    color:var(--text);
-
-    background:rgba(255,255,255,.05);
-
+  background: rgba(255, 255, 255, 0.05);
 }
 
-.blueprint-tabs button.active{
+.blueprint-tabs button.active {
+  background: var(--surface);
 
-    background:var(--surface);
+  color: var(--text);
 
-    color:var(--text);
-
-    box-shadow:0 2px 10px rgba(0,0,0,.18);
-
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.18);
 }
 /* =========================
    RESOURCE THEMES
 ========================= */
 
-.blueprint-resource-image.forex{
-  background:linear-gradient(
-    135deg,
-    #203d63,
-    #18273c
-  );
+.blueprint-resource-image.forex {
+  background: linear-gradient(135deg, #203d63, #18273c);
 }
 
-.blueprint-resource-image.purple{
-  background:linear-gradient(
-    135deg,
-    #6e5cff,
-    #4735a8
-  );
+.blueprint-resource-image.purple {
+  background: linear-gradient(135deg, #6e5cff, #4735a8);
 }
 
-.blueprint-resource-image.green{
-  background:linear-gradient(
-    135deg,
-    #23845f,
-    #195243
-  );
+.blueprint-resource-image.green {
+  background: linear-gradient(135deg, #23845f, #195243);
 }
 
-.blueprint-resource-image.dark{
-  background:linear-gradient(
-    135deg,
-    #434959,
-    #2b303b
-  );
+.blueprint-resource-image.dark {
+  background: linear-gradient(135deg, #434959, #2b303b);
 }
 
-.blueprint-resource-image.fantasy{
-  background:linear-gradient(
-    135deg,
-    #b1852d,
-    #7b5b20
-  );
+.blueprint-resource-image.fantasy {
+  background: linear-gradient(135deg, #b1852d, #7b5b20);
 }
 
-.blueprint-resource-image.wallet{
-  background:linear-gradient(
-    135deg,
-    #147b67,
-    #12453d
-  );
+.blueprint-resource-image.wallet {
+  background: linear-gradient(135deg, #147b67, #12453d);
 }
 
 /* =========================
    RESOURCE FOOTER
 ========================= */
 
-.blueprint-resource-grid footer{
-  display:flex;
-  align-items:center;
-  gap:12px;
+.blueprint-resource-grid footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-  padding:16px 18px;
+  padding: 16px 18px;
 }
 
 /* =========================
    RESOURCE AVATAR
 ========================= */
 
-.blueprint-resource-avatar{
-  width:38px;
-  height:38px;
+.blueprint-resource-avatar {
+  width: 38px;
+  height: 38px;
 
-  display:grid;
-  place-items:center;
+  display: grid;
+  place-items: center;
 
-  border-radius:50%;
+  border-radius: 50%;
 
-  background:var(--primary);
-  color:#fff;
+  background: var(--primary);
+  color: #fff;
 
-  font-weight:600;
+  font-weight: 600;
 
-  flex-shrink:0;
+  flex-shrink: 0;
 }
 
 /* =========================
    RESOURCE TEXT
 ========================= */
 
-.blueprint-resource-grid strong{
-  display:block;
-  font-size:15px;
-  color:var(--text);
+.blueprint-resource-grid strong {
+  display: block;
+  font-size: 15px;
+  color: var(--text);
 }
 
-.blueprint-resource-grid small{
-  display:block;
-  margin-top:4px;
+.blueprint-resource-grid small {
+  display: block;
+  margin-top: 4px;
 
-  color:var(--text-secondary);
-  font-size:13px;
-  line-height:1.45;
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
 }
 
 /* =========================
    FILTERS
 ========================= */
 
-.blueprint-filters{
-  display:flex;
-  align-items:center;
-  gap:14px;
+.blueprint-filters {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 
-  margin-bottom:28px;
+  margin-bottom: 28px;
 
-  overflow:auto;
-  white-space:nowrap;
-  scrollbar-width:none;
+  overflow: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
 }
 
-.blueprint-filters::-webkit-scrollbar{
-  display:none;
+.blueprint-filters::-webkit-scrollbar {
+  display: none;
 }
 
-.blueprint-filters button{
-  padding:9px 18px;
+.blueprint-filters button {
+  padding: 9px 18px;
 
-  border:1px solid var(--border);
-  border-radius:999px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
 
-  background:var(--hover);
-  color:var(--text-secondary);
+  background: var(--hover);
+  color: var(--text-secondary);
 
-  cursor:pointer;
+  cursor: pointer;
 
-  transition:.25s;
+  transition: 0.25s;
 }
 
-.blueprint-filters button:hover{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:#fff;
+.blueprint-filters button:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
 
-  transform:translateY(-2px);
+  transform: translateY(-2px);
 }
 
-.blueprint-filters button.filter-active{
-  background:var(--primary);
-  border-color:var(--primary);
-  color:#fff;
+.blueprint-filters button.filter-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
 }
 
 /* =========================
    RESPONSIVE
 ========================= */
 
-@media (max-width:1200px){
-
-  .blueprint-resource-grid{
-    grid-template-columns:repeat(2,1fr);
+@media (max-width: 1200px) {
+  .blueprint-resource-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-
 }
 
-@media (max-width:768px){
-
-  .blueprint-resource-grid{
-    grid-template-columns:1fr;
+@media (max-width: 768px) {
+  .blueprint-resource-grid {
+    grid-template-columns: 1fr;
   }
 
-  .blueprint-resource-image{
-    height:170px;
+  .blueprint-resource-image {
+    height: 170px;
   }
-
 }
 
 /* =========================
@@ -1263,259 +1180,159 @@ transparent 55%);
   border-top: 1px solid var(--bp-color-eee);
 }
 
-
 /* =========================================================
    SETTINGS MODAL — DARK MODE FIX
 ========================================================= */
 
-
 /* MAIN MODAL */
 
 .blueprint-settings-modal {
+  background: var(--surface);
 
-  background:var(--surface);
-
-  color:var(--text);
-
+  color: var(--text);
 }
-
-
 
 /* SETTINGS SIDEBAR */
 
 .blueprint-settings-modal > aside {
+  background: var(--surface);
 
-  background:var(--surface);
-
-  border-right:1px solid var(--border);
-
+  border-right: 1px solid var(--border);
 }
-
-
 
 /* SIDEBAR BUTTONS */
 
 .blueprint-settings-modal > aside button {
-
-  color:var(--text-secondary);
-
+  color: var(--text-secondary);
 }
-
 
 .blueprint-settings-modal > aside button:hover {
+  background: var(--hover);
 
-  background:var(--hover);
-
-  color:var(--text);
-
+  color: var(--text);
 }
-
 
 .blueprint-settings-modal > aside button.active {
+  background: var(--hover);
 
-  background:var(--hover);
-
-  color:var(--text);
-
+  color: var(--text);
 }
-
-
 
 /* BADGES */
 
 .blueprint-settings-modal em {
+  background: var(--hover);
 
-  background:var(--hover);
-
-  color:var(--text-secondary);
-
+  color: var(--text-secondary);
 }
-
 
 .blueprint-settings-modal > aside em {
+  background: color-mix(in srgb, var(--primary) 15%, var(--surface));
 
-  background:color-mix(
-    in srgb,
-    var(--primary) 15%,
-    var(--surface)
-  );
-
-  color:var(--primary);
-
+  color: var(--primary);
 }
-
-
 
 /* TITLES */
 
 .blueprint-settings-modal h2,
 .blueprint-settings-modal h3 {
-
-  color:var(--text);
-
+  color: var(--text);
 }
-
-
 
 .blueprint-settings-modal p {
-
-  color:var(--text-secondary);
-
+  color: var(--text-secondary);
 }
-
-
 
 /* CARDS */
 
 .blueprint-settings-card,
 .blueprint-members {
+  background: var(--surface);
 
-
-  background:var(--surface);
-
-  border:1px solid var(--border);
-
+  border: 1px solid var(--border);
 }
-
-
 
 /* INVITE INPUT */
 
-
 .blueprint-invite input {
+  background: var(--bg);
 
+  color: var(--text);
 
-  background:var(--bg);
-
-  color:var(--text);
-
-  border:1px solid var(--border);
-
+  border: 1px solid var(--border);
 }
 
-
-
-.blueprint-invite input::placeholder{
-
-  color:var(--text-secondary);
-
+.blueprint-invite input::placeholder {
+  color: var(--text-secondary);
 }
-
-
 
 /* INVITE BUTTON */
 
 .blueprint-invite button {
+  background: var(--primary);
 
-
-  background:var(--primary);
-
-  color:white;
-
+  color: white;
 }
 
-
-
-.blueprint-invite button:hover{
-
-  background:var(--primary-hover);
-
+.blueprint-invite button:hover {
+  background: var(--primary-hover);
 }
-
-
 
 /* MEMBERS TABLE */
 
 .blueprint-members header {
-
-
-  color:var(--text-secondary);
-
+  color: var(--text-secondary);
 }
-
-
 
 .blueprint-members p {
+  color: var(--text);
 
-
-  color:var(--text);
-
-  border-top:1px solid var(--border);
-
+  border-top: 1px solid var(--border);
 }
-
-
 
 /* ACTIVE BADGE */
 
-
 .blueprint-active-badge {
+  background: rgba(34, 197, 94, 0.15);
 
-
-  background:rgba(34,197,94,.15);
-
-  color:#22c55e;
-
-
+  color: #22c55e;
 }
-
-
 
 /* CLOSE BUTTON */
 
 .blueprint-modal-close {
-
-  color:var(--text-secondary);
-
+  color: var(--text-secondary);
 }
-
 
 .blueprint-modal-close:hover {
-
-  color:var(--text);
-
+  color: var(--text);
 }
 
-
-
 /* CONNECTORS / ROW DIVIDERS */
-
 
 .blueprint-connector-list > div,
 .blueprint-domain-row,
 .blueprint-account-row,
 .blueprint-setting-line {
-
-
-  border-color:var(--border);
-
+  border-color: var(--border);
 }
-
-
 
 /* BUTTONS INSIDE SETTINGS */
 
 .blueprint-connector-list button,
 .blueprint-domain-row button,
 .blueprint-notice button {
+  background: var(--surface);
 
+  color: var(--text);
 
-  background:var(--surface);
-
-  color:var(--text);
-
-  border:1px solid var(--border);
-
+  border: 1px solid var(--border);
 }
-
 
 .blueprint-connector-list button:hover,
 .blueprint-domain-row button:hover,
 .blueprint-notice button:hover {
-
-
-  background:var(--hover);
-
+  background: var(--hover);
 }
 /* =========================
    SETTINGS SIDEBAR
@@ -1567,7 +1384,6 @@ transparent 55%);
   background: var(--bp-color-eee);
 }
 
-
 /* =========================
    SETTINGS BADGES
 ========================= */
@@ -1591,7 +1407,6 @@ transparent 55%);
   background: var(--bp-color-e8ecff);
   color: var(--bp-color-4863ef);
 }
-
 
 /* =========================
    SETTINGS MAIN
@@ -1637,7 +1452,6 @@ transparent 55%);
   font-size: 14px;
 }
 
-
 /* =========================
    SETTINGS CARDS
 ========================= */
@@ -1654,7 +1468,6 @@ transparent 55%);
 .blueprint-settings-card h3 {
   margin: 3px 0;
 }
-
 
 /* =========================
    INVITE
@@ -1686,7 +1499,6 @@ transparent 55%);
   font-weight: bold;
 }
 
-
 /* =========================
    MEMBERS
 ========================= */
@@ -1714,7 +1526,6 @@ transparent 55%);
   display: none;
 }
 
-
 /* =========================
    ACTIVE BADGE
 ========================= */
@@ -1729,7 +1540,6 @@ transparent 55%);
   background: var(--bp-color-e6f5ea);
   color: var(--bp-color-238c4c);
 }
-
 
 /* =========================
    CONNECTORS
@@ -1772,7 +1582,6 @@ transparent 55%);
   background: var(--surface);
 }
 
-
 /* =========================
    CREDITS
 ========================= */
@@ -1802,7 +1611,6 @@ transparent 55%);
   border-radius: 9px;
 }
 
-
 /* =========================
    PLAN TABS
 ========================= */
@@ -1812,7 +1620,6 @@ transparent 55%);
 
   color: var(--bp-color-4b60e8);
 }
-
 
 /* =========================
    PLANS + CLOUD CARDS
@@ -1844,7 +1651,6 @@ transparent 55%);
   font-size: 14px;
 }
 
-
 /* =========================
    THEMES
 ========================= */
@@ -1872,7 +1678,6 @@ transparent 55%);
   color: var(--text);
 }
 
-
 /* =========================
    NOTICE + WARNING
 ========================= */
@@ -1889,7 +1694,6 @@ transparent 55%);
 .blueprint-notice button {
   float: right;
 }
-
 
 /* =========================
    DOMAIN
@@ -1917,7 +1721,6 @@ transparent 55%);
   color: var(--bp-color-888);
 }
 
-
 /* =========================
    ACCOUNT + SETTINGS ROW
 ========================= */
@@ -1937,7 +1740,6 @@ transparent 55%);
    + INTERACTIONS + CHAT + PROFILE
 ========================================================= */
 
-
 /* =========================
    ACCOUNT
 ========================= */
@@ -1956,7 +1758,6 @@ transparent 55%);
 
   font-size: 20px;
 }
-
 
 /* =========================
    CLOUD CARDS
@@ -1987,7 +1788,6 @@ transparent 55%);
   color: var(--surface);
 }
 
-
 /* =========================
    TOGGLE
 ========================= */
@@ -2000,7 +1800,6 @@ transparent 55%);
 
   background: var(--bp-color-bbb);
 }
-
 
 /* =========================
    COLLAPSED SIDEBAR
@@ -2053,7 +1852,6 @@ transparent 55%);
   justify-content: center;
 }
 
-
 /* =========================
    GENERAL TRANSITIONS
 ========================= */
@@ -2087,7 +1885,6 @@ transparent 55%);
 .blueprint-home-prompt button:active {
   transform: scale(0.96);
 }
-
 
 /* =========================
    PROFILE POPOVER
@@ -2160,22 +1957,19 @@ transparent 55%);
   cursor: pointer;
 
   transition: 0.25s ease;
-      color: var(--bp-color-999);
-
+  color: var(--bp-color-999);
 }
 
 .blueprint-profile-popover button svg:first-child {
   width: 18px;
   flex-shrink: 0;
-    color: var(--bp-color-999);
-
+  color: var(--bp-color-999);
 }
 
 .blueprint-profile-popover button span {
   flex: 1;
   text-align: left;
-    color: var(--bp-color-88a3b1);
-
+  color: var(--bp-color-88a3b1);
 }
 
 .blueprint-profile-popover button svg:last-child {
@@ -2192,7 +1986,6 @@ transparent 55%);
   background: var(--bp-color-fff0f0);
 }
 
-
 /* =========================
    PROFILE MENU ANIMATION
 ========================= */
@@ -2208,7 +2001,6 @@ transparent 55%);
     transform: translateY(0) scale(1);
   }
 }
-
 
 /* =========================
    CHAT INPUT
@@ -2227,7 +2019,10 @@ transparent 55%);
   background: transparent;
   color: var(--bp-color-26364d);
 
-  font: 14px Inter, Arial, sans-serif;
+  font:
+    14px Inter,
+    Arial,
+    sans-serif;
 }
 
 .blueprint-home-prompt input::placeholder {
@@ -2242,7 +2037,6 @@ transparent 55%);
 .blueprint-home-prompt .go:hover {
   background: var(--bp-color-7881a1);
 }
-
 
 /* =========================
    SENT MESSAGES
@@ -2311,7 +2105,6 @@ transparent 55%);
   }
 }
 
-
 /* =========================
    TEAM TOOLTIP
 ========================= */
@@ -2367,7 +2160,7 @@ transparent 55%);
   background: var(--bp-color-111);
   color: var(--surface);
 
-white-space: nowrap;
+  white-space: nowrap;
   font-size: 13px;
 }
 
@@ -2435,7 +2228,6 @@ white-space: nowrap;
 .blueprint-team-icon:hover {
   transform: translateY(-4px) scale(1.08);
 }
-
 
 /* =========================
    PROFILE PAGE
@@ -2511,7 +2303,6 @@ white-space: nowrap;
   color: var(--bp-color-777);
 }
 
-
 /* =========================
    PROFILE TABS
 ========================= */
@@ -2545,7 +2336,6 @@ white-space: nowrap;
   min-height: 200px;
 }
 
-
 /* =========================
    FILTER BUTTONS
 ========================= */
@@ -2571,28 +2361,27 @@ white-space: nowrap;
 }
 
 .blueprint-filters button.filter-active {
-
   color: var(--surface);
 }
 
-.back-button{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 
-    padding:8px 14px;
+  padding: 8px 14px;
 
-    border:1px solid var(--border);
-    border-radius:10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
 
-    background:var(--surface);
-    color:var(--text);
+  background: var(--surface);
+  color: var(--text);
 
-    cursor:pointer;
+  cursor: pointer;
 }
 
-.back-button:hover{
-    background:var(--hover);
+.back-button:hover {
+  background: var(--hover);
 }
 /* =========================
    CARDS HOVER
@@ -2608,12 +2397,10 @@ white-space: nowrap;
 .blueprint-resource-grid article:hover,
 .blueprint-project-grid article:hover {
   transform: translateY(-6px);
-border-color:var(--primary);
+  border-color: var(--primary);
 
-    box-shadow:
-        0 12px 28px rgba(0,0,0,.28);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
 }
-
 
 /* =========================
    SIDEBAR EFFECT
@@ -2627,7 +2414,6 @@ border-color:var(--primary);
     background 0.3s ease,
     box-shadow 0.3s ease;
 }
-
 
 /* =========================
    BUTTON EFFECT
@@ -2644,7 +2430,6 @@ button:hover {
 button:active {
   transform: scale(0.95);
 }
-
 
 /* =========================
    HOME TITLE ANIMATION
@@ -2665,7 +2450,6 @@ button:active {
     transform: translateY(0);
   }
 }
-
 
 /* =========================
    POPUP ANIMATION
@@ -2690,7 +2474,6 @@ button:active {
   }
 }
 
-
 /* =========================
    HOME PROMPT HOVER
 ========================= */
@@ -2704,7 +2487,6 @@ button:active {
 
   box-shadow: 0 15px 40px var(--bp-color-rgba-80-110-236-0-12);
 }
-
 
 /* =========================
    SIDEBAR ICON BUTTON
@@ -2732,7 +2514,6 @@ button:active {
   background: var(--bp-color-eceff5);
 }
 
-
 /* =========================
    RECORDING
 ========================= */
@@ -2744,13 +2525,11 @@ button:active {
    PART 5 — RESPONSIVE
 ========================================================= */
 
-
 /* =========================
    TABLETS
 ========================= */
 
 @media (max-width: 1100px) {
-
   .blueprint-app-sidebar {
     width: 220px;
   }
@@ -2783,13 +2562,11 @@ button:active {
   }
 }
 
-
 /* =========================
    TABLET / MOBILE LANDSCAPE
 ========================= */
 
 @media (max-width: 768px) {
-
   body {
     overflow-x: hidden;
   }
@@ -2809,21 +2586,20 @@ button:active {
     margin-left: 0;
   }
 
-
   /* Home */
 
   .blueprint-home-page {
-  width: 100%;
-  min-height: 100vh;
+    width: 100%;
+    min-height: 100vh;
 
-  padding: 75px 30px 40px;
+    padding: 75px 30px 40px;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-  text-align: center;
-}
+    text-align: center;
+  }
 
   .blueprint-home-page h1 {
     font-size: 28px;
@@ -2842,7 +2618,6 @@ button:active {
   .blueprint-catalog {
     padding: 20px;
   }
-
 
   /* New Blueprint */
 
@@ -2877,7 +2652,6 @@ button:active {
     width: 95%;
   }
 
-
   /* Friend drawer */
 
   .friend-page {
@@ -2891,13 +2665,11 @@ button:active {
   }
 }
 
-
 /* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 480px) {
-
   .blueprint-home-page h1 {
     font-size: 22px;
   }
@@ -2912,7 +2684,6 @@ button:active {
     font-size: 12px;
   }
 
-
   /* Chat */
 
   .blueprint-home-prompt footer {
@@ -2923,7 +2694,6 @@ button:active {
   .blueprint-home-prompt button {
     flex: 1;
   }
-
 
   /* Settings modal */
 
@@ -2944,7 +2714,6 @@ button:active {
   .blueprint-settings-modal > main {
     padding: 20px;
   }
-
 
   /* Profile */
 
@@ -2977,7 +2746,6 @@ button:active {
     overflow-x: auto;
   }
 
-
   /* Friend page */
 
   .friend-page {
@@ -2989,7 +2757,6 @@ button:active {
     width: 0;
     display: none;
   }
-
 
   /* New Blueprint */
 
@@ -3029,13 +2796,11 @@ button:active {
   }
 }
 
-
 /* =========================
    VERY SMALL SCREENS
 ========================= */
 
 @media (max-width: 360px) {
-
   .newBlueprint-project-name {
     font-size: 12px;
   }
@@ -3068,12 +2833,10 @@ button:active {
   }
 }
 
-
 /* =========================
    SMALL DESKTOP / TABLET
 ========================= */
 @media (max-width: 900px) {
-
   .blueprint-home-page {
     padding-top: 40px;
   }
@@ -3098,7 +2861,6 @@ button:active {
 ========================= */
 
 @media (max-width: 600px) {
-
   .blueprint-home-page h1 {
     font-size: 24px;
     line-height: 1.2;
@@ -3128,7 +2890,7 @@ button:active {
   max-width: 900px;
   margin: 50px auto 60px;
   padding: 28px;
-  background:var(--surface);
+  background: var(--surface);
   border: 1px solid #e7e7e7;
   border-radius: 18px;
 }
@@ -3144,7 +2906,6 @@ button:active {
   color: #777;
   font-size: 14px;
 }
-
 
 /* =========================
    STATUS ROW
@@ -3175,7 +2936,6 @@ button:active {
   font-size: 13px;
   color: #777;
 }
-
 
 /* =========================
    ACTIVATE / DEACTIVATE
@@ -3214,7 +2974,6 @@ button:active {
   cursor: not-allowed;
 }
 
-
 /* =========================
    DANGER ZONE
 ========================= */
@@ -3234,7 +2993,6 @@ button:active {
 .account-danger-zone .account-management-info strong {
   color: #d93025;
 }
-
 
 /* =========================
    DELETE BUTTON
@@ -3265,7 +3023,6 @@ button:active {
   cursor: not-allowed;
 }
 
-
 /* =========================
    MESSAGES
 ========================= */
@@ -3294,13 +3051,11 @@ button:active {
   font-size: 13px;
 }
 
-
 /* =========================
    RESPONSIVE
 ========================= */
 
 @media (max-width: 650px) {
-
   .blueprint-account-management {
     padding: 20px;
     margin-top: 35px;
@@ -3316,7 +3071,6 @@ button:active {
   .account-delete-button {
     width: 100%;
   }
-
 }
 /* =========================================
    ACCOUNT TOGGLE
@@ -3358,151 +3112,142 @@ button:active {
    MY PROJECTS
 ========================================================= */
 
-.blueprint-projects-page{
-    padding:40px;
-    max-width:1300px;
-    margin:auto;
+.blueprint-projects-page {
+  padding: 40px;
+  max-width: 1300px;
+  margin: auto;
 }
 
-.blueprint-projects-page h1{
-    margin:0 0 30px;
-    color:var(--text);
-    font-size:32px;
-    font-weight:700;
+.blueprint-projects-page h1 {
+  margin: 0 0 30px;
+  color: var(--text);
+  font-size: 32px;
+  font-weight: 700;
 }
 
-.blueprint-projects-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-    gap:24px;
+.blueprint-projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
 }
 
-.blueprint-project-card{
-    background:var(--surface);
-    border:1px solid var(--border);
-    border-radius:18px;
-    padding:22px;
-    cursor:pointer;
+.blueprint-project-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
+  cursor: pointer;
 
-    transition:
-        transform .25s,
-        border-color .25s,
-        box-shadow .25s;
+  transition:
+    transform 0.25s,
+    border-color 0.25s,
+    box-shadow 0.25s;
 }
 
-.blueprint-project-card:hover{
-    transform:translateY(-6px);
-    border-color:var(--primary);
-    box-shadow:var(--shadow);
+.blueprint-project-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--primary);
+  box-shadow: var(--shadow);
 }
 
-.blueprint-project-card-header{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    margin-bottom:18px;
+.blueprint-project-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
 }
 
-.blueprint-project-card-header svg:first-child{
-    width:26px;
-    height:26px;
-    color:var(--primary);
+.blueprint-project-card-header svg:first-child {
+  width: 26px;
+  height: 26px;
+  color: var(--primary);
 }
 
-.blueprint-project-card-header button{
-    border:none;
-    background:transparent;
-    color:var(--text-secondary);
-    cursor:pointer;
-    padding:6px;
-    border-radius:8px;
+.blueprint-project-card-header button {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
 }
 
-.blueprint-project-card-header button:hover{
-    background:var(--hover);
+.blueprint-project-card-header button:hover {
+  background: var(--hover);
 }
 
-.blueprint-project-card h3{
-    margin:0 0 10px;
-    color:var(--text);
-    font-size:18px;
-    font-weight:600;
+.blueprint-project-card h3 {
+  margin: 0 0 10px;
+  color: var(--text);
+  font-size: 18px;
+  font-weight: 600;
 }
 
-.blueprint-project-card p{
-    margin:0;
-    color:var(--text-secondary);
-    font-size:14px;
+.blueprint-project-card p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
 }
 
-.blueprint-project-card small{
-    display:block;
-    margin-top:20px;
-    color:var(--text-secondary);
-    font-size:12px;
+.blueprint-project-card small {
+  display: block;
+  margin-top: 20px;
+  color: var(--text-secondary);
+  font-size: 12px;
 }
 
-.blueprint-empty-projects{
-    min-height:60vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    color:var(--text-secondary);
+.blueprint-empty-projects {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: var(--text-secondary);
 }
 
-.blueprint-empty-projects svg{
-    margin-bottom:18px;
-    color:var(--primary);
+.blueprint-empty-projects svg {
+  margin-bottom: 18px;
+  color: var(--primary);
 }
 
-.blueprint-empty-projects h3{
-    margin:0 0 8px;
-    color:var(--text);
+.blueprint-empty-projects h3 {
+  margin: 0 0 8px;
+  color: var(--text);
 }
 
-.blueprint-empty-projects p{
-    margin:0;
+.blueprint-empty-projects p {
+  margin: 0;
 }
 
-@media(max-width:768px){
+@media (max-width: 768px) {
+  .blueprint-projects-page {
+    padding: 24px;
+  }
 
-    .blueprint-projects-page{
-        padding:24px;
-    }
-
-    .blueprint-projects-grid{
-        grid-template-columns:1fr;
-    }
-
+  .blueprint-projects-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* FORCE AVATAR COLOR */
 
 .blueprint-avatar,
 .blueprint-app-sidebar .blueprint-avatar {
+  background: #1e293b !important;
 
-    background:#1e293b !important;
+  border: 1px solid #334155 !important;
 
-    border:1px solid #334155 !important;
+  color: #cbd5e1 !important;
 
-    color:#cbd5e1 !important;
-
-    box-shadow:
-        0 4px 15px rgba(0,0,0,.35);
-
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
 }
-
 
 .blueprint-avatar:hover,
 .blueprint-app-sidebar .blueprint-avatar:hover {
+  background: #6366f1 !important;
 
-    background:#6366f1 !important;
+  border-color: #6366f1 !important;
 
-    border-color:#6366f1 !important;
-
-    color:white !important;
-
+  color: white !important;
 }
-
