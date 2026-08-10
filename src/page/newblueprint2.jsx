@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   FiBell,
   FiChevronDown,
@@ -87,10 +86,44 @@ function getSavedActiveConversation() {
    ATOMS APP
 ===================================================== */
 
-function AtomsApp({ themeMode, setThemeMode }) {
+function AtomsApp({ themeMode, setThemeMode, dark, setDark }) {
   const navigate = useNavigate();
 
-  const { language } = useTranslation();
+  const { t, language } = useTranslation();
+
+  const [searchParams] = useSearchParams();
+
+  const blueprintId = searchParams.get("id");
+
+  const [sections, setSections] = useState([]);
+
+  const [currentBlueprint, setCurrentBlueprint] = useState(null);
+  const [themeModeState, setThemeModeState] = useState(() => {
+    if (typeof themeMode === "string") {
+      return themeMode;
+    }
+
+    if (typeof dark === "boolean") {
+      return dark ? "dark" : "light";
+    }
+
+    return localStorage.getItem("theme") || "light";
+  });
+
+  const activeThemeMode = themeMode ?? themeModeState;
+
+  const handleThemeModeChange = (nextTheme) => {
+    if (typeof setThemeMode === "function") {
+      setThemeMode(nextTheme);
+    }
+
+    if (typeof setDark === "function") {
+      setDark(nextTheme === "dark");
+    }
+
+    setThemeModeState(nextTheme);
+  };
+
   /* ===================================================
      LOGOUT
   =================================================== */
@@ -99,7 +132,7 @@ function AtomsApp({ themeMode, setThemeMode }) {
     try {
       const refreshToken = localStorage.getItem("refreshToken");
 
-      await api.post("/api/auth/logout", {
+      await api.post("/auth/logout", {
         refreshToken,
       });
     } catch (error) {
@@ -113,7 +146,7 @@ function AtomsApp({ themeMode, setThemeMode }) {
 
       sessionStorage.clear();
 
-      navigate("/landing-page");
+      navigate("/Login");
     }
   };
 
@@ -140,7 +173,88 @@ function AtomsApp({ themeMode, setThemeMode }) {
   const [conversations, setConversations] = useState(() =>
     getSavedConversations()
   );
+  const [showBlueprintForm, setShowBlueprintForm] = useState(true);
 
+
+  useEffect(() => {
+
+if (!blueprintId) return;
+
+
+api
+.get(`/blueprints/${blueprintId}`)
+.then((res)=>{
+
+const bp = res.data.blueprint || res.data;
+
+setCurrentBlueprint(bp);
+
+})
+.catch((err)=>{
+console.error("Blueprint loading error", err);
+});
+
+
+},[blueprintId]);
+useEffect(() => {
+  if (!blueprintId) return;
+
+  const token = localStorage.getItem("accessToken");
+
+  console.log("Blueprint ID:", blueprintId);
+  console.log("SSE token exists:", !!token);
+
+  if (!token) {
+    console.error("No access token found. SSE connection cancelled.");
+    return;
+  }
+
+  const apiBase =
+    import.meta.env.VITE_API_URL ||
+    "https://api.luma-agent.com/api";
+
+  const sseUrl =
+    `${apiBase}/blueprints/${blueprintId}/events?token=${encodeURIComponent(token)}`;
+
+  console.log(
+    "Opening SSE:",
+    sseUrl.replace(token, "***")
+  );
+
+  const sse = new EventSource(sseUrl);
+
+  sse.onopen = () => {
+    console.log("SSE connection opened");
+  };
+
+  sse.onmessage = (event) => {
+    console.log("SSE event:", event.data);
+
+    api
+      .get(`/blueprints/${blueprintId}/sections`)
+      .then((res) => {
+        setSections(
+          res.data.sections || res.data
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to load sections:",
+          error
+        );
+      });
+  };
+
+  sse.onerror = (error) => {
+    console.error("SSE connection error:", error);
+
+    sse.close();
+  };
+
+  return () => {
+    sse.close();
+  };
+}, [blueprintId]);
   /* ===================================================
      ACTIVE CONVERSATION
   =================================================== */
@@ -166,50 +280,16 @@ function AtomsApp({ themeMode, setThemeMode }) {
   /* ===================================================
      SAVE ACTIVE CONVERSATION
   =================================================== */
+useEffect(() => {
+  const savedPrompt =
+    sessionStorage.getItem("blueprintPrompt");
 
-  useEffect(() => {
-    if (activeConversationId) {
-      sessionStorage.setItem(ACTIVE_CONVERSATION_KEY, activeConversationId);
-    } else {
-      sessionStorage.removeItem(ACTIVE_CONVERSATION_KEY);
-    }
-  }, [activeConversationId]);
+  if (savedPrompt) {
+    setPrompt(savedPrompt);
 
-  useEffect(() => {
-    const savedPrompt = sessionStorage.getItem("blueprintPrompt");
-    if (!savedPrompt) return;
-
-    const text = savedPrompt.trim();
-    if (!text) {
-      sessionStorage.removeItem("blueprintPrompt");
-      return;
-    }
-
-    const conversationId = `chat-${Date.now()}`;
-
-    /* eslint-disable react-hooks/set-state-in-effect */
-    setConversations((current) => {
-      const alreadyExists = current.some((conv) =>
-        conv.messages?.some((m) => m.type === "user" && m.text === text)
-      );
-      if (alreadyExists) {
-        sessionStorage.removeItem("blueprintPrompt");
-        return current;
-      }
-      const newConversation = {
-        id: conversationId,
-        title: text.length > 30 ? `${text.slice(0, 30)}…` : text,
-        messages: [{ id: `user-${Date.now()}`, type: "user", text }],
-        createdAt: new Date().toLocaleDateString("en-CA"),
-      };
-      sessionStorage.removeItem("blueprintPrompt");
-      return [newConversation, ...current];
-    });
-    /* eslint-enable react-hooks/set-state-in-effect */
-
-    setActiveConversationId(conversationId);
-  }, []); // intentionally empty — runs once on mount to pick up sessionStorage prompt
-
+    sessionStorage.removeItem("blueprintPrompt");
+  }
+}, []);
   /* ===================================================
      PAGE
   =================================================== */
@@ -227,12 +307,14 @@ function AtomsApp({ themeMode, setThemeMode }) {
   /* ===================================================
      SETTINGS
   =================================================== */
+const openSettings = (tab = "general") => {
+  console.log("Opening settings:", tab);
 
-  const openSettings = (tab = "General") => {
-    setSettings(tab);
-
-    setProfileOpen(false);
-  };
+  setSettings(tab);
+  setProfileOpen(false);
+  setWorkspaceOpen(false);
+  setShowProfile(false);
+};
 
   /* ===================================================
      OPEN CONVERSATION
@@ -272,10 +354,7 @@ function AtomsApp({ themeMode, setThemeMode }) {
     const newConversation = {
       id,
 
-      title: "New chat",
-
-      messages: [],
-
+      title: t("newChat"),
       createdAt: new Date().toLocaleDateString("en-CA"),
     };
 
@@ -299,114 +378,285 @@ function AtomsApp({ themeMode, setThemeMode }) {
   /* ===================================================
      SEND MESSAGE
   =================================================== */
+const sendMessage = async () => {
+  const text = prompt.trim();
 
-  const sendMessage = () => {
-    const text = prompt.trim();
+  if (!text) {
+    return;
+  }
 
-    if (!text) {
+  const conversationId =
+    activeConversationId || `chat-${Date.now()}`;
+
+  const userMessage = {
+    id: `user-${Date.now()}`,
+    type: "user",
+    text,
+  };
+
+  setConversations((current) => {
+    const existing = current.find(
+      (conversation) =>
+        conversation.id === conversationId
+    );
+
+    if (existing) {
+      return current.map((conversation) =>
+        conversation.id === conversationId
+          ? {
+              ...conversation,
+              messages: [
+                ...conversation.messages,
+                userMessage,
+              ],
+            }
+          : conversation
+      );
+    }
+
+    return [
+      {
+        id: conversationId,
+        title:
+          text.length > 30
+            ? `${text.slice(0, 30)}…`
+            : text,
+        messages: [userMessage],
+        createdAt:
+          new Date().toLocaleDateString("en-CA"),
+        blueprintId,
+      },
+      ...current,
+    ];
+  });
+
+
+  setActiveConversationId(conversationId);
+
+  setPrompt("");
+
+  setTyping(true);
+
+
+  try {
+
+    await api.post(
+      `/blueprints/${blueprintId}/messages`,
+      {
+        message: text,
+      }
+    );
+
+
+  } catch(error){
+
+    console.error(
+      "Sending message failed",
+      error
+    );
+
+  } finally {
+
+    setTyping(false);
+
+  }
+};
+ 
+
+// ==============================
+// Blueprint Creation Form
+// ==============================
+
+function BlueprintCreationForm({ onSuccess }) {
+
+  const navigate = useNavigate();
+  const { t } = useTranslation();
+
+  const [ideaText, setIdeaText] = useState("");
+  const [projectType, setProjectType] = useState("web");
+const [complexity, setComplexity] = useState("medium");
+const [outputLanguage, setOutputLanguage] = useState("en");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+    const savedPrompt = sessionStorage.getItem("blueprintPrompt");
+
+    if (savedPrompt) {
+      setIdeaText(savedPrompt);
+        sessionStorage.removeItem("blueprintPrompt");
+
+    }
+  }, []);
+
+
+
+  const handleSubmit = async () => {
+
+    setError("");
+
+    if (!ideaText.trim()) {
+      setError(t("blueprintErrorEmptyIdea"));
       return;
     }
 
-    const conversationId = activeConversationId || `chat-${Date.now()}`;
 
-    const userMessage = {
-      id: `user-${Date.now()}`,
+    if (ideaText.trim().length < 20) {
+      setError(
+        t("blueprintErrorIdeaShort")
+      );
+      return;
+    }
 
-      type: "user",
 
-      text,
-    };
+    try {
 
-    setConversations((current) => {
-      const existing = current.find(
-        (conversation) => conversation.id === conversationId
+      setLoading(true);
+
+const response = await api.post("/blueprints", {
+title: ideaText.trim().slice(0, 10),
+  idea_text: ideaText,
+  complexity,
+  output_language: outputLanguage,
+  project_type: projectType,
+});
+
+      const blueprint =
+        response.data.blueprint ||
+        response.data.data ||
+        response.data;
+
+
+      sessionStorage.removeItem("blueprintPrompt");
+
+
+      navigate(
+        `/DualWorkspace?id=${blueprint.id}`
       );
 
-      /* =============================================
-           EXISTING CHAT
-        ============================================= */
 
-      if (existing) {
-        return current.map((conversation) => {
-          if (conversation.id !== conversationId) {
-            return conversation;
-          }
+      onSuccess(blueprint.id);
 
-          return {
-            ...conversation,
 
-            title:
-              conversation.title === "New chat"
-                ? text.length > 30
-                  ? `${text.slice(0, 30)}…`
-                  : text
-                : conversation.title,
+    } catch (err) {
 
-            messages: [...conversation.messages, userMessage],
-          };
-        });
-      }
+      const message =
+        err.response?.data?.message;
 
-      /* =============================================
-           NEW CHAT
-        ============================================= */
 
-      return [
-        {
-          id: conversationId,
-
-          title: text.length > 30 ? `${text.slice(0, 30)}…` : text,
-
-          messages: [userMessage],
-
-          createdAt: new Date().toLocaleDateString("en-CA"),
-        },
-
-        ...current,
-      ];
-    });
-
-    setActiveConversationId(conversationId);
-
-    setPrompt("");
-
-    setTyping(true);
-
-    setPage("Home");
-
-    /* =================================================
-       TEMPORARY AI RESPONSE
-    ================================================= */
-
-    window.setTimeout(() => {
-      setConversations((current) =>
-        current.map((conversation) => {
-          if (conversation.id !== conversationId) {
-            return conversation;
-          }
-
-          return {
-            ...conversation,
-
-            messages: [
-              ...conversation.messages,
-
-              {
-                id: `alex-${Date.now()}`,
-
-                type: "assistant",
-
-                text: "وصلت فكرتك. سأساعدك في تنفيذها خطوة بخطوة.",
-              },
-            ],
-          };
-        })
+      setError(
+        message ||
+        t("blueprintErrorGeneric")
       );
 
-      setTyping(false);
-    }, 800);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
   };
 
+
+  return (
+    <div className="blueprint-form-container">
+      <div className="blueprint-form-chat">
+        <div className="chat-header">
+          <div>
+            <h1>{t("blueprintCreateTitle")}</h1>
+            <p>{t("blueprintCreateSubtitle")}</p>
+          </div>
+        </div>
+
+        <div className="blueprint-form-grid">
+          <div className="blueprint-form-field">
+            <label>{t("blueprintProjectIdeaLabel")}</label>
+            <textarea
+              value={ideaText}
+              onChange={(e) => setIdeaText(e.target.value)}
+              placeholder={t("blueprintProjectIdeaPlaceholder")}
+            />
+          </div>
+
+          <div className="blueprint-form-grid-side">
+            <div className="blueprint-form-field">
+              <label>{t("blueprintProjectTypeLabel")}</label>
+             <select
+  value={projectType}
+  onChange={(e) => setProjectType(e.target.value)}
+>
+  <option value="web">
+    {t("blueprintProjectTypeWeb")}
+  </option>
+
+  <option value="mobile">
+    {t("blueprintProjectTypeMobile")}
+  </option>
+
+  <option value="api">
+    {t("blueprintProjectTypeApi")}
+  </option>
+</select>
+            </div>
+
+            <div className="blueprint-form-field">
+              <label>{t("blueprintComplexityLabel")}</label>
+              
+             <select
+  value={complexity}
+  onChange={(e) => setComplexity(e.target.value)}
+>
+  <option value="simple">
+    {t("blueprintComplexitySimple")}
+  </option>
+
+  <option value="medium">
+    {t("blueprintComplexityMedium")}
+  </option>
+
+  <option value="complex">
+    {t("blueprintComplexityComplex")}
+  </option>
+</select>
+            </div>
+
+            <div className="blueprint-form-field">
+              <label>{t("blueprintOutputLanguageLabel")}</label>
+             <select
+  value={outputLanguage}
+  onChange={(e) => setOutputLanguage(e.target.value)}
+>
+  <option value="en">
+    {t("blueprintOutputLanguageEnglish")}
+  </option>
+
+  <option value="ar">
+    {t("blueprintOutputLanguageArabic")}
+  </option>
+</select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {error && (
+        <div className="blueprint-error">
+          {error}
+        </div>
+      )}
+
+      <button
+        className="blueprint-form-submit"
+        onClick={handleSubmit}
+        disabled={loading}
+      >
+        {loading ? t("blueprintCreating") : t("blueprintCreateButton")}
+      </button>
+    </div>
+  );
+}
   /* ===================================================
      RENDER
   =================================================== */
@@ -473,21 +723,54 @@ function AtomsApp({ themeMode, setThemeMode }) {
             HOME
         ================================================= */}
 
-        {page === "Home" && (
-          <Home
-            prompt={prompt}
-            setPrompt={setPrompt}
-            messages={
-              conversations.find(
-                (conversation) => conversation.id === activeConversationId
-              )?.messages || []
-            }
-            typing={typing}
-            onSend={sendMessage}
-            themeMode={themeMode}
-            setThemeMode={setThemeMode}
-          />
-        )}
+     {page === "Home" && (
+  <>
+    {showBlueprintForm ? (
+      <BlueprintCreationForm
+        onSuccess={(blueprintId) => {
+          setShowBlueprintForm(false);
+
+          const conversationId = `chat-${Date.now()}`;
+
+          const savedPrompt =
+            sessionStorage.getItem("blueprintPrompt") || "";
+
+          setConversations((current) => [
+            {
+              id: conversationId,
+              title:
+                savedPrompt.length > 30
+                  ? `${savedPrompt.slice(0, 30)}…`
+                  : savedPrompt,
+              messages: [],
+              createdAt: new Date().toLocaleDateString("en-CA"),
+              blueprintId: blueprintId,
+            },
+            ...current,
+          ]);
+
+          setActiveConversationId(conversationId);
+        }}
+      />
+    ) : (
+     <Home
+ prompt={prompt}
+ setPrompt={setPrompt}
+ messages={
+ conversations.find(
+ (conversation)=>
+ conversation.id === activeConversationId
+ )?.messages || []
+ }
+ sections={sections}
+ typing={typing}
+ onSend={sendMessage}
+themeMode={activeThemeMode}
+ setThemeMode={handleThemeModeChange}
+/>
+    )}
+  </>
+)}
 
         {/* =================================================
     MY PROJECTS
@@ -495,15 +778,15 @@ function AtomsApp({ themeMode, setThemeMode }) {
 
         {page === "My Projects" && !showProfile && (
           <section className="blueprint-projects-page">
-            <h1>My Projects</h1>
+            <h1>{t("blueprintMyProjectsTitle")}</h1>
 
             {conversations.length === 0 ? (
               <div className="blueprint-empty-projects">
                 <FiFolder size={48} />
 
-                <h3>No projects yet</h3>
+                <h3>{t("blueprintNoProjectsTitle")}</h3>
 
-                <p>Create a new chat to start your first project.</p>
+                <p>{t("blueprintNoProjectsText")}</p>
               </div>
             ) : (
               <div className="blueprint-projects-grid">
@@ -524,8 +807,7 @@ function AtomsApp({ themeMode, setThemeMode }) {
                     <h3>{conversation.title}</h3>
 
                     <p>
-                      {conversation.messages.length} message
-                      {conversation.messages.length !== 1 ? "s" : ""}
+                      {conversation.messages.length} {conversation.messages.length === 1 ? t("blueprintMessageSingular") : t("blueprintMessagePlural")}
                     </p>
 
                     <small>{conversation.createdAt}</small>
@@ -536,7 +818,7 @@ function AtomsApp({ themeMode, setThemeMode }) {
           </section>
         )}
 
-        {/* =================================================
+       { /* =================================================
             PROFILE
         ================================================= */}
 
@@ -548,13 +830,13 @@ function AtomsApp({ themeMode, setThemeMode }) {
       ================================================= */}
 
       {settings && (
-        <SettingsModal
-          tab={settings}
-
-          onTab={setSettings}
-
-          onClose={() => setSettings(null)}
-        />
+      <SettingsModal
+        tab={settings}
+        onTab={setSettings}
+        onClose={() => setSettings(null)}
+        themeMode={activeThemeMode}
+        setThemeMode={handleThemeModeChange}
+      />
       )}
     </div>
   );
@@ -606,7 +888,7 @@ function Sidebar({
           <b>Luma</b>
         </button>
 
-        <button onClick={onCollapse} aria-label="Collapse sidebar">
+        <button onClick={onCollapse} aria-label={t("workspaceCollapseAriaLabel")}>
           <FiMenu />
         </button>
       </div>
@@ -618,7 +900,7 @@ function Sidebar({
       <button className="blueprint-workspace-switch" onClick={onWorkspace}>
         <b>S</b>
 
-        <span>eng</span>
+        <span>{t("workspace")}</span>
 
         <FiChevronDown />
       </button>
@@ -635,12 +917,12 @@ function Sidebar({
             <span>
               <strong>eng</strong>
 
-              <small>Free plan</small>
+              <small>{t("workspaceFreePlan")}</small>
             </span>
           </div>
 
           <div className="blueprint-credit-line">
-            Credits remaining
+            {t("workspaceCreditsRemaining")}
             <a>Upgrade</a>
           </div>
 
@@ -648,9 +930,9 @@ function Sidebar({
             <i />
           </div>
 
-          <small className="blueprint-credit-left">15 left</small>
+          <small className="blueprint-credit-left">{t("workspaceCreditsLeft")}</small>
 
-          <small>All workspaces</small>
+          <small>{t("workspaceAllWorkspaces")}</small>
 
           <div className="blueprint-workspace-row">
             <b>S</b>
@@ -681,8 +963,6 @@ function Sidebar({
               }
 
               onPage(name);
-
-              onPage(name);
             }}
           >
             <Icon />
@@ -696,11 +976,11 @@ function Sidebar({
           RECENTS
       ================================================= */}
 
-      <small className="blueprint-recents-label">Recents</small>
+      <small className="blueprint-recents-label">{t("recents")}</small>
 
       <div className="blueprint-recents">
         {conversations.length === 0 ? (
-          <small className="empty-recents">Your chats will appear here</small>
+          <small className="empty-recents">{t("yourChats")}</small>
         ) : (
           conversations.map((conversation) => (
             <button
@@ -725,9 +1005,9 @@ function Sidebar({
           <FiUsers />
 
           <span>
-            <b>Join our Community</b>
+            <b>{t("joinCommunity")}</b>
 
-            <small>Earn up to 25 credits</small>
+            <small>{t("earnCredits")}</small>
           </span>
 
           <FiChevronRight />
@@ -737,9 +1017,9 @@ function Sidebar({
           <FiGift />
 
           <span>
-            <b>Get Free Credits</b>
+            <b>{t("getFreeCredits")}</b>
 
-            <small>Get 10 credits each</small>
+            <small>{t("get10Credits")}</small>
           </span>
 
           <FiChevronRight />
@@ -770,74 +1050,71 @@ function Sidebar({
       {/* =================================================
           PROFILE POPOVER
       ================================================= */}
+{profileOpen && (
+  <div className="blueprint-profile-popover">
 
-      {profileOpen && (
-        <div className="blueprint-profile-popover">
-          <header>
-            <b>S</b>
+    <header>
+      <b>S</b>
 
-            <span>
-              <strong>saswe eng</strong>
+      <span>
+        <strong>saswe eng</strong>
+        <small>engsaswe@gmail.com</small>
+      </span>
+    </header>
 
-              <small>engsaswe@gmail.com</small>
-            </span>
-          </header>
+    {/* GENERAL */}
+   <button onClick={() => onSettings("general")}>
+  <FiSettings />
+  <span>{t("settings")}</span>
+  <FiChevronRight />
+</button>
+    {/* PLANS */}
+    <button onClick={() => onSettings("plansCredits")}>
+      <FiPackage />
+      <span>{t("plans")}</span>
+      <FiChevronRight />
+    </button>
 
-          <button onClick={() => onSettings("General")}>
-            <FiSettings />
+    {/* ACCOUNT */}
+    <button onClick={() => onSettings("account")}>
+  <FiUser />
+  <span>{t("profile")}</span>
+  <FiChevronRight />
+</button>
+    {/* REDEMPTION */}
+    <button>
+      <FiGift />
+      <span>{t("redemption")}</span>
+      <FiChevronRight />
+    </button>
 
-            <span>{t("settings")}</span>
+    {/* PREFERENCE */}
+  <button onClick={() => onSettings("preference")}>
+  <FiSliders />
+  <span>{t("appearance")}</span>
+  <FiChevronRight />
+</button>
+    {/* HELP */}
+    <button>
+      ⓘ
+      <span>{t("helpCenter")}</span>
+    </button>
 
-            <FiChevronRight />
-          </button>
+    {/* HOME */}
+    <button onClick={() => onPage("Home")}>
+      <FiHome />
+      <span>{t("homepage")}</span>
+    </button>
 
-          <button onClick={() => onSettings("Plans and credits")}>
-            <FiPackage />
+    {/* LOGOUT */}
+    <button className="signout" onClick={onLogout}>
+      <FiLogOut />
+      <span>{t("signOut")}</span>
+    </button>
 
-            <span>{t("plans")}</span>
-
-            <FiChevronRight />
-          </button>
-
-          <button onClick={() => onSettings("Account")}>
-            <FiUser />
-
-            <span>{t("profile")}</span>
-
-            <FiChevronRight />
-          </button>
-
-          <button>
-            <FiGift />
-
-            <span>{t("redemption")}</span>
-
-            <FiChevronRight />
-          </button>
-
-          <button onClick={() => onSettings("Preference")}>
-            <FiSliders />
-
-            <span>{t("appearance")}</span>
-
-            <FiChevronRight />
-          </button>
-
-          <button>ⓘ {t("helpCenter")}</button>
-
-          <button onClick={() => onPage("Home")}>
-            <FiHome />
-
-            <span>{t("homepage")}</span>
-          </button>
-
-          <button className="signout" onClick={onLogout}>
-            <FiLogOut />
-
-            <span>{t("signOut")}</span>
-          </button>
-        </div>
-      )}
+  </div>
+)}
+    
     </aside>
   );
 }
@@ -845,16 +1122,16 @@ function Sidebar({
 /* =====================================================
    HOME
 ===================================================== */
-
 function Home({
-  prompt,
-  setPrompt,
-  messages,
-  typing,
-  onSend,
-  themeMode,
-  setThemeMode,
-}) {
+prompt,
+setPrompt,
+messages,
+sections,
+typing,
+onSend,
+themeMode,
+setThemeMode,
+}){
   const theme = themeMode || "light";
   const { t } = useTranslation();
   const [listening, setListening] = useState(false);
@@ -866,19 +1143,13 @@ function Home({
   const [hoveredAgent, setHoveredAgent] = useState(null);
 
   const agents = [
-    "Alex is a Product Manager",
-
-    "Emma is a UI Designer",
-
-    "Noah is a Backend Developer",
-
-    "Luna is a QA Engineer",
-
-    "David is a Data Analyst",
-
-    "Mia is an AI Engineer",
-
-    "Leo is a Marketing Expert",
+    t("alexAgent"),
+    t("emmaAgent"),
+    t("noahAgent"),
+    t("lunaAgent"),
+    t("davidAgent"),
+    t("miaAgent"),
+    t("leoAgent"),
   ];
 
   /* ===================================================
@@ -890,7 +1161,7 @@ function Home({
       window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
-      alert("Speech Recognition is not supported.");
+      alert(t("speechNotSupported"));
 
       return;
     }
@@ -963,12 +1234,68 @@ function Home({
       {/* =================================================
           MESSAGES
       ================================================= */}
+{sections.length > 0 && (
 
+  <div className="assistant-sections">
+
+    {sections.map((section,index)=>(
+
+      <div
+        key={section.id || index}
+        className="assistant-section-message"
+      >
+
+        <b>
+          {section.sectionKey ||
+            section.title ||
+            "AI Agent"}
+        </b>
+
+
+        {
+          section.status === "done" ? (
+
+            section.contentMarkdown
+              ?.split("\n")
+              .filter(Boolean)
+              .map((line,i)=>(
+
+                <p key={i}>
+                  {line}
+                </p>
+
+              ))
+
+          ) : (
+
+            <div className="generating">
+
+              <span>
+                {t("blueprintGenerating")}
+              </span>
+
+              <i></i>
+              <i></i>
+              <i></i>
+
+            </div>
+
+          )
+        }
+
+
+      </div>
+
+    ))}
+
+  </div>
+
+)}
       {messages.length > 0 && (
         <div className="blueprint-sent-messages">
           {messages.map((message) => (
             <p key={message.id} className={message.type}>
-              {message.type === "assistant" && <b>Alex</b>}
+              {message.type === "assistant" && <b>{t("blueprintAgentAlex")}</b>}
 
               {message.text}
             </p>
@@ -976,7 +1303,7 @@ function Home({
 
           {typing && (
             <p className="assistant typing-message">
-              <b>Alex</b>
+              <b>{t("blueprintAgentAlex")}</b>
 
               <i />
               <i />
@@ -1030,58 +1357,7 @@ function Home({
             )}
           </div>
 
-          {/* =============================================
-              THEME
-          ============================================= */}
-
-          <div className="prompt-action">
-            <button
-              type="button"
-              onClick={() => {
-                setShowThemeMenu((current) => !current);
-
-                setShowPlusMenu(false);
-              }}
-            >
-              {theme}
-
-              <FiChevronDown />
-            </button>
-
-            {showThemeMenu && (
-              <div className="blueprint-theme-menu">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setThemeMode("system");
-                    setShowThemeMenu(false);
-                  }}
-                >
-                  {t("system")}{" "}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setThemeMode("light");
-                    setShowThemeMenu(false);
-                  }}
-                >
-                  {t("light")}{" "}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => {
-                    setThemeMode("dark");
-                    setShowThemeMenu(false);
-                  }}
-                >
-                  {t("dark")}{" "}
-                </button>
-              </div>
-            )}
-          </div>
+       
 
           <span />
 
@@ -1134,16 +1410,20 @@ function Home({
   );
 }
 
-/* =====================================================
+{/* =====================================================
    PROFILE PAGE
-===================================================== */
+===================================================== */}
 function ProfilePage() {
+  const { t } = useTranslation();
   const [accountActive, setAccountActive] = useState(true);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
+  const [themeMode, setThemeMode] = useState(
+  () => localStorage.getItem("theme") || "light"
+);
   const navigate = useNavigate();
 
   // =========================
@@ -1156,8 +1436,8 @@ function ProfilePage() {
 
     try {
       const endpoint = accountActive
-        ? "/api/users/account/deactivate"
-        : "/api/users/account/activate";
+        ? "/users/account/deactivate"
+        : "/users/account/activate";
 
       await api.patch(endpoint);
 
@@ -1180,6 +1460,7 @@ function ProfilePage() {
     }
   };
 
+
   // =========================
   // DELETE ACCOUNT
   // =========================
@@ -1197,7 +1478,7 @@ function ProfilePage() {
     setError("");
 
     try {
-      await api.delete("/api/users/account");
+      await api.delete("/users/account");
 
       // Remove saved authentication data
       localStorage.removeItem("accessToken");
@@ -1230,19 +1511,19 @@ function ProfilePage() {
 
       <div className="blueprint-profile-avatar">S</div>
 
-      <button className="blueprint-edit-profile">Edit profile</button>
+      <button className="blueprint-edit-profile">{t("blueprintEditProfile")}</button>
 
       <h1>saswe eng</h1>
 
-      <p>0 saves | 0 views</p>
+      <p>{t("blueprintProfileStats")}</p>
 
       <div className="blueprint-profile-tabs">
-        <b>Public Projects</b>
+        <b>{t("blueprintPublicProjects")}</b>
 
-        <span>Saved</span>
+        <span>{t("blueprintSaved")}</span>
       </div>
 
-      <h3>Other Projects</h3>
+      <h3>{t("blueprintOtherProjects")}</h3>
 
       <div className="blueprint-profile-projects" />
 
@@ -1251,10 +1532,10 @@ function ProfilePage() {
       ========================= */}
 
       <div className="blueprint-account-management">
-        <h3>Account Settings</h3>
+        <h3>{t("blueprintAccountSettings")}</h3>
 
         <p className="account-management-description">
-          Manage your account status and permanently delete your account.
+          {t("blueprintAccountDescription")}
         </p>
 
         {/* SUCCESS MESSAGE */}
@@ -1269,12 +1550,12 @@ function ProfilePage() {
 
         <div className="account-management-row">
           <div className="account-management-info">
-            <strong>Account status</strong>
+            <strong>{t("blueprintAccountStatus")}</strong>
 
             <span>
               {accountActive
-                ? "Your account is currently active."
-                : "Your account is currently deactivated."}
+                ? t("blueprintAccountActive")
+                : t("blueprintAccountDeactivated")}
             </span>
           </div>
 
@@ -1288,10 +1569,10 @@ function ProfilePage() {
             disabled={loading}
           >
             {loading
-              ? "Please wait..."
+              ? t("pleaseWait")
               : accountActive
-                ? "Deactivate account"
-                : "Activate account"}
+                ? t("blueprintDeactivateAccount")
+                : t("blueprintActivateAccount")}
           </button>
         </div>
 
@@ -1301,10 +1582,10 @@ function ProfilePage() {
 
         <div className="account-danger-zone">
           <div className="account-management-info">
-            <strong>Delete account</strong>
+            <strong>{t("blueprintDeleteAccount")}</strong>
 
             <span>
-              Permanently delete your account and all associated data.
+              {t("blueprintDeleteAccountWarning")}
             </span>
           </div>
 
@@ -1313,104 +1594,342 @@ function ProfilePage() {
             onClick={handleDeleteAccount}
             disabled={deleteLoading}
           >
-            {deleteLoading ? "Deleting..." : "Delete account"}
+            {deleteLoading ? t("blueprintDeleting") : t("blueprintDeleteAccount")}
           </button>
         </div>
       </div>
     </section>
   );
 }
+
 /* =====================================================
    SETTINGS MODAL
 ===================================================== */
-
-function SettingsModal({ tab, onTab, onClose }) {
+function SettingsModal({
+  tab,
+  onTab,
+  onClose,
+  themeMode,
+  setThemeMode,
+}) {
   const { t } = useTranslation();
 
   const tabs = [
-    [t("domains"), FiGlobe],
-
-    [t("people"), FiUsers],
-
-    [t("general"), FiSliders],
-
-    [t("connectors"), FiZap],
-
-    [t("plansCredits"), FiPackage],
-
-    [t("cloudAI"), FiGrid],
-
-    [t("account"), FiUser],
-
-    [t("preference"), FiSliders],
+    {
+      key: "domains",
+      label: t("domains"),
+      icon: FiGlobe,
+      group: "project",
+    },
+    {
+      key: "people",
+      label: t("people"),
+      icon: FiUsers,
+      group: "workspace",
+    },
+    {
+      key: "general",
+      label: t("general"),
+      icon: FiSliders,
+      group: "workspace",
+    },
+    {
+      key: "connectors",
+      label: t("connectors"),
+      icon: FiZap,
+      group: "workspace",
+    },
+    {
+      key: "plansCredits",
+      label: t("plansCredits"),
+      icon: FiPackage,
+      group: "workspace",
+    },
+    {
+      key: "cloudAI",
+      label: t("cloudAI"),
+      icon: FiGrid,
+      group: "workspace",
+    },
+    {
+      key: "account",
+      label: t("account"),
+      icon: FiUser,
+      group: "account",
+    },
+    {
+      key: "preference",
+      label: t("preference"),
+      icon: FiSliders,
+      group: "account",
+    },
   ];
 
   return (
-    <div className="blueprint-modal-backdrop">
-      <section className="blueprint-settings-modal">
-        <aside>
-          <b>{t("settings")}</b>
+    <div className="blueprint-settings-overlay">
 
+      <section className="blueprint-settings-modal">
+
+        {/* SIDEBAR */}
+        <aside className="blueprint-settings-sidebar">
+
+          <div className="blueprint-settings-title">
+            <h2>{t("settings")}</h2>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="blueprint-settings-mobile-close"
+            >
+              <FiX />
+            </button>
+          </div>
+
+          {/* PROJECT */}
           <small>{t("project")}</small>
 
-          {tabs.slice(0, 1).map(([n, I]) => (
-            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
-          ))}
+          {tabs
+            .filter((item) => item.group === "project")
+            .map(({ key, label, icon }) => (
+              <Tab
+                key={key}
+                id={key}
+                label={label}
+                I={icon}
+                tab={tab}
+                onTab={onTab}
+              />
+            ))}
 
+          {/* WORKSPACE */}
           <small>{t("workspace")}</small>
 
-          {tabs.slice(1, 6).map(([n, I]) => (
-            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
-          ))}
+          {tabs
+            .filter((item) => item.group === "workspace")
+            .map(({ key, label, icon }) => (
+              <Tab
+                key={key}
+                id={key}
+                label={label}
+                I={icon}
+                tab={tab}
+                onTab={onTab}
+              />
+            ))}
 
+          {/* ACCOUNT */}
           <small>{t("account")}</small>
 
-          {tabs.slice(6).map(([n, I]) => (
-            <Tab key={n} n={n} I={I} tab={tab} onTab={onTab} />
-          ))}
+          {tabs
+            .filter((item) => item.group === "account")
+            .map(({ key, label, icon }) => (
+              <Tab
+                key={key}
+                id={key}
+                label={label}
+                I={icon}
+                tab={tab}
+                onTab={onTab}
+              />
+            ))}
+
         </aside>
 
-        <main>
-          <button className="blueprint-modal-close" onClick={onClose}>
+        {/* CONTENT */}
+        <main className="blueprint-settings-content">
+
+          <button
+            type="button"
+            className="blueprint-modal-close"
+            onClick={onClose}
+            aria-label={t("blueprintCloseSettingsAriaLabel")}
+          >
             <FiX />
           </button>
 
-          <SettingsContent tab={tab} />
+          <SettingsContent
+            tab={tab}
+            themeMode={themeMode}
+            setThemeMode={setThemeMode}
+          />
+
         </main>
+
       </section>
+
     </div>
   );
 }
 
 /* =====================================================
-   TAB
+   SETTINGS TAB
 ===================================================== */
+function Tab({
+  id,
+  label,
+  I,
+  tab,
+  onTab,
+}) {
+  const Icon = I;
+  const { t } = useTranslation();
 
-function Tab({ n, I, tab, onTab }) {
   return (
-    <button className={tab === n ? "active" : ""} onClick={() => onTab(n)}>
-      <I />
+    <button
+      type="button"
+      className={`blueprint-settings-tab ${
+        tab === id ? "active" : ""
+      }`}
+      onClick={() => onTab(id)}
+    >
+      <Icon />
 
-      {n}
+      <span>{label}</span>
 
-      {n === "Cloud & AI" && <em>✦ Free</em>}
+      {id === "cloudAI" && (
+        <small className="settings-free-badge">
+          ✦ {t("free")}
+        </small>
+      )}
     </button>
   );
 }
-
 /* =====================================================
    SETTINGS CONTENT
 ===================================================== */
-function SettingsContent({ tab }) {
-  const { t } = useTranslation();
+
+function SettingsContent({
+  tab,
+  themeMode,
+  setThemeMode,
+}) {
+  const { t, language, setLanguage } = useTranslation();
+  const navigate = useNavigate();
 
   const [accountActive, setAccountActive] = useState(true);
   const [loading, setLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  const navigate = useNavigate();
+  /* ===================================================
+     PROFILE
+  =================================================== */
+
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileSuccess, setProfileSuccess] = useState("");
+  const [profileError, setProfileError] = useState("");
+
+  /* ===================================================
+     LOAD USER
+  =================================================== */
+
+  useEffect(() => {
+    try {
+      const user = JSON.parse(
+        localStorage.getItem("user") || "{}"
+      );
+
+      setFullName(user.full_name || "");
+      setEmail(user.email || "");
+    } catch (error) {
+      console.error(
+        "Failed to load user data:",
+        error
+      );
+    }
+  }, []);
+
+  /* ===================================================
+     APPLY THEME
+  =================================================== */
+useEffect(() => {
+  if (!themeMode) return;
+
+  localStorage.setItem("theme", themeMode);
+
+  const root = document.documentElement;
+  const body = document.body;
+
+  if (themeMode === "dark") {
+    root.classList.add("dark");
+    body.classList.add("dark");
+    root.setAttribute("data-theme", "dark");
+  } else if (themeMode === "light") {
+    root.classList.remove("dark");
+    body.classList.remove("dark");
+    root.setAttribute("data-theme", "light");
+  } else if (themeMode === "system") {
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    root.classList.toggle("dark", prefersDark);
+    body.classList.toggle("dark", prefersDark);
+    root.setAttribute(
+      "data-theme",
+      prefersDark ? "dark" : "light"
+    );
+  }
+}, [themeMode]);
+  /* ===================================================
+     SAVE PROFILE
+  =================================================== */
+
+  const handleSaveProfile = async () => {
+    try {
+      setProfileLoading(true);
+      setProfileSuccess("");
+      setProfileError("");
+
+      const res = await api.patch(
+        "/users/me",
+        {
+          full_name: fullName,
+        }
+      );
+
+      const updatedUser =
+        res.data.user || res.data;
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(updatedUser)
+      );
+
+      setFullName(
+        updatedUser.full_name || fullName
+      );
+
+      setEmail(
+        updatedUser.email || email
+      );
+
+      setProfileSuccess(
+        t("blueprintProfileSuccess")
+      );
+
+    } catch (error) {
+      console.error(
+        "Profile update error:",
+        error
+      );
+
+      setProfileError(
+        error.response?.data?.message ||
+          t("blueprintProfileError")
+      );
+    } finally {
+      setProfileLoading(false);
+    }
+  };
+
+  /* ===================================================
+     ACTIVATE / DEACTIVATE
+  =================================================== */
 
   const handleAccountStatus = async () => {
     setLoading(true);
@@ -1419,59 +1938,81 @@ function SettingsContent({ tab }) {
 
     try {
       const endpoint = accountActive
-        ? "/api/users/account/deactivate"
-        : "/api/users/account/activate";
+        ? "/users/account/deactivate"
+        : "/users/account/activate";
 
       await api.patch(endpoint);
 
-      setAccountActive((current) => !current);
+      setAccountActive(
+        (current) => !current
+      );
 
       setMessage(
         accountActive
-          ? "Your account has been deactivated."
-          : "Your account has been activated."
+          ? t("blueprintProfileAccountDeactivated")
+          : t("blueprintProfileAccountActivated")
       );
+
     } catch (error) {
-      console.error("Account status error:", error);
+      console.error(
+        "Account status error:",
+        error
+      );
 
       setError(
         error.response?.data?.message ||
-          "Something went wrong. Please try again."
+          t("blueprintErrorGeneric")
       );
     } finally {
       setLoading(false);
     }
   };
 
+  /* ===================================================
+     DELETE ACCOUNT
+  =================================================== */
+
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
-      "Are you sure you want to permanently delete your account? This action cannot be undone."
+      t("blueprintDeleteConfirm")
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
 
     setDeleteLoading(true);
     setMessage("");
     setError("");
 
     try {
-      await api.delete("/api/users/account");
+      await api.delete(
+        "/users/account"
+      );
 
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("user");
+      localStorage.removeItem(
+        "accessToken"
+      );
+
+      localStorage.removeItem(
+        "refreshToken"
+      );
+
+      localStorage.removeItem(
+        "user"
+      );
 
       sessionStorage.clear();
 
       navigate("/login");
+
     } catch (error) {
-      console.error("Delete account error:", error);
+      console.error(
+        "Delete account error:",
+        error
+      );
 
       setError(
         error.response?.data?.message ||
-          "Unable to delete your account. Please try again."
+          t("blueprintDeleteError")
       );
     } finally {
       setDeleteLoading(false);
@@ -1479,52 +2020,376 @@ function SettingsContent({ tab }) {
   };
 
   /* ===================================================
+     PREFERENCE
+  =================================================== */
+
+  if (tab === "preference") {
+    const currentTheme =
+      themeMode || "light";
+
+    return (
+      <section className="settings-page-section">
+
+        <div className="settings-page-header">
+          <h2>{t("preference")}</h2>
+
+          <p>
+            {t("customizeAppearance")}
+          </p>
+        </div>
+
+        {/* =========================
+            LANGUAGE
+        ========================= */}
+
+        <div className="settings-section-card">
+
+          <div className="settings-section-info">
+            <h3>{t("language")}</h3>
+
+            <p>
+              {t("changeLanguage")}
+            </p>
+          </div>
+
+          <div className="blueprint-language-options">
+
+            <button
+              type="button"
+              className={
+                language === "en"
+                  ? "chosen"
+                  : ""
+              }
+              onClick={() =>
+                setLanguage("en")
+              }
+            >
+              English
+            </button>
+
+            <button
+              type="button"
+              className={
+                language === "ar"
+                  ? "chosen"
+                  : ""
+              }
+              onClick={() =>
+                setLanguage("ar")
+              }
+            >
+              عربي
+            </button>
+
+          </div>
+        </div>
+
+        {/* =========================
+            THEME
+        ========================= */}
+
+        <div className="settings-section-card">
+
+          <div className="settings-section-info">
+            <h3>{t("theme")}</h3>
+
+            <p>
+              {t("customizeAppearance")}
+            </p>
+          </div>
+
+          <div className="blueprint-themes">
+
+            {/* SYSTEM */}
+
+            <button
+              type="button"
+              className={
+                currentTheme === "system"
+                  ? "chosen"
+                  : ""
+              }
+              onClick={() =>
+                setThemeMode("system")
+              }
+            >
+              <span className="theme-option-icon">
+                ◐
+              </span>
+
+              <span>
+                {t("system")}
+              </span>
+            </button>
+
+            {/* LIGHT */}
+
+            <button
+              type="button"
+              className={
+                currentTheme === "light"
+                  ? "chosen"
+                  : ""
+              }
+              onClick={() =>
+                setThemeMode("light")
+              }
+            >
+              <span className="theme-option-icon">
+                ☀
+              </span>
+
+              <span>
+                {t("light")}
+              </span>
+            </button>
+
+            {/* DARK */}
+
+            <button
+              type="button"
+              className={
+                currentTheme === "dark"
+                  ? "chosen"
+                  : ""
+              }
+              onClick={() =>
+                setThemeMode("dark")
+              }
+            >
+              <span className="theme-option-icon">
+                ☾
+              </span>
+
+              <span>
+                {t("dark")}
+              </span>
+            </button>
+
+          </div>
+        </div>
+
+      </section>
+    );
+  }
+
+  /* ===================================================
+     ACCOUNT
+  =================================================== */
+
+  if (tab === "account") {
+    return (
+      <section className="settings-page-section">
+
+        <h2>{t("accountSettings")}</h2>
+
+        {/* PROFILE */}
+
+        <div className="blueprint-account-row">
+          <span>{t("avatar")}</span>
+
+          <b>
+            {fullName
+              ? fullName
+                  .charAt(0)
+                  .toUpperCase()
+              : "S"}
+          </b>
+        </div>
+
+        <div className="blueprint-account-row">
+          <label>
+            {t("username")}
+          </label>
+
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) =>
+              setFullName(
+                e.target.value
+              )
+            }
+            placeholder={t("blueprintAccountNamePlaceholder")}
+          />
+        </div>
+
+        <div className="blueprint-account-row">
+          <label>
+            {t("email")}
+          </label>
+
+          <input
+            type="email"
+            value={email}
+            disabled
+            readOnly
+          />
+        </div>
+
+        {profileSuccess && (
+          <div className="account-success-message">
+            {profileSuccess}
+          </div>
+        )}
+
+        {profileError && (
+          <div className="account-error-message">
+            {profileError}
+          </div>
+        )}
+
+        <button
+          type="button"
+          className="blueprint-save-profile-button"
+          onClick={handleSaveProfile}
+          disabled={profileLoading}
+        >
+          {profileLoading
+            ? t("blueprintProfileSaving")
+            : t("blueprintProfileSaveChanges")}
+        </button>
+
+        {/* ACCOUNT STATUS */}
+
+        <div className="blueprint-account-profile">
+
+          <h3>{t("profile")}</h3>
+
+          <p>
+            {t("manageProfile")}
+          </p>
+
+          {message && (
+            <div className="account-success-message">
+              {message}
+            </div>
+          )}
+
+          {error && (
+            <div className="account-error-message">
+              {error}
+            </div>
+          )}
+
+          <div className="account-management-row">
+
+            <div className="account-management-info">
+
+              <strong>
+                {t("accountStatus")}
+              </strong>
+
+              <span>
+                {accountActive
+                  ? t("accountActive")
+                  : t("accountDeactivated")}
+              </span>
+
+            </div>
+
+            <button
+              type="button"
+              className={`account-toggle ${
+                accountActive
+                  ? "active"
+                  : ""
+              }`}
+              onClick={
+                handleAccountStatus
+              }
+              disabled={loading}
+            >
+              <span />
+            </button>
+
+          </div>
+
+          {/* DELETE */}
+
+          <div className="account-danger-zone">
+
+            <div className="account-management-info">
+
+              <strong>
+                {t("deleteAccount")}
+              </strong>
+
+              <span>
+                {t(
+                  "deleteAccountWarning"
+                )}
+              </span>
+
+            </div>
+
+            <button
+              type="button"
+              className="account-delete-button"
+              onClick={
+                handleDeleteAccount
+              }
+              disabled={deleteLoading}
+            >
+              {deleteLoading
+                ? t("deleting")
+                : t("deleteAccount")}
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+    );
+  }
+
+  /* ===================================================
      PEOPLE
   =================================================== */
 
   if (tab === "people") {
     return (
-      <>
+      <section className="settings-page-section">
+
         <h2>
-          {t("people")} <em>{t("free")}</em>
+          {t("people")}
         </h2>
 
         <div className="blueprint-settings-card">
-          <h3>{t("inviteWorkspaceMembers")}</h3>
+
+          <h3>
+            {t(
+              "inviteWorkspaceMembers"
+            )}
+          </h3>
 
           <p>
-            {t("upgradeToInviteMembers")} {t("collaborateProjects")}
+            {t(
+              "upgradeToInviteMembers"
+            )}
           </p>
 
           <div className="blueprint-invite">
-            <input placeholder={t("addEmails")} />
 
-            <button>{t("upgradeToInviteMembers")}</button>
+            <input
+              placeholder={t(
+                "addEmails"
+              )}
+            />
+
+            <button>
+              {t(
+                "upgradeToInviteMembers"
+              )}
+            </button>
+
           </div>
+
         </div>
 
-        <div className="blueprint-members">
-          <header>
-            {t("user")}
-
-            <span>{t("role")}</span>
-
-            <span>{t("status")}</span>
-
-            <span>{t("totalUsage")}</span>
-
-            <span>{t("dateJoined")}</span>
-          </header>
-
-          <p>
-            <b>S</b>
-            saswe eng ({t("you")})<span>{t("owner")}</span>
-            <span className="blueprint-active-badge">{t("active")}</span>
-            <span>6.51 {t("credits")}</span>
-            <span>Jul 26, 2026</span>
-          </p>
-        </div>
-      </>
+      </section>
     );
   }
 
@@ -1534,10 +2399,14 @@ function SettingsContent({ tab }) {
 
   if (tab === "connectors") {
     return (
-      <>
-        <h2>{t("connectors")}</h2>
+      <section className="settings-page-section">
+
+        <h2>
+          {t("connectors")}
+        </h2>
 
         <div className="blueprint-connector-list">
+
           {[
             "GitHub",
             "Supabase",
@@ -1546,24 +2415,33 @@ function SettingsContent({ tab }) {
             "Google Search Console",
             "Google Ads",
           ].map((name) => (
+
             <div key={name}>
+
               <b>
                 <FiCode />
 
                 {name}
 
                 <small>
-                  {t("connectServiceData", {
-                    name,
-                  })}
+                  {t(
+                    "connectServiceData",
+                    { name }
+                  )}
                 </small>
               </b>
 
-              <button>{t("connect")}</button>
+              <button>
+                {t("connect")}
+              </button>
+
             </div>
+
           ))}
+
         </div>
-      </>
+
+      </section>
     );
   }
 
@@ -1573,80 +2451,67 @@ function SettingsContent({ tab }) {
 
   if (tab === "plansCredits") {
     return (
-      <>
+      <section className="settings-page-section">
+
         <h2>
-          {t("plansCredits")} <em>{t("free")}</em>
+          {t("plansCredits")}
         </h2>
 
         <div className="blueprint-credits-card">
-          <b>{t("creditsRemaining")}</b>
 
-          <strong>15 / 15</strong>
+          <b>
+            {t(
+              "creditsRemaining"
+            )}
+          </b>
+
+          <strong>
+            15 / 15
+          </strong>
 
           <i>
             <span />
           </i>
 
-          <small>
-            •{" "}
-            {t("dailyCreditsReset", {
-              count: 15,
-              date: "Jul 28",
-            })}
-          </small>
         </div>
 
-        <div className="blueprint-plan-tabs">{t("planPayment")}</div>
         <div className="blueprint-plans">
+
           {[
             ["free", "$0"],
             ["pro", "$15.8"],
             ["max", "$79"],
-          ].map(([name, price]) => (
-            <article key={name}>
-              <h2>{t(name)}</h2>
+          ].map(
+            ([name, price]) => (
 
-              <strong>
-                {price}
+              <article key={name}>
 
-                <small>{t("month")}</small>
-              </strong>
+                <h2>
+                  {t(name)}
+                </h2>
 
-              <p>{t("unlockFeatures")}</p>
-            </article>
-          ))}
+                <strong>
+                  {price}
+
+                  <small>
+                    {t("month")}
+                  </small>
+                </strong>
+
+                <p>
+                  {t(
+                    "unlockFeatures"
+                  )}
+                </p>
+
+              </article>
+
+            )
+          )}
+
         </div>
-      </>
-    );
-  }
 
-  /* ===================================================
-     PREFERENCE
-  =================================================== */
-
-  if (tab === "preference") {
-    return (
-      <>
-        <h2>{t("preference")}</h2>
-
-        <h3>{t("language")}</h3>
-
-        <p>{t("changeLanguage")}</p>
-
-        <hr />
-
-        <h3>{t("theme")}</h3>
-
-        <p>{t("customizeAppearance")}</p>
-
-        <div className="blueprint-themes">
-          <b>{t("system")}</b>
-
-          <b className="chosen">{t("light")}</b>
-
-          <b>{t("dark")}</b>
-        </div>
-      </>
+      </section>
     );
   }
 
@@ -1656,181 +2521,208 @@ function SettingsContent({ tab }) {
 
   if (tab === "domains") {
     return (
-      <>
-        <h2>{t("domains")} ⓘ</h2>
+      <section className="settings-page-section">
 
-        <h3>{t("connectedDomains")}</h3>
+        <h2>
+          {t("domains")}
+        </h2>
 
-        <p>{t("manageConnectedDomains")}</p>
+        <h3>
+          {t("connectedDomains")}
+        </h3>
+
+        <p>
+          {t(
+            "manageConnectedDomains"
+          )}
+        </p>
 
         <div className="blueprint-notice">
+
           {t("notPublished")}
 
-          <button>{t("publish")}</button>
+          <button>
+            {t("publish")}
+          </button>
+
         </div>
 
-        <div className="blueprint-domain-row">
-          <FiGlobe />
-
-          <span>
-            <b>{t("connectExistingDomain")}</b>
-
-            <small>{t("upgradeSubscription")}</small>
-          </span>
-
-          <button>{t("connectDomain")}</button>
-        </div>
-      </>
+      </section>
     );
   }
 
   /* ===================================================
-     ACCOUNT
+     CLOUD AI
   =================================================== */
-  if (tab === "account") {
-    return (
-      <>
-        <h2>{t("accountSettings")}</h2>
 
-        <div className="blueprint-account-row">
-          {t("avatar")}
-
-          <b>S</b>
-        </div>
-
-        <div className="blueprint-account-row">
-          {t("username")}
-
-          <span>saswe eng ✎</span>
-        </div>
-
-        <div className="blueprint-account-row">
-          {t("email")}
-
-          <span>engsaswe@gmail.com</span>
-        </div>
-
-        <div className="blueprint-account-profile">
-          <h3>{t("profile")}</h3>
-
-          <p>{t("manageProfile")}</p>
-
-          {message && <div className="account-success-message">{message}</div>}
-
-          {error && <div className="account-error-message">{error}</div>}
-
-          <div className="account-management-row">
-            <div className="account-management-info">
-              <strong>{t("accountStatus")}</strong>
-
-              <span>
-                {accountActive ? t("accountActive") : t("accountDeactivated")}
-              </span>
-            </div>
-
-            <button
-              type="button"
-
-              className={`account-toggle ${accountActive ? "active" : ""}`}
-
-              onClick={handleAccountStatus}
-
-              disabled={loading}
-
-              aria-label={t("toggleAccountStatus")}
-            >
-              <span />
-            </button>
-          </div>
-
-          <div className="account-danger-zone">
-            <div className="account-management-info">
-              <strong>{t("deleteAccount")}</strong>
-
-              <span>{t("deleteAccountWarning")}</span>
-            </div>
-
-            <button
-              type="button"
-
-              className="account-delete-button"
-
-              onClick={handleDeleteAccount}
-
-              disabled={deleteLoading}
-            >
-              {deleteLoading ? t("deleting") : t("deleteAccount")}
-            </button>
-          </div>
-        </div>
-      </>
-    );
-  }
-  /* ===================================================
-     CLOUD & AI
-  =================================================== */
   if (tab === "cloudAI") {
     return (
-      <>
-        <h2>{t("cloudAI")}</h2>
+      <section className="settings-page-section">
 
-        <div className="blueprint-warning">ⓘ {t("cloudWarning")}</div>
+        <h2>
+          {t("cloudAI")}
+        </h2>
+
+        <div className="blueprint-warning">
+          ⓘ {t("cloudWarning")}
+        </div>
 
         <div className="blueprint-cloud-cards">
+
           <article>
-            <h3>◕ {t("cloudAI")}</h3>
 
-            <strong>$0.00</strong>
+            <h3>
+              ◕ {t("cloudAI")}
+            </h3>
 
-            <button>{t("upgrade")}</button>
+            <strong>
+              $0.00
+            </strong>
+
+            <button>
+              {t("upgrade")}
+            </button>
+
           </article>
 
           <article>
-            <h3>{t("cloudBalance")}</h3>
+
+            <h3>
+              {t("cloudBalance")}
+            </h3>
 
             <hr />
 
-            <h3>{t("aiBalance")}</h3>
+            <h3>
+              {t("aiBalance")}
+            </h3>
+
           </article>
+
         </div>
-      </>
+
+      </section>
     );
   }
+
   /* ===================================================
      GENERAL
   =================================================== */
+if (tab === "general") {
+  const currentTheme = themeMode || "light";
+
+  const handleThemeChange = (newTheme) => {
+    setThemeMode(newTheme);
+  };
 
   return (
-    <>
-      <h2>{t("general")}</h2>
+    <section className="settings-page-section">
+      <div className="settings-page-header">
+        <h2>{t("general")}</h2>
 
-      <h3>{t("defaultModel")}</h3>
-
-      <div className="blueprint-setting-line">
-        {t("model")}
-
-        <span>Claude Opus 4.7⌄</span>
+        <p>{t("customizeAppearance")}</p>
       </div>
 
-      <h3>{t("permissions")}</h3>
+      <div className="settings-section-card">
+        <div className="settings-section-info">
+          <h3>{t("theme")}</h3>
 
-      <div className="blueprint-setting-line">
-        {t("defaultAccess")}
+          <p>{t("customizeAppearance")}</p>
+        </div>
 
-        <span>◎ {t("public")}⌄</span>
+        <div className="blueprint-themes">
+          {/* SYSTEM */}
+          <button
+            type="button"
+            className={
+              currentTheme === "system" ? "chosen" : ""
+            }
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              handleThemeChange("system");
+            }}
+          >
+            <span className="theme-option-icon">
+              ◐
+            </span>
+
+            <span>{t("system")}</span>
+          </button>
+
+          {/* LIGHT */}
+          <button
+            type="button"
+            className={
+              currentTheme === "light" ? "chosen" : ""
+            }
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              handleThemeChange("light");
+            }}
+          >
+            <span className="theme-option-icon">
+              ☀
+            </span>
+
+            <span>{t("light")}</span>
+          </button>
+
+          {/* DARK */}
+          <button
+            type="button"
+            className={
+              currentTheme === "dark" ? "chosen" : ""
+            }
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              handleThemeChange("dark");
+            }}
+          >
+            <span className="theme-option-icon">
+              ☾
+            </span>
+
+            <span>{t("dark")}</span>
+          </button>
+        </div>
       </div>
 
-      <h3>{t("creditReminder")}</h3>
+      <hr />
 
-      <div className="blueprint-setting-line">
-        {t("showCredits")}
+      {/* LANGUAGE */}
+      <div className="settings-section-card">
+        <div className="settings-section-info">
+          <h3>{t("language")}</h3>
 
-        <i className="blueprint-toggle" />
+          <p>{t("changeLanguage")}</p>
+        </div>
+
+        <div className="blueprint-language-options">
+          <button
+            type="button"
+            className={language === "en" ? "chosen" : ""}
+            onClick={() => setLanguage("en")}
+          >
+            English
+          </button>
+
+          <button
+            type="button"
+            className={language === "ar" ? "chosen" : ""}
+            onClick={() => setLanguage("ar")}
+          >
+            عربي
+          </button>
+        </div>
       </div>
-    </>
+    </section>
   );
 }
 
+}
 /* =====================================================
    EXPORT
 ===================================================== */

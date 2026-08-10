@@ -1,23 +1,34 @@
-import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import NewBlueprint from "./new-blueprint";
 import NewBlueprint2 from "./newblueprint2";
 import "../css/dualWorkspace.css";
 
 function DualWorkspace() {
+  const navigate = useNavigate();
   const location = useLocation();
 
   const message = location.state?.message || "";
+
+  useEffect(() => {
+    const token = localStorage.getItem("token") || localStorage.getItem("accessToken");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   return (
     <div className="dual-workspace">
       {/* LEFT SIDE */}
       <section className="dual-workspace-left">
         <NewBlueprint2 initialMessage={message} />
+
       </section>
 
       {/* RIGHT SIDE */}
       <section className="dual-workspace-right">
         <NewBlueprint />
+
       </section>
     </div>
   );

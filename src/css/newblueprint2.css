@@ -3251,3 +3251,528 @@ button:active {
 
   color: white !important;
 }
+/* =========================
+   BLUEPRINT CREATION FORM
+========================= */
+
+.blueprint-form-container {
+  width: min(720px, 100%);
+  margin: 48px auto;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: transparent;
+}
+
+.blueprint-form-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+}
+
+.chat-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-header h1 {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.08;
+  color: var(--text);
+}
+
+.chat-header p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.blueprint-form-grid {
+  display: grid;
+  gap: 18px;
+}
+
+.blueprint-form-grid-side {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.blueprint-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blueprint-form-field label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.blueprint-form-field input,
+.blueprint-form-field select,
+.blueprint-form-field textarea {
+  width: 100%;
+  min-height: 54px;
+  padding: 16px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  font-size: 15px;
+  line-height: 1.65;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blueprint-form-field textarea {
+  min-height: 220px;
+  resize: vertical;
+}
+
+.blueprint-form-field input:focus,
+.blueprint-form-field select:focus,
+.blueprint-form-field textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 5px rgba(79, 110, 247, 0.12);
+}
+
+.blueprint-form-submit {
+  align-self: flex-end;
+  min-width: 220px;
+  height: 52px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 20px;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.blueprint-form-submit:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 16px 30px rgba(79, 110, 247, 0.14);
+}
+
+.blueprint-form-submit:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.blueprint-form-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+@media (max-width: 900px) {
+  .blueprint-form-container {
+    width: 100%;
+  }
+
+  .blueprint-form-chat {
+    padding: 20px;
+  }
+
+  .blueprint-form-grid-side {
+    grid-template-columns: 1fr;
+  }
+
+  .blueprint-form-submit {
+    width: 100%;
+    align-self: stretch;
+  }
+}
+
+.blueprint-error {
+  margin-top: 10px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  background: rgba(248, 113, 113, 0.12);
+  color: #b91c1c;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.assistant-section-message {
+  margin-bottom: 20px;
+  padding: 16px;
+  border-radius: 14px;
+}
+
+
+.assistant-section-message b {
+  display:block;
+  margin-bottom:8px;
+}
+
+
+.generating {
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+
+.generating i {
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor;
+  animation:pulse 1s infinite;
+}
+
+
+.generating i:nth-child(2){
+  animation-delay:.2s;
+}
+
+
+.generating i:nth-child(3){
+  animation-delay:.4s;
+}
+
+
+@keyframes pulse {
+
+0%,100%{
+ opacity:.3;
+}
+
+50%{
+ opacity:1;
+}
+
+}
+/* =====================================================
+   PROFILE SETTINGS
+===================================================== */
+
+.blueprint-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.blueprint-account-row label,
+.blueprint-account-row > span:first-child {
+  font-weight: 600;
+}
+
+.blueprint-account-row input {
+  width: 260px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--text);
+  outline: none;
+}
+
+.blueprint-account-row input:focus {
+  border-color: var(--primary);
+}
+
+.blueprint-account-row input:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.blueprint-save-profile-button {
+  margin-top: 18px;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.blueprint-save-profile-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================================
+   LANGUAGE
+===================================================== */
+
+.blueprint-language-options {
+  display: flex;
+  gap: 10px;
+  margin: 14px 0 24px;
+}
+
+.blueprint-language-options button,
+.blueprint-themes button {
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+  padding: 9px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.blueprint-language-options button:hover,
+.blueprint-themes button:hover {
+  background: var(--hover);
+}
+
+.blueprint-language-options button.chosen,
+.blueprint-themes button.chosen {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* =====================================================
+   THEME
+===================================================== */
+
+.blueprint-themes {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+/* =====================================================
+   GENERAL SETTINGS
+===================================================== */
+
+.blueprint-setting-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.blueprint-setting-line > span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.blueprint-setting-options {
+  display: flex;
+  gap: 8px;
+}
+
+.blueprint-setting-options button {
+  border: 1px solid var(--border-color, #d1d5db);
+  background: var(--card-bg, #fff);
+  color: var(--text-color, #222);
+  border-radius: 8px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: 0.2s ease;
+}
+
+.blueprint-setting-options button:hover {
+  border-color: #888;
+}
+
+.blueprint-setting-options button.chosen {
+  background: var(--text-color, #222);
+  color: var(--card-bg, #fff);
+  border-color: var(--text-color, #222);
+}
+
+.blueprint-setting-line + h3 {
+  margin-top: 30px;
+}
+
+.blueprint-setting-line + h3,
+h3 {
+  font-size: 15px;
+}
+html.dark .blueprint-app {
+  background: #0f1115;
+  color: #ffffff;
+}
+
+html.dark .blueprint-settings-modal {
+  background: #17191f;
+  color: #ffffff;
+}
+
+html.dark .blueprint-settings-sidebar {
+  background: #121419;
+  border-color: #292d35;
+}
+
+html.dark .blueprint-settings-content {
+  background: #17191f;
+}
+
+html.dark .settings-section-card {
+  background: #1d2027;
+  border-color: #30343d;
+}
+
+html.dark .blueprint-settings-tab {
+  color: #b9bec9;
+}
+
+html.dark .blueprint-settings-tab.active {
+  background: #292d35;
+  color: #ffffff;
+}
+
+html.dark .blueprint-settings-content input,
+html.dark .blueprint-settings-content select {
+  background: #20232b;
+  color: #ffffff;
+  border-color: #343944;
+}
+
+html.dark .blueprint-themes button,
+html.dark .blueprint-language-options button,
+html.dark .blueprint-setting-options button {
+  background: #20232b;
+  color: #ffffff;
+  border-color: #343944;
+}
+
+html.dark .blueprint-themes button.chosen,
+html.dark .blueprint-language-options button.chosen,
+html.dark .blueprint-setting-options button.chosen {
+  background: #ffffff;
+  color: #111111;
+}
+/* =========================================
+   SETTINGS OVERLAY
+========================================= */
+
+.blueprint-settings-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.45);
+}
+
+
+/* =========================================
+   SETTINGS MODAL
+========================================= */
+
+.blueprint-settings-modal {
+  width: min(1100px, 95vw);
+  height: min(750px, 90vh);
+
+  display: flex;
+
+  background: var(--bg, #ffffff);
+  color: var(--text, #111111);
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+}
+
+
+/* =========================================
+   SETTINGS SIDEBAR
+========================================= */
+
+.blueprint-settings-sidebar {
+  width: 250px;
+  flex-shrink: 0;
+
+  padding: 24px 16px;
+
+  background: var(--sidebar-bg, #f7f7f8);
+
+  overflow-y: auto;
+}
+
+
+/* =========================================
+   SETTINGS CONTENT
+========================================= */
+
+.blueprint-settings-content {
+  position: relative;
+
+  flex: 1;
+
+  padding: 40px;
+
+  overflow-y: auto;
+
+  background: var(--bg, #ffffff);
+}
+
+
+/* =========================================
+   CLOSE BUTTON
+========================================= */
+
+.blueprint-modal-close {
+  position: absolute;
+
+  top: 18px;
+  right: 18px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-size: 20px;
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 700px) {
+
+  .blueprint-settings-modal {
+    width: 100%;
+    height: 100%;
+
+    border-radius: 0;
+  }
+
+  .blueprint-settings-sidebar {
+    width: 200px;
+  }
+
+  .blueprint-settings-content {
+    padding: 25px 20px;
+  }
+
+}

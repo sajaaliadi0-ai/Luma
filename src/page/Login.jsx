@@ -53,19 +53,25 @@ function Login() {
 
     try {
       setLoading(true);
-      const response = await api.post(
-        "https://api.luma-agent.com/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+     const response = await api.post("/auth/login", {
+  email,
+  password,
+});
 
-      const data = response.data;
-      if (data.token) {
-        localStorage.setItem("token", data.token);
-      }
-      localStorage.setItem("user", JSON.stringify(data));
+const data = response.data;
+
+console.log("LOGIN RESPONSE:", data);
+
+if (data.success && data.data) {
+  // Save access token
+  localStorage.setItem("token", data.data.accessToken);
+
+  // Save refresh token
+  localStorage.setItem("refreshToken", data.data.refreshToken);
+
+  // Save user information
+  localStorage.setItem("user", JSON.stringify(data.data.user));
+}
 
       if (rememberMe) {
         localStorage.setItem("rememberedEmail", email);

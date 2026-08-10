@@ -130,7 +130,7 @@ function Landpage({ dark, setDark }) {
             {t("languageToggle")}
           </button>
 
-          <button className="login" onClick={() => navigate("/Overview")}>
+          <button className="login" onClick={() => navigate("/login")}>
             {t("loginButton")}
           </button>
 

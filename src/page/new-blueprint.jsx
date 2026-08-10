@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect } from "react";
+﻿import { useState, useRef, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import api from "../api/api";
 import "../css/newBlueprint.css";
 import { useTranslation } from "../i18n";
-
 /* ------------------------------------------------------------------ */
 /* Icons                                                              */
 /* ------------------------------------------------------------------ */
@@ -435,14 +436,20 @@ const FilesView = () => {
 /* ------------------------------------------------------------------ */
 /* Page                                                               */
 /* ------------------------------------------------------------------ */
-
 export default function NewBlueprint() {
-  const { t } = useTranslation();
+const { t } = useTranslation();
 
-  const [activeTab, setActiveTab] = useState("viewer");
+const [searchParams] = useSearchParams();
 
-  const [drawerOpen] = useState(false);
+const blueprintId = searchParams.get("id");
 
+const [activeTab, setActiveTab] = useState("viewer");
+
+const [drawerOpen] = useState(false);
+
+const [currentBlueprint, setCurrentBlueprint] = useState(null);
+
+const [sections, setSections] = useState([]);
   /*
     These are currently empty because
     the AI Agent content will be connected later.
@@ -453,6 +460,61 @@ export default function NewBlueprint() {
   const analysisContent = null;
   const terminalContent = null;
 
+
+  useEffect(() => {
+  if (!blueprintId) return;
+
+  api
+    .get(`/blueprints/${blueprintId}`)
+    .then((res) => {
+      const bp = res.data.blueprint || res.data;
+      setCurrentBlueprint(bp);
+    })
+    .catch((err) => {
+      console.error("Failed to load blueprint", err);
+    });
+
+}, [blueprintId]);
+useEffect(() => {
+  if (!blueprintId) return;
+
+  const token = localStorage.getItem("token");
+
+  const apiBase =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:3000";
+
+
+  const sse = new EventSource(
+    `${apiBase}/blueprints/${blueprintId}/events?token=${token}`
+  );
+
+
+  sse.onmessage = () => {
+
+    api
+      .get(`/blueprints/${blueprintId}/sections`)
+      .then((r) => {
+        setSections(r.data.sections || r.data);
+      })
+      .catch((err) => {
+        console.error("Failed loading sections", err);
+      });
+
+  };
+
+
+  sse.onerror = () => {
+    sse.close();
+  };
+
+
+  return () => {
+    sse.close();
+  };
+
+
+}, [blueprintId]);
   return (
     <div className="blueprint-container">
       <div className={`newBlueprint-page ${drawerOpen ? "split-mode" : ""}`}>
