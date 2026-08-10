@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import "./css/theme.css";
 
@@ -23,87 +23,189 @@ import Users from "./page/Users";
 import Overview from "./page/Overview";
 
 function App() {
-  const [dark, setDark] = useState(false);
-
-  useEffect(() => {
-    document.body.classList.toggle("dark", dark);
-  }, [dark]);
+  const [themeMode, setThemeMode] = useState("light");
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landpage dark={dark} setDark={setDark} />} />
+        <Route
+          path="/"
+          element={
+            <Landpage
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
+        />
 
         <Route
           path="/login"
-          element={<Login dark={dark} setDark={setDark} />}
+          element={
+            <Login
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
-        <Route path="/Work" element={<Work dark={dark} setDark={setDark} />} />
+        <Route
+          path="/Work"
+          element={
+            <Work
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
+        />
 
         <Route
           path="/Register"
-          element={<Register dark={dark} setDark={setDark} />}
+          element={
+            <Register
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/new-blueprint"
-          element={<NewBlueprint dark={dark} setDark={setDark} />}
+          element={
+            <NewBlueprint
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/newblueprint2"
-          element={<NewBlueprint2 dark={dark} setDark={setDark} />}
+          element={
+            <NewBlueprint2
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/ForgotPassword"
-          element={<ForgotPassword dark={dark} setDark={setDark} />}
+          element={
+            <ForgotPassword
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/VerifyEmail"
-          element={<VerifyEmail dark={dark} setDark={setDark} />}
+          element={
+            <VerifyEmail
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/ResetPassword"
-          element={<ResetPassword dark={dark} setDark={setDark} />}
+          element={
+            <ResetPassword
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/Resources"
-          element={<Resources dark={dark} setDark={setDark} />}
+          element={
+            <Resources
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
-        <Route path="/Home" element={<Home dark={dark} setDark={setDark} />} />
+        <Route
+          path="/Home"
+          element={
+            <Home
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
+        />
 
-        <Route path="/DualWorkspace" element={<DualWorkspace />} />
+        <Route
+          path="/DualWorkspace"
+          element={
+            <DualWorkspace
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
+        />
 
         <Route
           path="/BlueprintsAdmen"
-          element={<BlueprintsAdmen dark={dark} setDark={setDark} />}
+          element={
+            <BlueprintsAdmen
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
-        <Route path="/Logs" element={<Logs dark={dark} setDark={setDark} />} />
+
+        <Route
+          path="/Logs"
+          element={
+            <Logs
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
+        />
 
         <Route
           path="/SystemState"
-          element={<SystemState dark={dark} setDark={setDark} />}
+          element={
+            <SystemState
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/Overview"
-          element={<Overview dark={dark} setDark={setDark} />}
+          element={
+            <Overview
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/Users"
-          element={<Users dark={dark} setDark={setDark} />}
+          element={
+            <Users
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
 
         <Route
           path="/Settings"
-          element={<Settings dark={dark} setDark={setDark} />}
+          element={
+            <Settings
+              themeMode={themeMode}
+              setThemeMode={setThemeMode}
+            />
+          }
         />
       </Routes>
     </BrowserRouter>
