@@ -1,0 +1,670 @@
+/* =========================================================
+   SYSTEM SETTINGS PAGE
+   ========================================================= */
+
+.system-settings-page {
+  min-height: 100vh;
+  background: #f8f7ff;
+  color: #1f2937;
+  font-family: "Inter", sans-serif;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.system-settings-main {
+  margin-left: 250px;
+  padding: 32px;
+  min-height: 100vh;
+
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.system-settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+
+.system-settings-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 750;
+  color: #111827;
+
+  transition: color 0.25s ease;
+}
+
+
+.system-settings-header p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+
+  transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   CARD
+   ========================================================= */
+
+.system-settings-card {
+  background: #ffffff;
+  border: 1px solid #eeeef2;
+  border-radius: 18px;
+  margin-bottom: 24px;
+  overflow: hidden;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.035);
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.system-settings-card-header {
+  padding: 24px 26px;
+  border-bottom: 1px solid #eeeef2;
+
+  transition: border-color 0.25s ease;
+}
+
+
+.system-settings-card-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 20px;
+  font-weight: 700;
+
+  transition: color 0.25s ease;
+}
+
+
+.system-settings-card-header p {
+  margin: 7px 0 0;
+  color: #6b7280;
+  font-size: 13px;
+
+  transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   SETTINGS LIST
+   ========================================================= */
+
+.system-settings-list {
+  padding: 0 26px;
+}
+
+
+.system-settings-item {
+  min-height: 92px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 30px;
+
+  border-bottom: 1px solid #f0f0f3;
+
+  transition: border-color 0.25s ease;
+}
+
+
+.system-settings-item:last-child {
+  border-bottom: none;
+}
+
+
+/* =========================================================
+   ITEM INFO
+   ========================================================= */
+
+.system-settings-item-info {
+  flex: 1;
+}
+
+
+.system-settings-item-info h3 {
+  margin: 0 0 6px;
+
+  color: #111827;
+  font-size: 14px;
+  font-weight: 650;
+
+  transition: color 0.25s ease;
+}
+
+
+.system-settings-item-info p {
+  margin: 0;
+
+  max-width: 650px;
+
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 1.6;
+
+  transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   TOGGLE
+   ========================================================= */
+
+.system-settings-toggle {
+  position: relative;
+
+  flex-shrink: 0;
+
+  width: 48px;
+  height: 27px;
+
+  border: none;
+  border-radius: 30px;
+
+  background: #d1d5db;
+
+  cursor: pointer;
+  padding: 0;
+
+  transition:
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+
+.system-settings-toggle span {
+  position: absolute;
+
+  width: 21px;
+  height: 21px;
+
+  background: #ffffff;
+
+  border-radius: 50%;
+
+  top: 3px;
+  left: 3px;
+
+  transition:
+    left 0.25s ease,
+    box-shadow 0.25s ease;
+
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+
+.system-settings-toggle:hover {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+}
+
+
+.system-settings-toggle-active {
+  background: #7c3aed;
+}
+
+
+.system-settings-toggle-active span {
+  left: 24px;
+}
+
+
+/* =========================================================
+   SYSTEM INFORMATION
+   ========================================================= */
+
+.system-settings-info-grid {
+  padding: 24px 26px;
+
+  display: grid;
+
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 16px;
+}
+
+
+.system-settings-info-box {
+  background: #fafafa;
+
+  border: 1px solid #eeeef2;
+
+  border-radius: 12px;
+
+  padding: 18px;
+
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+.system-settings-info-box span:first-child {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #9ca3af;
+
+  font-size: 12px;
+
+  transition: color 0.25s ease;
+}
+
+
+.system-settings-info-box strong {
+  color: #111827;
+
+  font-size: 14px;
+
+  transition: color 0.25s ease;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.system-settings-status {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+
+.system-settings-status span {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: #22c55e;
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+/*
+   App.jsx adds:
+
+   body.dark
+
+   لذلك نعتمد هنا على body.dark
+   وليس فقط .system-settings-page.dark
+*/
+
+
+body.dark .system-settings-page {
+  background: #111827;
+  color: #f9fafb;
+}
+
+
+body.dark .system-settings-main {
+  background: #111827;
+  color: #f9fafb;
+}
+
+
+/* =========================================================
+   DARK HEADER
+   ========================================================= */
+
+body.dark .system-settings-header h1 {
+  color: #f9fafb;
+}
+
+
+body.dark .system-settings-header p {
+  color: #9ca3af;
+}
+
+
+/* =========================================================
+   DARK CARDS
+   ========================================================= */
+
+body.dark .system-settings-card {
+  background: #181c27;
+
+  border-color: #292e3b;
+
+  box-shadow:
+    0 8px 25px rgba(0, 0, 0, 0.20);
+}
+
+
+/* =========================================================
+   DARK CARD HEADER
+   ========================================================= */
+
+body.dark .system-settings-card-header {
+  border-color: #292e3b;
+}
+
+
+body.dark .system-settings-card-header h2 {
+  color: #f9fafb;
+}
+
+
+body.dark .system-settings-card-header p {
+  color: #9ca3af;
+}
+
+
+/* =========================================================
+   DARK SETTINGS ITEMS
+   ========================================================= */
+
+body.dark .system-settings-item {
+  border-color: #292e3b;
+}
+
+
+body.dark .system-settings-item-info h3 {
+  color: #f9fafb;
+}
+
+
+body.dark .system-settings-item-info p {
+  color: #9ca3af;
+}
+
+
+/* =========================================================
+   DARK TOGGLES
+   ========================================================= */
+
+body.dark .system-settings-toggle {
+  background: #4b5563;
+}
+
+
+body.dark .system-settings-toggle-active {
+  background: #7c3aed;
+}
+
+
+body.dark .system-settings-toggle span {
+  background: #ffffff;
+
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+
+/* =========================================================
+   DARK INFORMATION BOXES
+   ========================================================= */
+
+body.dark .system-settings-info-box {
+  background: #202532;
+
+  border-color: #292e3b;
+}
+
+
+body.dark .system-settings-info-box span:first-child {
+  color: #9ca3af;
+}
+
+
+body.dark .system-settings-info-box strong {
+  color: #f9fafb;
+}
+
+
+/* =========================================================
+   DARK STATUS
+   ========================================================= */
+
+body.dark .system-settings-status span {
+  background: #22c55e;
+}
+
+
+/* =========================================================
+   OLD CLASS SUPPORT
+   ========================================================= */
+
+/*
+   هذا الجزء يخلي الصفحة تشتغل أيضًا
+   إذا كان عندك class="dark" على الصفحة نفسها.
+*/
+
+.system-settings-page.dark {
+  background: #111827;
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-main {
+  background: #111827;
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-header h1 {
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-header p {
+  color: #9ca3af;
+}
+
+
+.system-settings-page.dark .system-settings-card {
+  background: #181c27;
+  border-color: #292e3b;
+}
+
+
+.system-settings-page.dark .system-settings-card-header {
+  border-color: #292e3b;
+}
+
+
+.system-settings-page.dark .system-settings-card-header h2 {
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-card-header p {
+  color: #9ca3af;
+}
+
+
+.system-settings-page.dark .system-settings-item {
+  border-color: #292e3b;
+}
+
+
+.system-settings-page.dark .system-settings-item-info h3 {
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-item-info p {
+  color: #9ca3af;
+}
+
+
+.system-settings-page.dark .system-settings-info-box {
+  background: #202532;
+  border-color: #292e3b;
+}
+
+
+.system-settings-page.dark .system-settings-info-box span:first-child {
+  color: #9ca3af;
+}
+
+
+.system-settings-page.dark .system-settings-info-box strong {
+  color: #f9fafb;
+}
+
+
+.system-settings-page.dark .system-settings-toggle {
+  background: #4b5563;
+}
+
+
+.system-settings-page.dark .system-settings-toggle-active {
+  background: #7c3aed;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1100px) {
+
+  .system-settings-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .system-settings-main {
+    margin-left: 72px;
+    padding: 24px;
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  .system-settings-main {
+    margin-left: 72px;
+    padding: 18px;
+  }
+
+
+  .system-settings-header {
+    margin-bottom: 24px;
+  }
+
+
+  .system-settings-header h1 {
+    font-size: 27px;
+  }
+
+
+  .system-settings-card {
+    border-radius: 15px;
+    margin-bottom: 18px;
+  }
+
+
+  .system-settings-card-header {
+    padding: 20px;
+  }
+
+
+  .system-settings-card-header h2 {
+    font-size: 18px;
+  }
+
+
+  .system-settings-list {
+    padding: 0 20px;
+  }
+
+
+  .system-settings-item {
+    min-height: 100px;
+    gap: 15px;
+  }
+
+
+  .system-settings-item-info h3 {
+    font-size: 13px;
+  }
+
+
+  .system-settings-item-info p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+
+  .system-settings-toggle {
+    width: 45px;
+    height: 25px;
+  }
+
+
+  .system-settings-toggle span {
+    width: 19px;
+    height: 19px;
+
+    top: 3px;
+    left: 3px;
+  }
+
+
+  .system-settings-toggle-active span {
+    left: 23px;
+  }
+
+
+  .system-settings-info-grid {
+    grid-template-columns: 1fr;
+
+    padding: 20px;
+
+    gap: 12px;
+  }
+
+
+  .system-settings-info-box {
+    padding: 16px;
+  }
+
+}

@@ -1,0 +1,218 @@
+import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
+import { useTranslation } from "../i18n";
+
+import "../css/ResetPassword.css";
+
+function ResetPassword() {
+  const { t } = useTranslation();
+
+  const navigate = useNavigate();
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const [strength, setStrength] = useState(0);
+
+  function checkPasswordStrength(password) {
+    let s = 0;
+
+    if (password.length >= 8) s++;
+
+    if (/[A-Z]/.test(password)) s++;
+
+    if (/[0-9]/.test(password)) s++;
+
+    if (/[^A-Za-z0-9]/.test(password)) s++;
+
+    setStrength(s);
+  }
+
+  async function resetPassword() {
+    if (newPassword.length < 8) {
+      alert(t("passwordMustContain8"));
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      alert(t("passwordsDoNotMatch"));
+      return;
+    }
+
+    try {
+      const response = await fetch("https://dummyjson.com/users/1", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          password: newPassword,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        navigate("/login");
+      } else {
+        alert(t("resetPasswordFailed"));
+      }
+    } catch (error) {
+      console.log(error);
+      alert(t("somethingWentWrong"));
+    }
+  }
+
+  return (
+    <div className="resetpassword-page-wrapper">
+      <div className="resetpassword-page-card">
+        <div className="resetpassword-page-header">
+          <div className="resetpassword-page-avatar">
+            <div
+              className={`resetpassword-page-robot ${
+                showNewPassword || showConfirmPassword
+                  ? "resetpassword-page-robot-cover"
+                  : "resetpassword-page-robot-normal"
+              }`}
+            >
+              <div className="resetpassword-page-robot-antenna"></div>
+
+              <div className="resetpassword-page-robot-head">
+                <div className="resetpassword-page-robot-eye resetpassword-page-robot-eye-left"></div>
+
+                <div className="resetpassword-page-robot-eye resetpassword-page-robot-eye-right"></div>
+
+                <div className="resetpassword-page-robot-mouth"></div>
+
+                <div className="resetpassword-page-robot-hand resetpassword-page-robot-hand-left"></div>
+
+                <div className="resetpassword-page-robot-hand resetpassword-page-robot-hand-right"></div>
+              </div>
+            </div>
+          </div>
+
+          <h1>{t("resetPasswordTitle")}</h1>
+
+          <p>{t("resetPasswordSubtitle")}</p>
+        </div>
+
+        <form>
+          <div className="resetpassword-page-input-group">
+            <label>{t("newPasswordLabel")}</label>
+
+            <div className="resetpassword-page-password-field">
+              <input
+                type={showNewPassword ? "text" : "password"}
+                placeholder={t("enterNewPassword")}
+                value={newPassword}
+                onChange={(e) => {
+                  setNewPassword(e.target.value);
+                  checkPasswordStrength(e.target.value);
+                }}
+              />
+
+              <button
+                className="resetpassword-page-eye-btn"
+                type="button"
+                onClick={() => setShowNewPassword((prev) => !prev)}
+              >
+                <i
+                  className={
+                    showNewPassword
+                      ? "fa-solid fa-eye-slash"
+                      : "fa-solid fa-eye"
+                  }
+                ></i>
+              </button>
+            </div>
+
+            <small className="resetpassword-page-error"></small>
+
+            <div className="resetpassword-page-strength">
+              <div className="resetpassword-page-strength-bar">
+                <div
+                  className="resetpassword-page-strength-fill"
+                  style={{
+                    width:
+                      strength === 0
+                        ? "0%"
+                        : strength <= 2
+                          ? "35%"
+                          : strength === 3
+                            ? "65%"
+                            : "100%",
+                  }}
+                />
+              </div>
+
+              <p>
+                {strength === 0
+                  ? ""
+                  : strength <= 2
+                    ? t("weakPassword")
+                    : strength === 3
+                      ? t("mediumPassword")
+                      : t("strongPassword")}
+              </p>
+            </div>
+          </div>
+          <div className="resetpassword-page-input-group">
+            <label>{t("confirmPasswordLabel")}</label>
+
+            <div className="resetpassword-page-password-field">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder={t("confirmPasswordPlaceholder")}
+                value={confirmNewPassword}
+                onChange={(e) => setConfirmNewPassword(e.target.value)}
+              />
+
+              <button
+                className="resetpassword-page-eye-btn"
+                type="button"
+                onClick={() => setShowConfirmPassword((prev) => !prev)}
+              >
+                <i
+                  className={
+                    showConfirmPassword
+                      ? "fa-solid fa-eye-slash"
+                      : "fa-solid fa-eye"
+                  }
+                ></i>
+              </button>
+            </div>
+
+            <small className="resetpassword-page-error"></small>
+          </div>
+
+          <button
+            className="resetpassword-page-btn"
+            type="button"
+            onClick={resetPassword}
+          >
+            {t("resetPasswordButton")}
+          </button>
+        </form>
+
+        <div className="resetpassword-page-footer">
+          <Link to="/login">{t("backToLogin")}</Link>
+        </div>
+      </div>
+
+      <div className="resetpassword-page-success">
+        <div className="resetpassword-page-success-icon">✓</div>
+
+        <h2>Password Updated</h2>
+
+        <p>Your password has been reset successfully.</p>
+      </div>
+    </div>
+  );
+}
+
+export default ResetPassword;
