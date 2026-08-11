@@ -1,0 +1,658 @@
+import { useState } from "react";
+import { useTranslation } from "../i18n";
+import Sidebar from "../components/Sidebar/Sidebar";
+import "../css/Settings.css";
+
+function SystemSettings({ dark, setDark }) {
+  const { t } = useTranslation();
+
+  // =========================================================
+  // SYSTEM SETTINGS
+  // =========================================================
+
+  const [settings, setSettings] = useState({
+    maintenanceMode: false,
+    maxAgents: 10,
+
+    registrationEnabled: true,
+    emailVerification: true,
+    notifications: true,
+    allowBlueprintCreation: true,
+    allowAiChat: true,
+  });
+
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  // =========================================================
+  // API
+  // =========================================================
+
+  const API_BASE_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:8000";
+
+  const handleToggle = (key) => {
+    setSettings((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+
+    setSaveMessage("");
+    setErrorMessage("");
+  };
+
+  // =========================================================
+  // UPDATE SYSTEM SETTINGS
+  // =========================================================
+
+  const handleSaveSettings = async () => {
+    setSaving(true);
+    setSaveMessage("");
+    setErrorMessage("");
+
+    try {
+      // Get access token
+      const token =
+        localStorage.getItem("access_token") ||
+        localStorage.getItem("accessToken") ||
+        localStorage.getItem("token");
+
+      if (!token) {
+        setErrorMessage("No access token found. Please login again.");
+        setSaving(false);
+        return;
+      }
+
+      // API payload
+      const payload = {
+        maintenance_mode: settings.maintenanceMode,
+        max_agents: Number(settings.maxAgents),
+      };
+
+      console.log("Sending system settings:", payload);
+
+      const response = await fetch(
+        `${API_BASE_URL}/api/super-admin/system-settings`,
+        {
+          method: "PUT",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify(payload),
+        }
+      );
+
+      // =====================================================
+      // SUCCESS
+      // =====================================================
+
+      if (response.ok) {
+        const data = await response.json().catch(() => null);
+
+        console.log("System settings updated:", data);
+
+        setSaveMessage(
+          "System settings updated successfully."
+        );
+
+        setErrorMessage("");
+
+        return;
+      }
+
+      // =====================================================
+      // UNAUTHORIZED
+      // =====================================================
+
+      if (response.status === 401) {
+        setErrorMessage(
+          "Unauthorized. Please login again."
+        );
+
+        setSaveMessage("");
+        return;
+      }
+
+      // =====================================================
+      // FORBIDDEN
+      // =====================================================
+
+      if (response.status === 403) {
+        setErrorMessage(
+          "Forbidden. Only Super Admin can modify system settings."
+        );
+
+        setSaveMessage("");
+        return;
+      }
+
+      // =====================================================
+      // OTHER ERRORS
+      // =====================================================
+
+      let errorText = "Failed to update system settings.";
+
+      try {
+        const errorData = await response.json();
+
+        if (errorData?.detail) {
+          errorText =
+            typeof errorData.detail === "string"
+              ? errorData.detail
+              : JSON.stringify(errorData.detail);
+        } else if (errorData?.message) {
+          errorText = errorData.message;
+        }
+      } catch {
+        // Ignore JSON parsing errors
+      }
+
+      setErrorMessage(errorText);
+      setSaveMessage("");
+    } catch (error) {
+      console.error("Update system settings error:", error);
+
+      setErrorMessage(
+        "Unable to connect to the server. Please try again."
+      );
+
+      setSaveMessage("");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div
+      className={`system-settings-page ${dark ? "dark" : ""}`}
+      style={{
+        background: dark ? "#111827" : "#f8f7ff",
+        color: dark ? "#ffffff" : "#1f2937",
+      }}
+    >
+      {/* ================= SIDEBAR ================= */}
+
+      <Sidebar dark={dark} setDark={setDark} />
+
+      {/* ================= MAIN CONTENT ================= */}
+
+      <main className="system-settings-main">
+
+        {/* ================= HEADER ================= */}
+
+        <header className="system-settings-header">
+          <div>
+            <h1>{t("systemSettings")}</h1>
+
+            <p>{t("systemSettingsDescription")}</p>
+          </div>
+        </header>
+
+        {/* =================================================
+            GENERAL SETTINGS
+        ================================================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+            <div>
+              <h2>{t("generalSettings")}</h2>
+
+              <p>{t("generalSettingsDescription")}</p>
+            </div>
+          </div>
+
+          <div className="system-settings-list">
+
+            {/* ================= MAINTENANCE MODE ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("maintenanceMode")}</h3>
+
+                <p>{t("maintenanceModeDescription")}</p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.maintenanceMode
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("maintenanceMode")
+                }
+                aria-label={t(
+                  "toggleMaintenanceMode"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+            {/* ================= USER REGISTRATION ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("userRegistration")}</h3>
+
+                <p>
+                  {t("userRegistrationDescription")}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.registrationEnabled
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("registrationEnabled")
+                }
+                aria-label={t(
+                  "toggleUserRegistration"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+            {/* ================= EMAIL VERIFICATION ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("emailVerification")}</h3>
+
+                <p>
+                  {t(
+                    "emailVerificationDescription"
+                  )}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.emailVerification
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("emailVerification")
+                }
+                aria-label={t(
+                  "toggleEmailVerification"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+          </div>
+        </section>
+
+        {/* =================================================
+            PLATFORM SETTINGS
+        ================================================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+
+            <div>
+
+              <h2>{t("platformFeatures")}</h2>
+
+              <p>
+                {t(
+                  "platformFeaturesDescription"
+                )}
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="system-settings-list">
+
+            {/* ================= MAX AGENTS ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>Maximum Agents</h3>
+
+                <p>
+                  Set the maximum number of agents
+                  allowed on the platform.
+                </p>
+
+              </div>
+
+              <input
+                type="number"
+                min="1"
+                value={settings.maxAgents}
+                onChange={(e) => {
+                  setSettings((prev) => ({
+                    ...prev,
+                    maxAgents: e.target.value,
+                  }));
+
+                  setSaveMessage("");
+                  setErrorMessage("");
+                }}
+                style={{
+                  width: "100px",
+                  padding: "10px 12px",
+                  borderRadius: "8px",
+                  border: dark
+                    ? "1px solid #374151"
+                    : "1px solid #d1d5db",
+                  background: dark
+                    ? "#1f2937"
+                    : "#ffffff",
+                  color: dark
+                    ? "#ffffff"
+                    : "#111827",
+                  fontSize: "14px",
+                  outline: "none",
+                }}
+              />
+
+            </div>
+
+            {/* ================= NOTIFICATIONS ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("notifications")}</h3>
+
+                <p>
+                  {t("notificationsDescription")}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.notifications
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("notifications")
+                }
+                aria-label={t(
+                  "toggleNotifications"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+            {/* ================= BLUEPRINT CREATION ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("blueprintCreation")}</h3>
+
+                <p>
+                  {t(
+                    "blueprintCreationDescription"
+                  )}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.allowBlueprintCreation
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle(
+                    "allowBlueprintCreation"
+                  )
+                }
+                aria-label={t(
+                  "toggleBlueprintCreation"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+            {/* ================= AI CHAT ================= */}
+
+            <div className="system-settings-item">
+
+              <div className="system-settings-item-info">
+
+                <h3>{t("aiChat")}</h3>
+
+                <p>
+                  {t("aiChatDescription")}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className={`system-settings-toggle ${
+                  settings.allowAiChat
+                    ? "system-settings-toggle-active"
+                    : ""
+                }`}
+                onClick={() =>
+                  handleToggle("allowAiChat")
+                }
+                aria-label={t(
+                  "toggleAiChat"
+                )}
+              >
+                <span></span>
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* =================================================
+              SAVE SETTINGS
+          ================================================= */}
+
+          <div
+            style={{
+              marginTop: "24px",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "flex-end",
+              gap: "12px",
+            }}
+          >
+
+            {/* SUCCESS */}
+
+            {saveMessage && (
+              <div
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  borderRadius: "8px",
+                  background: dark
+                    ? "#064e3b"
+                    : "#ecfdf5",
+                  color: dark
+                    ? "#a7f3d0"
+                    : "#047857",
+                  fontSize: "14px",
+                }}
+              >
+                {saveMessage}
+              </div>
+            )}
+
+            {/* ERROR */}
+
+            {errorMessage && (
+              <div
+                style={{
+                  width: "100%",
+                  padding: "12px 14px",
+                  borderRadius: "8px",
+                  background: dark
+                    ? "#450a0a"
+                    : "#fef2f2",
+                  color: dark
+                    ? "#fecaca"
+                    : "#dc2626",
+                  fontSize: "14px",
+                }}
+              >
+                {errorMessage}
+              </div>
+            )}
+
+            {/* SAVE BUTTON */}
+
+            <button
+              type="button"
+              onClick={handleSaveSettings}
+              disabled={saving}
+              style={{
+                padding: "11px 22px",
+                borderRadius: "8px",
+                border: "none",
+                background: saving
+                  ? "#9ca3af"
+                  : "#4f6ef7",
+                color: "#ffffff",
+                fontSize: "14px",
+                fontWeight: "600",
+                cursor: saving
+                  ? "not-allowed"
+                  : "pointer",
+                transition: "0.2s",
+              }}
+            >
+              {saving
+                ? "Saving..."
+                : "Save Changes"}
+            </button>
+
+          </div>
+
+        </section>
+
+        {/* =================================================
+            SYSTEM INFORMATION
+        ================================================= */}
+
+        <section className="system-settings-card">
+
+          <div className="system-settings-card-header">
+
+            <div>
+
+              <h2>{t("systemInformation")}</h2>
+
+              <p>
+                {t(
+                  "systemInformationDescription"
+                )}
+              </p>
+
+            </div>
+
+          </div>
+
+          <div className="system-settings-info-grid">
+
+            {/* Platform */}
+
+            <div className="system-settings-info-box">
+
+              <span>{t("platform")}</span>
+
+              <strong>LUMA</strong>
+
+            </div>
+
+            {/* Environment */}
+
+            <div className="system-settings-info-box">
+
+              <span>{t("environment")}</span>
+
+              <strong>
+                {t("production")}
+              </strong>
+
+            </div>
+
+            {/* System Status */}
+
+            <div className="system-settings-info-box">
+
+              <span>{t("systemStatus")}</span>
+
+              <strong className="system-settings-status">
+
+                <span></span>
+
+                {t("operational")}
+
+              </strong>
+
+            </div>
+
+            {/* Version */}
+
+            <div className="system-settings-info-box">
+
+              <span>{t("version")}</span>
+
+              <strong>1.0.0</strong>
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+    </div>
+  );
+}
+
+export default SystemSettings;
