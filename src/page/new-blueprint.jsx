@@ -1,5 +1,4 @@
 ﻿import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import api, { API_BASE_URL } from "../api/api";
 import "../css/newBlueprint.css";
 import { EventSource } from "eventsource";
@@ -528,23 +527,20 @@ function AgentMessagesView({
 /* ------------------------------------------------------------------ */
 /* Page                                                               */
 /* ------------------------------------------------------------------ */
-export default function NewBlueprint() {
+export default function NewBlueprint({ blueprintId }) {
   const [currentBlueprint, setCurrentBlueprint] = useState(null);
   const [agentMessages, setAgentMessages] = useState([]);
 const [messagesLoading, setMessagesLoading] = useState(false);
 const [messagesError, setMessagesError] = useState(null);
 const { t } = useTranslation();
 
-const [searchParams] = useSearchParams();
-
-const blueprintId = searchParams.get("id");
 
 const [activeTab, setActiveTab] = useState("viewer");
 
 const [drawerOpen] = useState(false);
 const fetchAgentMessages = async () => {
   if (!blueprintId) {
-    console.warn("No blueprintId found");
+    console.log("⏳ Waiting for blueprintId...");
     return;
   }
 
@@ -552,11 +548,19 @@ const fetchAgentMessages = async () => {
     setMessagesLoading(true);
     setMessagesError(null);
 
+    console.log(
+      "📨 Fetching agent messages for:",
+      blueprintId
+    );
+
     const response = await api.get(
       `/agent-messages/blueprint/${blueprintId}`
     );
 
-    console.log("Agent messages response:", response.data);
+    console.log(
+      "Agent messages response:",
+      response.data
+    );
 
     const data = response.data;
 
@@ -573,11 +577,17 @@ const fetchAgentMessages = async () => {
     }
 
     setAgentMessages(messages);
+
   } catch (error) {
-    console.error("Failed to load agent messages:", error);
+    console.error(
+      "Failed to load agent messages:",
+      error
+    );
 
     if (error.response?.status === 401) {
-      setMessagesError("Unauthorized. Please login again.");
+      setMessagesError(
+        "Unauthorized. Please login again."
+      );
     } else if (error.response?.status === 404) {
       setMessagesError("Blueprint not found.");
     } else {
@@ -586,10 +596,12 @@ const fetchAgentMessages = async () => {
           "Failed to load agent messages."
       );
     }
+
   } finally {
     setMessagesLoading(false);
   }
 };
+
 useEffect(() => {
   fetchAgentMessages();
 }, [blueprintId]);
@@ -614,10 +626,8 @@ useEffect(() => {
     console.error("No access token found. SSE connection cancelled.");
     return;
   }
-
-  const sseUrl =
-    `https://api.luma-agent.com/api/blueprints/${blueprintId}/events`;
-
+const sseUrl =
+  `https://api.luma-agent.com/api/blueprints/${blueprintId}/events`;
   console.log("Opening SSE:", sseUrl);
 
   const eventSource = new EventSource(sseUrl, {

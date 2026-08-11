@@ -86,7 +86,8 @@ function getSavedActiveConversation() {
    ATOMS APP
 ===================================================== */
 
-function AtomsApp({ themeMode, setThemeMode, dark, setDark }) {
+function AtomsApp({ themeMode, setThemeMode, dark, setDark ,initialMessage,
+  onBlueprintCreated }) {
   const navigate = useNavigate();
 
   const { t, language } = useTranslation();
@@ -197,70 +198,6 @@ console.error("Blueprint loading error", err);
 
 },[blueprintId]);
 
-
-useEffect(() => {
-  if (!blueprintId) return;
-
-  const token = localStorage.getItem("token");
-
-  console.log("Blueprint ID:", blueprintId);
-  console.log("Access token exists:", !!token);
-
-  if (!token) {
-    console.error(
-      "No access token found. SSE connection cancelled."
-    );
-    return;
-  }
-
-  const sseUrl =
-    `https://api.luma-agent.com/api/blueprints/${blueprintId}/events`;
-
-  console.log("Opening SSE:", sseUrl);
-
-  const sse = new EventSource(sseUrl, {
-    fetch: (input, init) =>
-      fetch(input, {
-        ...init,
-        headers: {
-          ...init?.headers,
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-  });
-
-  sse.onopen = () => {
-    console.log("✅ SSE connection opened");
-  };
-
-  sse.onmessage = (event) => {
-    console.log("📡 SSE event:", event.data);
-
-    api
-      .get(`/blueprints/${blueprintId}/sections`)
-      .then((res) => {
-        setSections(
-          res.data.sections || res.data
-        );
-      })
-      .catch((error) => {
-        console.error(
-          "Failed to load sections:",
-          error
-        );
-      });
-  };
-
-  sse.onerror = (error) => {
-    console.error("❌ SSE connection error:", error);
-    sse.close();
-  };
-
-  return () => {
-    console.log("Closing SSE connection");
-    sse.close();
-  };
-}, [blueprintId]);
   /* ===================================================
      ACTIVE CONVERSATION
   =================================================== */
@@ -456,99 +393,86 @@ try {
 // ==============================
 // Blueprint Creation Form
 // ==============================
-
-function BlueprintCreationForm({ onSuccess }) {
-
-  const navigate = useNavigate();
+function BlueprintCreationForm({ onSuccess, onBlueprintCreated }) {
+    const navigate = useNavigate();
   const { t } = useTranslation();
 
   const [ideaText, setIdeaText] = useState("");
   const [projectType, setProjectType] = useState("web");
-const [complexity, setComplexity] = useState("medium");
-const [outputLanguage, setOutputLanguage] = useState("en");
+  const [complexity, setComplexity] = useState("medium");
+  const [outputLanguage, setOutputLanguage] = useState("en");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     const savedPrompt = sessionStorage.getItem("blueprintPrompt");
 
     if (savedPrompt) {
       setIdeaText(savedPrompt);
-        sessionStorage.removeItem("blueprintPrompt");
-
+      sessionStorage.removeItem("blueprintPrompt");
     }
   }, []);
 
-
-
   const handleSubmit = async () => {
+    if (!ideaText.trim()) {
+      setError(t("blueprintErrorGeneric"));
+      return;
+    }
 
+    setLoading(true);
     setError("");
 
-    if (!ideaText.trim()) {
-      setError(t("blueprintErrorEmptyIdea"));
-      return;
-    }
-
-
-    if (ideaText.trim().length < 20) {
-      setError(
-        t("blueprintErrorIdeaShort")
-      );
-      return;
-    }
-
-
     try {
+      console.log("🚀 Creating blueprint...");
 
-      setLoading(true);
+      const response = await api.post("/blueprints", {
+        title: ideaText.trim().slice(0, 10),
+        idea_text: ideaText.trim(),
+        project_type: projectType,
+        complexity,
+        output_language: outputLanguage,
+      });
 
-const response = await api.post("/blueprints", {
-title: ideaText.trim().slice(0, 10),
-  idea_text: ideaText,
-  complexity,
-  output_language: outputLanguage,
-  project_type: projectType,
-});
+      console.log(
+        "✅ Blueprint creation response:",
+        response.data
+      );
 
       const blueprint =
-        response.data.blueprint ||
-        response.data.data ||
+        response.data?.blueprint ||
+        response.data?.data ||
         response.data;
 
+      if (!blueprint?.id) {
+        throw new Error("No blueprint ID returned from API");
+      }
+console.log("✅ Blueprint ID:", blueprint.id);
+
+if (onBlueprintCreated) {
+  onBlueprintCreated(blueprint.id);
+}
 
       sessionStorage.removeItem("blueprintPrompt");
 
-
-      navigate(
-        `/DualWorkspace?id=${blueprint.id}`
-      );
-
-
       onSuccess(blueprint.id);
 
-
+      navigate(`/DualWorkspace?id=${blueprint.id}`);
     } catch (err) {
-
-      const message =
-        err.response?.data?.message;
-
-
-      setError(
-        message ||
-        t("blueprintErrorGeneric")
+      console.error(
+        "❌ Blueprint creation failed:",
+        err.response?.data || err
       );
 
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        t("blueprintErrorGeneric");
 
+      setError(message);
     } finally {
-
       setLoading(false);
-
     }
-
   };
-
 
   return (
     <div className="blueprint-form-container">
@@ -563,70 +487,89 @@ title: ideaText.trim().slice(0, 10),
         <div className="blueprint-form-grid">
           <div className="blueprint-form-field">
             <label>{t("blueprintProjectIdeaLabel")}</label>
+
             <textarea
               value={ideaText}
               onChange={(e) => setIdeaText(e.target.value)}
-              placeholder={t("blueprintProjectIdeaPlaceholder")}
+              placeholder={t(
+                "blueprintProjectIdeaPlaceholder"
+              )}
             />
           </div>
 
           <div className="blueprint-form-grid-side">
+
             <div className="blueprint-form-field">
-              <label>{t("blueprintProjectTypeLabel")}</label>
-             <select
-  value={projectType}
-  onChange={(e) => setProjectType(e.target.value)}
->
-  <option value="web">
-    {t("blueprintProjectTypeWeb")}
-  </option>
+              <label>
+                {t("blueprintProjectTypeLabel")}
+              </label>
 
-  <option value="mobile">
-    {t("blueprintProjectTypeMobile")}
-  </option>
+              <select
+                value={projectType}
+                onChange={(e) =>
+                  setProjectType(e.target.value)
+                }
+              >
+                <option value="web">
+                  {t("blueprintProjectTypeWeb")}
+                </option>
 
-  <option value="api">
-    {t("blueprintProjectTypeApi")}
-  </option>
-</select>
+                <option value="mobile">
+                  {t("blueprintProjectTypeMobile")}
+                </option>
+
+                <option value="api">
+                  {t("blueprintProjectTypeApi")}
+                </option>
+              </select>
             </div>
 
             <div className="blueprint-form-field">
-              <label>{t("blueprintComplexityLabel")}</label>
-              
-             <select
-  value={complexity}
-  onChange={(e) => setComplexity(e.target.value)}
->
-  <option value="simple">
-    {t("blueprintComplexitySimple")}
-  </option>
+              <label>
+                {t("blueprintComplexityLabel")}
+              </label>
 
-  <option value="medium">
-    {t("blueprintComplexityMedium")}
-  </option>
+              <select
+                value={complexity}
+                onChange={(e) =>
+                  setComplexity(e.target.value)
+                }
+              >
+                <option value="simple">
+                  {t("blueprintComplexitySimple")}
+                </option>
 
-  <option value="complex">
-    {t("blueprintComplexityComplex")}
-  </option>
-</select>
+                <option value="medium">
+                  {t("blueprintComplexityMedium")}
+                </option>
+
+                <option value="complex">
+                  {t("blueprintComplexityComplex")}
+                </option>
+              </select>
             </div>
 
             <div className="blueprint-form-field">
-              <label>{t("blueprintOutputLanguageLabel")}</label>
-             <select
-  value={outputLanguage}
-  onChange={(e) => setOutputLanguage(e.target.value)}
->
-  <option value="en">
-    {t("blueprintOutputLanguageEnglish")}
-  </option>
+              <label>
+                {t("blueprintOutputLanguageLabel")}
+              </label>
 
-  <option value="ar">
-    {t("blueprintOutputLanguageArabic")}
-  </option>
-</select>
+              <select
+                value={outputLanguage}
+                onChange={(e) =>
+                  setOutputLanguage(e.target.value)
+                }
+              >
+                <option value="en">
+                  {t("blueprintOutputLanguageEnglish")}
+                </option>
+
+                <option value="ar">
+                  {t("blueprintOutputLanguageArabic")}
+                </option>
+              </select>
             </div>
+
           </div>
         </div>
       </div>
@@ -638,15 +581,19 @@ title: ideaText.trim().slice(0, 10),
       )}
 
       <button
+        type="button"
         className="blueprint-form-submit"
         onClick={handleSubmit}
         disabled={loading}
       >
-        {loading ? t("blueprintCreating") : t("blueprintCreateButton")}
+        {loading
+          ? t("blueprintCreating")
+          : t("blueprintCreateButton")}
       </button>
     </div>
   );
 }
+
   /* ===================================================
      RENDER
   =================================================== */
@@ -716,32 +663,34 @@ title: ideaText.trim().slice(0, 10),
      {page === "Home" && (
   <>
     {showBlueprintForm ? (
-      <BlueprintCreationForm
-        onSuccess={(blueprintId) => {
-          setShowBlueprintForm(false);
+<BlueprintCreationForm
+  onBlueprintCreated={onBlueprintCreated}
+  onSuccess={(blueprintId) => {
+    setShowBlueprintForm(false);
 
-          const conversationId = `chat-${Date.now()}`;
+    const conversationId = `chat-${Date.now()}`;
 
-          const savedPrompt =
-            sessionStorage.getItem("blueprintPrompt") || "";
+    const savedPrompt =
+      sessionStorage.getItem("blueprintPrompt") || "";
 
-          setConversations((current) => [
-            {
-              id: conversationId,
-              title:
-                savedPrompt.length > 30
-                  ? `${savedPrompt.slice(0, 30)}…`
-                  : savedPrompt,
-              messages: [],
-              createdAt: new Date().toLocaleDateString("en-CA"),
-              blueprintId: blueprintId,
-            },
-            ...current,
-          ]);
+    setConversations((current) => [
+      {
+        id: conversationId,
+        title:
+          savedPrompt.length > 30
+            ? `${savedPrompt.slice(0, 30)}…`
+            : savedPrompt,
+        messages: [],
+        createdAt: new Date().toLocaleDateString("en-CA"),
+        blueprintId: blueprintId,
+      },
+      ...current,
+    ]);
 
-          setActiveConversationId(conversationId);
-        }}
-      />
+    setActiveConversationId(conversationId);
+  }}
+/>
+
     ) : (
      <Home
  prompt={prompt}
